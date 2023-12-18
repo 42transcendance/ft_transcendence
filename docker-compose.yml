@@ -2,16 +2,32 @@ version: '3'
 
 services:
   backend:
-    image: backend
     container_name: backend
     build:
-      context: Docker/
+      context: Docker/Backend/
       dockerfile: backend.Dockerfile
+    environment:
+      - PGSERVICEFILE=/pg_service.conf
     volumes:
       - backend:/djangoSource
     ports:
       - 8000:8000
+    depends_on:
+      - postgresql
     restart: on-failure
+
+  postgresql:
+    container_name: postgresql
+    build:
+      context: Docker/PostgreSQL
+      dockerfile: postgresql.Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - postgresql:/usr/local/pgsql/data
+    restart: on-failure
+    expose:
+      - 5432
 
 
 volumes:
@@ -21,3 +37,9 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/backend
+  postgresql:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/pgdatabase

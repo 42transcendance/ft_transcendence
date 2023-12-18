@@ -25,7 +25,9 @@ SECRET_KEY = 'django-insecure-*pc5qd$g9l00-hk8ntt!zy)3k9&&$r18!y_*6$v_%!^pbd2^xc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#Adding the host's local IP to this list allows other devices on your local network to see and connect to the app
+# (Replace first parameter)
+ALLOWED_HOSTS = ['192.168.1.18', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -74,12 +76,14 @@ WSGI_APPLICATION = 'ft_transcendenceBackend.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "OPTIONS": {
+            "service": "django",
+            "passfile": "/.pgpass",
+          },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

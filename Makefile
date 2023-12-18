@@ -1,22 +1,27 @@
 PATH_YML = ./docker-compose.yml
 
-all: build start
+all: start
 
-build:
-	docker-compose -f $(PATH_YML) build
+test:
+	@utils/setup.sh
 
 start:
-	docker-compose -f $(PATH_YML) up --build
+	@utils/setup.sh
+	@docker-compose -f $(PATH_YML) up --build
 
 stop:
-	docker-compose -f $(PATH_YML) stop
+	@docker-compose -f $(PATH_YML) stop
 
-prune:
-	docker-compose -f $(PATH_YML) down
-	docker system prune -af
-	docker network prune -f
-	docker volume rm ft_transcendence_backend
+prune: stop
+	@docker-compose -f $(PATH_YML) down -v
+	@docker system prune -af
+	@rm -rf /home/${USER}/pgdatabase/*
 
-cleardbase:
+	@rm -rf .env
 
+	@rm -rf ./Docker/Backend/conf/.pgpass
+	@rm -rf ./Docker/Backend/conf/.pg_service.conf
 
+	@echo "Pruned docker system, deleted content of database, deleted env file"
+
+re: prune start
