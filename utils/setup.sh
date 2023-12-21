@@ -12,6 +12,12 @@ fi
 
 env_file=".env"
 user_input=""
+password_file="./Docker/Backend/conf/.pgpass"
+service_file="./Docker/Backend/conf/.pg_service.conf"
+
+if [ ! -e "$env_file" ] || [ ! -e "$password_file" ] || [ ! -e "$service_file" ]; then
+  echo "Files needed for configuration have been compromised you might need to intervene"
+fi
 
 if [ -e "$env_file" ]; then
   echo "The .env file already exists."
@@ -25,8 +31,7 @@ else
   echo "DB_PORT=5432" >> "$env_file"
 fi
 
-password_file=".pgpass"
-service_file=".pg_service.conf"
+
 
 if [ -e "$password_file" ]; then
     echo "Password file already exists."
@@ -42,6 +47,3 @@ else
     
     echo "postgresql:5432:djangodb:postgresUser:$user_input" > $password_file
 fi
-
-mv $password_file ./Docker/Backend/conf/.
-mv $service_file ./Docker/Backend/conf/.

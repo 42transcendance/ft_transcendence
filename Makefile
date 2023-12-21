@@ -1,13 +1,14 @@
 PATH_YML = ./docker-compose.yml
 
-all: start
+all: build start
 
-test:
+build:
 	@utils/setup.sh
+	docker-compose -f $(PATH_YML) build
 
 start:
 	@utils/setup.sh
-	@docker-compose -f $(PATH_YML) up --build
+	@docker-compose -f $(PATH_YML) up
 
 stop:
 	@docker-compose -f $(PATH_YML) stop

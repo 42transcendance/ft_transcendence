@@ -27,8 +27,9 @@ DEBUG = True
 
 #Adding the host's local IP to this list allows other devices on your local network to see and connect to the app
 # (Replace first parameter)
-ALLOWED_HOSTS = ['192.168.1.18', 'localhost', '127.0.0.1']
+#ALLOWED_HOSTS = ['x.x.x.x', 'localhost', '127.0.0.1']
 
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 

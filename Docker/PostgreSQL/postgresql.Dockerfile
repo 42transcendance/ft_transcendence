@@ -4,9 +4,9 @@ RUN apt-get update && \
     apt-get -y install procps \
     postgresql
 
-COPY init_db.sh /init_db.sh 
+COPY scripts/init_db.sh /init_db.sh 
 
-COPY start_script.sh /start_script.sh
+COPY scripts/start_script.sh /start_script.sh
 
 RUN chmod +x start_script.sh init_db.sh
 
