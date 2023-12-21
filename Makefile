@@ -22,6 +22,7 @@ prune: stop
 
 	@rm -rf ./Docker/Backend/conf/.pgpass
 	@rm -rf ./Docker/Backend/conf/.pg_service.conf
+	@rm -rf ~/pgdatabase
 
 	@echo "Pruned docker system, deleted content of database, deleted env file"
 
