@@ -10,6 +10,7 @@ else
   echo "Database directory already exists."
 fi
 
+mkdir -p ./Docker/Backend/conf/
 env_file=".env"
 user_input=""
 password_file="./Docker/Backend/conf/.pgpass"
