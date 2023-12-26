@@ -1,0 +1,235 @@
+.inner-container1 {
+    border: 2px solid rgba(0, 128, 255, 0.7);
+    border-radius: 10px;
+    padding: 0px;
+    margin-top: 120px;
+    height: 75vh;
+    background-color: #ddd;
+    opacity: 0.85;
+}
+
+
+/* Social section */
+
+.social-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 255, 0.7);
+    border-radius: 8px 8px 0 0;
+    padding: 5px;
+    margin: 0px;
+}
+
+.social-icon {
+    font-size: 22px;
+    padding-left: 10px;
+    margin-right: 10px;
+}
+
+.button-container {
+    max-height: 63vh;
+    overflow-y: auto;
+    flex: 1; 
+    min-width: 100px; 
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.FriendsChannels {
+    display: flex;
+    justify-content: space-around;
+}
+
+.social-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    width: 40%; 
+    margin: 10px 2.5%; 
+    padding: 5px; 
+}
+
+#button2 {
+    margin-left: auto; 
+}
+
+.social-button.active {
+    color: #007bff;
+    border-bottom: 2px solid rgba(0, 128, 255);
+    padding: 5px;
+}
+
+.social-text {
+    font-size: 20px;
+}
+
+/* add friend button */
+
+.add-friend-button {
+    background-color: rgba(0, 128, 0, 0.5);
+    color: white; 
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+    font-size: 15px;
+    width: 95%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.add-friend-button:hover {
+    background-color: rgba(0, 128, 0, 0.7);
+
+}
+
+/* channels btoons */
+
+.add-channels-button {
+    background-color: rgba(0, 128, 0, 0.5);
+    color: white; 
+    border: none;
+    padding: 7px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
+    font-size: 12px;
+    width: 95%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3px;
+}
+
+.add-channels-button:hover {
+    background-color: rgba(0, 128, 0, 0.7);
+
+}
+
+/* friends  requests etc*/
+
+.friend-tab-button {
+    width: 95%;
+    border: 2px solid rgba(102, 178, 255, 0.7);
+    background-color: transparent;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    margin: 10px auto;
+    border-radius: 5px;
+    background-color: rgba(102, 178, 255, 0.7);
+}
+
+.friend-tab-button.active-tab {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.friend-tab-button i:not(.arrow-icon) {
+    margin-right: 10px;
+}
+
+/* Style for the arrow icon */
+.arrow-icon {
+    margin-left: auto;
+}
+
+.arrow-up {
+    transform: rotate(180deg);
+}
+
+.friends-tab-content {
+    width: 95%;
+    padding: 10px;
+    border: 2px solid rgba(102, 178, 255, 0.7);
+    text-align: left;
+    justify-content: flex-start;
+    border-top: none;
+    margin-bottom: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: none;
+    margin: auto;
+    background-color: #ddd;
+}
+
+
+/* cards in friends tab */
+.friend-item {
+    border: 2px solid rgba(102, 178, 255, 0.7);    
+    width: 95%;
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-start; 
+    margin: 1px auto;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 5px;
+    /* background-color:#b0d5fc; */
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+}
+
+.friend-info {
+    flex-grow: 1;
+}
+
+.icon-chat, .icon-controller {
+    font-size: 15px;
+    margin-left: auto; 
+    cursor: pointer;
+    padding: 0 5px; 
+    color: black;
+}
+
+.icon-chat:hover, .icon-controller:hover {
+    color: #007bff;
+}
+
+.friend-image {
+    width: 25px;
+    height: 25px;
+    border-radius: 25%;
+    margin-right: 15px;
+}
+
+/* cards in channels tab */
+
+.channel-item {   
+    width: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-start; 
+    margin: 1px auto;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 5px;
+    /* background-color:#b0d5fc; */
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f0f0f0;
+}
+
+.channels-tab-content {
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    justify-content: flex-start;
+    margin: auto;
+}
+
+.channels-icon {
+    padding: 3px;
+    padding-right: 7px;
+}
