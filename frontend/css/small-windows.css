@@ -1,0 +1,140 @@
+.modal-overlay {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto; /* Allows scrolling inside the modal if necessary */
+    background-color: rgba(0, 0, 0, 0.6); /* Dim background */
+}
+
+.modal-content {
+    background-color: #ddd; /* Greyish background */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centering the modal */
+    padding: 10px;
+    border-radius: 10px;
+    width: 23%; /* Smaller window */
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Add some depth */
+    /* Adjust max-height and overflow for content */
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.modal-content p {
+    font-size: 12px; /* Smaller description text */
+    margin-top: 5px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+}
+
+.modal-input {
+    width: 90%; /* Centered input field */
+    padding: 8px;
+    margin: 10px auto; /* Equal space from both ends */
+    display: block;
+    border-radius: 4px;
+    border: 1px solid #007bff; /* Blue outline */
+}
+
+.modal-input:focus {
+    outline: 2px solid #007bff; /* Blue outline to indicate focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: Add a subtle glow effect */
+
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end; /* Buttons aligned to the right */
+    gap: 10px;
+    margin-top: 15px;
+    margin-right: 5%;
+}
+
+.modal-button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 14px;
+}
+
+.modal-button-add {
+    background-color: #007bff; /* Blue background for Add */
+    color: white;
+}
+
+.modal-button-add:hover {
+    background-color: #0056b3;
+}
+
+.modal-button-cancel {
+    background-color: #6c757d; /* Grey background for Cancel */
+    color: white;
+}
+
+.modal-button-cancel:hover {
+    background-color: #545b62;
+}
+
+/* Create Chann */
+
+.threeChanOptions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 5px;
+}
+
+.radio-option label {
+    font-size: 14px;
+}
+
+
+.container {
+    transition: transform 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.container-slide-in {
+    transform: translateX(0);
+    visibility: visible;
+}
+
+.container-slide-out {
+    transform: translateX(-100%); /* Adjust direction based on your layout */
+    visibility: hidden;
+}
+
+/* invite notif */
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: rgb(168, 64, 64);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: none;
+}
+
