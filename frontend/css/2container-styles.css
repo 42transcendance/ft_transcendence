@@ -189,7 +189,7 @@
     align-items: center;
 }
 
-.change-button, .tfa-button {
+.change-username-button, .tfa-button {
     padding: 6px 12px;
     font-size: 14px;
     border-radius: 5px;
