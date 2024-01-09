@@ -1,12 +1,11 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.sdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
@@ -15,12 +14,12 @@
     <link rel="stylesheet" href="{% static 'css/3container-styles.css' %}">
 </head>
 <body>
-
+    {% if user.is_authenticated %}
     <!-- Video Background -->
     <video autoplay muted loop id="myVideo">
         <source src="{% static 'assets/bg.mp4' %}" type="video/mp4">
     </video>
-    
+   
 
     <!--navbar-->
     <nav class="navbar navbar-expand bg-body-tertiary navbar-custom">
@@ -82,8 +81,9 @@
                                     <div class="friend-info">
                                         <div>Friend's Name</div>
                                     </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat icon-chat"></i>
+                                    <i class="bi bi-controller icon-controller"></i>
+                                    <i class="bi bi-x-circle icon-block"></i>
                                 </div>
 
 
@@ -92,8 +92,9 @@
                                     <div class="friend-info">
                                         <div>Friend's Name</div>
                                     </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat icon-chat"></i>
+                                    <i class="bi bi-controller icon-controller"></i>
+                                    <i class="bi bi-x-circle icon-block"></i>
                                 </div>                                
                                 
                             </div>
@@ -119,8 +120,8 @@
                         <!-- Channels Container -->
                         <div id="channelsContainer" class="content-container" style="display: none;">
                             <!-- Content for Channels -->
-                            <button class="add-channels-button">CREATE CHANNEL</button>
-                            <button class="add-channels-button">JOIN CHANNEL</button>
+                            <button class="create-channel-button">CREATE CHANNEL</button>
+                            <button class="join-channel-button">JOIN CHANNEL</button>
                             <div id="channelsTabContent" class="channels-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
                                 <div class="channel-item">
@@ -256,8 +257,8 @@
                             <div class="user-info">
                                 <div class="username-label">Username:</div>
                                 <div class="username-and-button">
-                                    <div class="current-username">CurrentUsername</div>
-                                    <button class="change-button">Change</button>
+                                    <div class="current-username">{{user.username}}</div>
+                                    <button class="change-username-button">Change</button>
                                 </div>
                             </div>
                         
@@ -286,7 +287,9 @@
                                 </div>
                             </div>
                             <div class="settings-actions">
+                                <a href="{% url 'logout' %}">
                                 <button class="settings-button logout-button">Logout</button>
+                            </a>
                                 <button class="settings-button delete-account-button">Delete Account</button>
                             </div>
                         </div>
@@ -302,21 +305,21 @@
                         <div class="achievements-content">
                             <!-- Achievement Item -->
                             <div class="achievement-item">
-                                <!-- <img src="path_to_logo" alt="Logo" class="achievement-logo"> -->
+                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
                                 <div class="achievement-info">
                                     <div class="achievement-name">Achievement Name</div>
                                     <div class="achievement-description">Description goes here...</div>
                                 </div>
                             </div>
                             <div class="achievement-item">
-                                <!-- <img src="path_to_logo" alt="Logo" class="achievement-logo"> -->
+                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
                                 <div class="achievement-info">
                                     <div class="achievement-name">Achievement Name</div>
                                     <div class="achievement-description">Description goes here...</div>
                                 </div>
                             </div>
                             <div class="achievement-item">
-                                <!-- <img src="path_to_logo" alt="Logo" class="achievement-logo"> -->
+                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
                                 <div class="achievement-info">
                                     <div class="achievement-name">Achievement Name</div>
                                     <div class="achievement-description">Description goes here...</div>
@@ -369,14 +372,14 @@
                             <div class="user-achievements">
                                 <div class="section-heading">Achievements</div>
                                 <div class="achievement-item">
-                                    <!-- <img src="path_to_achievement_icon.png" alt="Achievement" class="achievement-logo"> -->
+                                    <img src="path_to_achievement_icon.png" alt="Achievement" class="achievement-logo">
                                     <div class="achievement-info">
                                         <div class="achievement-name">Achievement Name 1</div>
                                         <div class="achievement-description">Description of the achievement 1.</div>
                                     </div>
                                 </div>
                                 <div class="achievement-item">
-                                    <!-- <img src="path_to_another_achievement_icon.png" alt="Achievement" class="achievement-logo"> -->
+                                    <img src="path_to_another_achievement_icon.png" alt="Achievement" class="achievement-logo">
                                     <div class="achievement-info">
                                         <div class="achievement-name">Achievement Name 2</div>
                                         <div class="achievement-description">Description of the achievement 2.</div>
@@ -389,12 +392,133 @@
             </div>
             <!-- THIRD TAB -->
             <div class="col-2 col-lg-3 third-tab">
-                <div class="inner-container3 mx-1">here</div>
+                <div class="inner-container3 mx-1">
+                    <div class="career-select">
+                        <i class="bi bi-clock-history clock-icon"></i>
+                        <span class="career-text">Career</span>
+                    </div>
+                    <div class="button-container">
+                        <div class="FriendsChannels">
+                            <button class="social-button active" id="button4">LIST FRIENDS</button>
+                            <button class="social-button" id="button3">HISTORIC</button>
+                        </div>
+                        <div id="friendslistContainer" class="content-container">
+                            <div id="friendsListContent" class="friends-list-content">
+                                <!--EXAMPLE (needs to be removed)-->
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Friend's Name</div>
+                                    </div>
+                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                </div>
+
+
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Friend's Name</div>
+                                    </div>
+                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                </div>     
+                                
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Friend's Name</div>
+                                    </div>
+                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                </div>
+
+
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Friend's Name</div>
+                                    </div>
+                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
+                                </div> 
+                            </div>
+                        </div>
+                        <div id="historicContainer" class="content-container" style="display: none;">
+                            <!-- Content for Channels -->
+                            <div id="HistoricTabContent" class="Historic-tab-content">
+                                <!--EXAMPLE (needs to be removed)-->
+                                <div class="game-item win">
+                                    <div class="game-details">
+                                        <div class="game-opponent">Versus: name</div>
+                                        <div class="game-result">2023-12-25</div>
+                                    </div>
+                                    <div class="game-info">
+                                        <div class="game-date">Win</div>
+                                        <div class="game-score">Score: 3-1</div>
+                                    </div>
+                                </div>   
+                                <div class="game-item lose">
+                                    <div class="game-details">
+                                        <div class="game-opponent">Versus: name</div>
+                                        <div class="game-result">2023-12-20</div>
+                                    </div>
+                                    <div class="game-info">
+                                        <div class="game-date">Lose</div>
+                                        <div class="game-score">Score: 1-3</div>
+                                    </div>
+                                </div>
+                                <div class="game-item lose">
+                                    <div class="game-details">
+                                        <div class="game-opponent">Versus: name</div>
+                                        <div class="game-result">2023-12-20</div>
+                                    </div>
+                                    <div class="game-info">
+                                        <div class="game-date">Lose</div>
+                                        <div class="game-score">Score: 6-7</div>
+                                    </div>
+                                </div>
+                                <div class="game-item lose">
+                                    <div class="game-details">
+                                        <div class="game-opponent">Versus: name</div>
+                                        <div class="game-result">2023-12-20</div>
+                                    </div>
+                                    <div class="game-info">
+                                        <div class="game-date">Lose</div>
+                                        <div class="game-score">Score: 6-8</div>
+                                    </div>
+                                </div>
+                                <div class="game-item win">
+                                    <div class="game-details">
+                                        <div class="game-opponent">Versus: name</div>
+                                        <div class="game-result">2023-12-25</div>
+                                    </div>
+                                    <div class="game-info">
+                                        <div class="game-date">Win</div>
+                                        <div class="game-score">Score: 9-1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Content for Friends -->
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="{% static 'main.js' %}"></script>
+    <script src="{% static 'js/writing.js' %}"></script>
+    <script src="{% static 'js/navigation.js' %}"></script>
+    <script src="{% static 'js/socialButtons.js' %}"></script>
+    <script src="{% static 'js/modalManagement.js' %}"></script>
+    <script src="{% static 'js/tabManagement.js' %}"></script>
+    <script src="{% static 'js/smallButtons.js' %}"></script>
+    {% else %}
+        <h1>Please login to access the App page</h1>
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'signup' %}">Signup</a>
+    {% endif %}
 </body>
 </html>

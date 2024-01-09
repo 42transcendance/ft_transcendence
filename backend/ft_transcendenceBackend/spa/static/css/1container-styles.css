@@ -8,6 +8,11 @@
     opacity: 0.85;
 }
 
+.container-fluid {
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
 
 /* Social section */
 
@@ -91,7 +96,7 @@
 
 /* channels btoons */
 
-.add-channels-button {
+.create-channel-button, .join-channel-button {
     background-color: rgba(0, 128, 0, 0.5);
     color: white; 
     border: none;
@@ -107,7 +112,7 @@
     margin-bottom: 3px;
 }
 
-.add-channels-button:hover {
+.create-channel-button:hover, .join-channel-button:hover {
     background-color: rgba(0, 128, 0, 0.7);
 
 }
@@ -185,7 +190,7 @@
     flex-grow: 1;
 }
 
-.icon-chat, .icon-controller {
+.icon-chat, .icon-controller, .icon-block {
     font-size: 15px;
     margin-left: auto; 
     cursor: pointer;
@@ -195,6 +200,10 @@
 
 .icon-chat:hover, .icon-controller:hover {
     color: #007bff;
+}
+
+.icon-block:hover {
+    color: rgb(190, 44, 44);
 }
 
 .friend-image {
