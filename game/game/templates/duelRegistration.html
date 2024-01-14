@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>duel_registration</title>
+    <link rel="stylesheet"  href="{% static 'game.css' %}">
+</head>
+<body>
+    <p>
+      {% csrf_token %}
+      Player 1 <input type="tex" id="Player1" maxlength="30" , size="33"></input>     VS 
+      <input type="tex" id="Player2" maxlength="30" , size="33">  </input>   Player 2  
+    </p>
+    <button id="game_bnt" onclick="runGame()">Start</button>
+    <script src="{% static 'duelRegistration.js' %}"></script>
+</body>
+</html>

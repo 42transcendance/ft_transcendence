@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choix du Nombre de Joueurs</title>
+</head>
+<body>
+
+  <label for="nombreJoueurs">Choisissez le nombre de joueurs :</label>
+  <select id="nombreJoueurs" onchange="genererCases()">
+    <option value="0">Sélectionnez</option>
+    <option value="4">4 Joueurs</option>
+    <option value="8">8 Joueurs</option>
+    <!-- Ajoutez plus d'options au besoin -->
+  </select>
+
+  <div id="pseudosForm"></div>
+
+
+   <script src="{% static 'tournementRegistration.js' %}"></script>
+
+   <button id="game_bnt" onclick="startTournement()">Start</button>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface</title>
+</head>
+<body>
+
+    <style>
+        body {
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+        }
+    
+        .rectangle {
+          width: 700px;
+          height: 400px;
+          background-color: #f0f0f0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-evenly;
+        }
+    
+        .bouton {
+          width: 250px;
+          height: 120px;
+          background-color: #3498db;
+          color: #fff;
+          text-align: center;
+          text-decoration: none;
+          font-size: 16px;
+          line-height: 120px; /* Centrer verticalement le texte */
+          border-radius: 15px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+    
+        .bouton:hover {
+          background-color: #2980b9;
+        }
+      </style>
+    </head>
+    <body>
+    
+      <div class="rectangle">
+        <a href="duelRegistration" class="bouton">Duel mode</a>
+        <a href="tournementRegistration" class="bouton">Tournament mode</a>
+      </div>
+    
+</body>
+</html>

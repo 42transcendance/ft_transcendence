@@ -1,0 +1,12 @@
+body{
+    text-align: center;
+}
+#scoreGame{
+    border: 3px solid;
+    color : rgb(200, 200 , 200);
+    background-color: "#40E0D0";
+}
+#gameBoard{
+    border: 3px solid;
+    color : rgb(200, 200 , 200);
+}
