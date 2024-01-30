@@ -1,0 +1,53 @@
+#duelButton {
+    width: 270px; /* Spécifiez la largeur du bouton */
+    height: 60px; /* Spécifiez la hauteur du bouton */
+    position: absolute;
+    left: 350px;
+    top : 125px;
+  }
+
+
+/* Styles pour le formulaire */
+#duelForm {
+    max-width: 400px; /* Largeur maximale du formulaire */
+    margin: 250px 500px; /* Centrage horizontal du formulaire */
+    padding: 20px; /* Espace intérieur du formulaire */
+    background-color: #f0f0f0; /* Couleur de fond */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    display: none;
+
+}
+
+/* Styles pour les labels */
+#duelForm label {
+    display: block; /* Place chaque label sur une nouvelle ligne */
+    margin-bottom: 10px; /* Espacement entre les labels */
+    font-weight: bold; /* Texte en gras pour les labels */
+}
+
+/* Styles pour les champs de texte */
+#duelForm input[type="text"],
+#duelForm textarea {
+    width: 95%; /* Remplit la largeur du formulaire */
+    padding: 10px; /* Espace intérieur des champs de texte */
+    margin-bottom: 15px; /* Espacement entre les champs de texte */
+    border: 1px solid #ccc; /* Bordure légère */
+    border-radius: 5px; /* Coins arrondis */
+}
+
+
+/* Style pour le bouton de soumission */
+#duelForm input[type="submit"] {
+    background-color: #007bff; /* Couleur de fond du bouton */
+    color: #fff; /* Couleur du texte du bouton */
+    padding: 10px 20px; /* Espace intérieur du bouton */
+    border: none; /* Supprime la bordure du bouton */
+    border-radius: 5px; /* Coins arrondis du bouton */
+    cursor: pointer; /* Curseur de type pointeur pour indiquer la possibilité de clic */
+    margin-top: 10px; /* Espacement supérieur pour centrer le bouton */
+}
+
+#duelForm input[type="submit"]:hover {
+    background-color: #0056b3; /* Couleur de fond au survol du bouton */
+}

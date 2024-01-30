@@ -1,0 +1,67 @@
+.tournamentTableElement 
+{
+    width: 120px; /* Largeur ajustée pour plus d'espace */
+    height: 35px; /* Hauteur ajustée pour un meilleur aspect */
+    border: 1px solid #5468FF;; /* Bordure plus fine et colorée */
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre plus profonde pour un effet 3D plus marqué */
+    border-radius: 8px; /* Bordures plus arrondies */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transition pour animation */
+    cursor: pointer; /* Change le curseur en pointeur pour indiquer la possibilité de cliquer */
+    position: absolute;
+    display: none;
+}
+  
+.tournamentTableElement:hover 
+{
+    transform: translateY(-5px); /* Légère élévation au survol */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3); /* Ombre augmentée au survol */
+}
+
+#nextMatchButton {
+    position: absolute;
+    left: 600px;
+    top : 125px;
+    display: none;
+  }
+
+
+
+
+.horizontalline 
+  {
+      width: 2px; /* Largeur ajustée pour plus d'espace */
+      height: 33px; /* Hauteur ajustée pour un meilleur aspect */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #5468FF;;/* Gradient de fond subtil */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre plus profonde pour un effet 3D plus marqué */
+      border-radius: 8px; /* Bordures plus arrondies */
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transition pour animation */
+      cursor: pointer; /* Change le curseur en pointeur pour indiquer la possibilité de cliquer */
+      position: absolute;
+      display: none;
+  }
+
+
+  .verticalline 
+  {
+      width: 151px; /* Largeur ajustée pour plus d'espace */
+      height: 2px; /* Hauteur ajustée pour un meilleur aspect */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #5468FF;;/* Gradient de fond subtil */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Ombre plus profonde pour un effet 3D plus marqué */
+      border-radius: 8px; /* Bordures plus arrondies */
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transition pour animation */
+      cursor: pointer; /* Change le curseur en pointeur pour indiquer la possibilité de cliquer */
+      position: absolute;
+      display: none;
+  }
+
+  /*****************************/
+
+

@@ -1,0 +1,43 @@
+body {
+    background-image: url('../images/background.png');
+    background-size: cover; /* Pour que l'image couvre tout l'arrière-plan */
+    background-repeat: no-repeat; /* Empêche la répétition de l'image */
+    background-attachment: fixed; /* Cette ligne peut être ajoutée pour fixer l'image en arrière-plan lorsque la page est scrollée */
+}
+
+
+#gameBoard{
+    position: absolute;
+    top: 300px;
+    left: 400px; /* Centrage horizontal du formulaire */
+    padding: 10px; /* Espace intérieur du formulaire */
+    background-color: #f0f0f0; /* Couleur de fond */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    display: none;
+}
+    
+#scoreGame{
+    position: absolute;
+    top: 235px;
+    left: 500px; /* Centrage horizontal du formulaire */
+    padding: 5px; /* Espace intérieur du formulaire */
+    background-color: #f0f0f0; /* Couleur de fond */
+    border-radius: 10px; /* Coins arrondis */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
+    display: none;
+}
+
+#gameContainer
+{
+    background-attachment: fixed; /* Cette ligne peut être ajoutée pour fixer l'image en arrière-plan lorsque la page est scrollée */
+    width: 800px; /* Largeur du rectangle */
+    height: 650px; /* Hauteur du rectangle */
+    background-color: #f0f0f0; /* Couleur de fond du rectangle */
+    position: absolute; /* Positionnement absolu */
+    top: 80px;/* Centrer le rectangle verticalement */
+    left: 300px; /* Centrer le rectangle horizontalement */
+    z-index: -1; /* S'assurer que le rectangle reste en arrière-plan */
+    border: 10px solid #5468FF; /* Contour bleu foncé et épais */
+    border-radius: 10px;
+  }
