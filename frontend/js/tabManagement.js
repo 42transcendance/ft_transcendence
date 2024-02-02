@@ -1,11 +1,7 @@
 const friendsBtn = document.getElementById('button1');
 const channelsBtn = document.getElementById('button2');
-const historicBtn = document.getElementById('button3');
-const friendslistBtn = document.getElementById('button4');
 const friendsContainer = document.getElementById('friendsContainer');
 const channelsContainer = document.getElementById('channelsContainer');
-const HistoricContainer = document.getElementById('historicContainer');
-const friendslistContainer = document.getElementById('friendslistContainer');
 
 function showFriends() {
     friendsContainer.style.display = 'block';
@@ -21,24 +17,8 @@ function showChannels() {
     friendsBtn.classList.remove('active');
 }
 
-function showHistoric() {
-    friendslistContainer.style.display = 'none';
-    historicContainer.style.display = 'block';
-    historicBtn.classList.add('active');
-    friendslistBtn.classList.remove('active');
-}
-
-function showFriendsList() {
-    friendslistContainer.style.display = 'block';
-    historicContainer.style.display = 'none';
-    friendslistBtn.classList.add('active');
-    historicBtn.classList.remove('active');
-}
-
 friendsBtn.addEventListener('click', showFriends);
 channelsBtn.addEventListener('click', showChannels);
-historicBtn.addEventListener('click', showHistoric);
-friendslistBtn.addEventListener('click', showFriendsList);
 
 // Initialize with Friends button active
 showFriends();
@@ -90,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // containers visibility management
 // Function to handle the visibility and animation of containers
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
+    
     if (isVisible) {
         if (container.classList.contains(slideOutClass)) {
             container.classList.remove(slideOutClass);
@@ -112,6 +93,7 @@ function setContainerVisibility(container, isVisible, slideOutClass, slideInClas
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+
     // Define icons and tabs
     var chatIcon = document.querySelector('.chat');
     var settingsIcon = document.querySelector('.settings');
@@ -206,3 +188,19 @@ document.addEventListener('DOMContentLoaded', function() {
 function toggleSetting(element) {
     element.classList.toggle("on");
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

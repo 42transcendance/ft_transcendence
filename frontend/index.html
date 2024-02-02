@@ -329,13 +329,13 @@
                     <div class="profile-tab">
                         <!-- User Profile Heading -->
                         <div class="user-profile-heading">
-                            <img src="assets/pfp.png" alt="User" class="user-pfp">
+                            <img id="userPfp" src="assets/pfp.png" alt="User" class="user-pfp">
                             <div class="user-details">
-                                <div class="username">Username</div>
+                                <div id="username" class="username">Username</div>
                                 <div class="additional-info">
-                                    <span>Joined: xx/xx/xxxx</span>
-                                    <span>Ranking: #1</span>
-                                    <span>Matches Played: 99</span>
+                                    <span id="joinedDate">Joined: xx/xx/xxxx</span>
+                                    <span id="ranking">Ranking: #1</span>
+                                    <span id="matchesPlayed">Matches Played: 99</span>
                                 </div>
                             </div>
                         </div>
@@ -352,17 +352,7 @@
                                         <div class="game-date">Win</div>
                                         <div class="game-score">Score: 3-1</div>
                                     </div>
-                                </div>   
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 1-3</div>
-                                    </div>
-                                </div>
+                                </div>  
                                 
                             </div>
                         
@@ -389,120 +379,41 @@
                 </div>
             </div>
             <!-- THIRD TAB -->
+            <!-- THIRD TAB -->
             <div class="col-2 col-lg-3 third-tab">
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
-                        <span class="career-text">Career</span>
+                        <span class="career-text">Career's</span>
                     </div>
-                    <div class="button-container">
-                        <div class="FriendsChannels">
-                            <button class="social-button active" id="button4">LIST FRIENDS</button>
-                            <button class="social-button" id="button3">HISTORIC</button>
-                        </div>
-                        <div id="friendslistContainer" class="content-container">
-                            <div id="friendsListContent" class="friends-list-content">
-                                <!--EXAMPLE (needs to be removed)-->
-                                <div class="friend-item">
-                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>
-
-
-                                <div class="friend-item">
-                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>     
-                                
-                                <div class="friend-item">
-                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>
-
-
-                                <div class="friend-item">
-                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div> 
+                    <!-- Friends List Content -->
+                    <div id="friendsListContent" class="friends-list-content">
+                        <!-- Friend Item Example (to be dynamically generated/updated) -->
+                        <div class="friend-item">
+                            <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
                             </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <div id="historicContainer" class="content-container" style="display: none;">
-                            <!-- Content for Channels -->
-                            <div id="HistoricTabContent" class="Historic-tab-content">
-                                <!--EXAMPLE (needs to be removed)-->
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 3-1</div>
-                                    </div>
-                                </div>   
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 1-3</div>
-                                    </div>
-                                </div>
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 6-7</div>
-                                    </div>
-                                </div>
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 6-8</div>
-                                    </div>
-                                </div>
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 9-1</div>
-                                    </div>
-                                </div>
+                        <div class="friend-item">
+                            <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
                             </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <!-- Content for Friends -->
+                        <div class="friend-item">
+                            <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
+                            </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
+                        </div>
+                        <!-- Additional friend items will be similar -->
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -513,5 +424,6 @@
     <script src="js/modalManagement.js"></script>
     <script src="js/tabManagement.js"></script>
     <script src="js/smallButtons.js"></script>
+    <script src="js/ajaxCalls.js"></script>
 </body>
 </html>
