@@ -68,6 +68,28 @@
     color: #007bff;
 }
 
+.friends-list-content {
+    max-height: 65vh;
+    overflow-y: auto;
+    flex: 1; 
+    min-width: 100px; 
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 15px 10px;
+}
+
+.friends-list-content .friend-item:hover {
+    color: #007bff; 
+    border: 3px solid rgba(102, 178, 255, 0.7);
+}
+
+.icon-friend-profile {
+    font-size: 20px;
+    margin-left: auto; 
+    cursor: pointer;
+    padding: 0 5px; 
+}
 
 /* cont animation  */
 
