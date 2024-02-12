@@ -66,6 +66,7 @@
     animation: color_anim 1s infinite 0.4s;
   }
   
+  
   @keyframes color_anim {
     0% {
       fill: white;
@@ -79,4 +80,5 @@
       fill: white;
     }
   }
+  
 

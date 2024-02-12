@@ -46,7 +46,7 @@ tournamentForm.addEventListener("submit", function(event) {
 
     tournamentData.semiFinal = [player1,player2,player3,player4];
  
-    tournamentTable.displayTournamentTable(440,300, tournamentData);
+    tournamentTable.displayTournamentTable(tournamentData);
 
     // Réinitialise le formulaire
     this.reset();

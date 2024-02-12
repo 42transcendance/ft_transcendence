@@ -80,7 +80,7 @@ DATABASES = {
         'NAME': 'ft_tr',
         'USER': 'ft_tr',
         'PASSWORD': 'passe123',
-       # 'HOST': '',
+        'HOST': 'localhost',
        # 'PORT': '5432',
 }
 }

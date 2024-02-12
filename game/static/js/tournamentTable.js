@@ -1,65 +1,75 @@
 
-export function tournamentTableElement(message, top, left) {
+export function tournamentTableElement(container, message, top, left) {
   var el = document.createElement("div");
   el.className = "tournamentTableElement";
   el.style.display = "flex";
   el.innerHTML = message;
-  el.style.top = top + "px";
   el.style.left = left + "px";
-  document.body.appendChild(el);
+  el.style.top = top + "px";
+  container.appendChild(el);
 }
 
-
-
-export function drawline(type, top, left) {
+export function drawline(container, type, top, left) {
   var line = document.createElement("div");
   line.className = type;
   line.style.display = "flex";
   line.style.top = top + "px";
   line.style.left = left + "px";
-  document.body.appendChild(line);
+  container.appendChild(line);
 }
 
+export function displayTournamentTable(tournamentData) {
+  const gameContainer = document.getElementById('gameContainer');
+  console.log(tournamentData.semiFinal[0])
+  // Create a container div for the bracket
+  var bracketContainer = document.getElementById("bracketContainer");
+  bracketContainer.id = "bracketContainer"; // You can adjust the ID as needed
+  bracketContainer.style.position = "absolute"; // or "relative", depending on your layout
+  bracketContainer.style.left = "28%";
+  bracketContainer.style.top = "35%";
 
-export function displayTournamentTable(x, y, tournamentData)
-{
-
-  for (let i = 0; i<= 3; i+=1){
-    tournamentTableElement(tournamentData.semiFinal[i], y, x + 150 * i);
-    drawline("horizontalline", y + 37 , x + 150 * i + 60);
-    if(i!= 3){
-      drawline("verticalline", y + 68 , x + 150 * i + 60);
+  // Use bracketContainer as the parent for tournamentTableElement and drawline calls
+  // Adjust the x and y coordinates accordingly based on the bracketContainer's position
+  for (let i = 0; i <= 3; i += 1) {
+    console.log(tournamentData.semiFinal[i])
+    tournamentTableElement(bracketContainer, tournamentData.semiFinal[i],0, 150 * i);
+    drawline(bracketContainer, "horizontalline", 37, 150 * i + 60);
+    if (i !== 3 && i !== 1) {
+      drawline(bracketContainer, "verticalline", 68, 150 * i + 60);
     }
   }
+
   //semi  final
-  drawline("horizontalline", y + 68 , x + 135);
-  drawline("horizontalline", y + 68 , x + 435);
+  drawline(bracketContainer, "horizontalline", 68, 135);
+  drawline(bracketContainer, "horizontalline", 68, 435);
 
-
-  if(tournamentData.final[0] !== undefined){
-    tournamentTableElement(tournamentData.final[0], y + 100, x + 75);}
-  else{
-    tournamentTableElement("à définir", y + 100, x + 75);}
+  if (tournamentData.final[0] !== undefined) {
+    tournamentTableElement(bracketContainer, tournamentData.final[0], 100, 75);
+  } else {
+    tournamentTableElement(bracketContainer, "à définir", 100, 75);
+  }
 
   if(tournamentData.final[1] !== undefined){
-    tournamentTableElement(tournamentData.final[1], y + 100, x +  375);}
+    tournamentTableElement(bracketContainer, tournamentData.final[1], 100,  375);}
   else{
-    tournamentTableElement("à définir", y + 100, x +  375);}
+    tournamentTableElement(bracketContainer,"à définir",  100,  375);}
 
-  drawline("horizontalline", y + 137 , x + 135);
-  drawline("horizontalline", y + 137, x + 435);
+  drawline(bracketContainer,"horizontalline",  137 ,  135);
+  drawline(bracketContainer,"horizontalline", 137,  435);
 
-  drawline("verticalline", y + 168 ,x + 135);
-  drawline("verticalline", y + 168 ,  x + 285);
+  drawline(bracketContainer,"verticalline",  168 , 135);
+  drawline(bracketContainer,"verticalline", 168 ,  285);
   //final
-  drawline("horizontalline", y + 168 ,  x + 285);
-  if(tournamentData.winner[0] !== undefined){
-    tournamentTableElement(tournamentData.winner[0], y + 200, x + 225 );}
-  else{
-    tournamentTableElement("à définir", y + 200, x + 225 );
-    var nextMatchButton = document.getElementById('nextMatchButton');
-    nextMatchButton.style.top =  y + 300  + "px";
-    nextMatchButton.style.left = x + 160  +  "px";
-    nextMatchButton.style.display = "flex";}
-}
+  drawline(bracketContainer,"horizontalline",  168 ,  285);
 
+  if (tournamentData.winner[0] !== undefined) {
+    tournamentTableElement(bracketContainer, tournamentData.winner[0], 200, 225);
+  } else {
+    tournamentTableElement(bracketContainer,"à définir",  200, 225 );
+    var nextMatchButton = document.getElementById('nextMatchButton');
+    nextMatchButton.style.position = "absolute";
+    nextMatchButton.style.display = "flex";
+    nextMatchButton.style.marginTop = "40%";
+
+  }
+}

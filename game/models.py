@@ -2,8 +2,6 @@ from django.db import models
 
 # Create your models here.
 class Game(models.Model):
-
-
     player_1 = models.CharField(max_length = 255)
     player_2 = models.CharField(max_length = 255)
     mode = models.CharField(max_length=1)
@@ -14,7 +12,6 @@ class Game(models.Model):
 
 # Create your models here.
 class tournament(models.Model):
-
     name = models.CharField(max_length = 255)
     semifinal_1 = models.CharField(max_length = 255)
     semifinal_2 = models.CharField(max_length = 255)

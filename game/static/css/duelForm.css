@@ -1,21 +1,19 @@
 #duelButton {
-    width: 270px; /* Spécifiez la largeur du bouton */
-    height: 60px; /* Spécifiez la hauteur du bouton */
-    position: absolute;
-    left: 350px;
-    top : 125px;
+    margin-top: 2%;
+    width: auto; /* Spécifiez la largeur du bouton */
+    height:30%; /* Spécifiez la hauteur du bouton */
   }
-
 
 /* Styles pour le formulaire */
 #duelForm {
-    max-width: 400px; /* Largeur maximale du formulaire */
-    margin: 250px 500px; /* Centrage horizontal du formulaire */
+    align-self: center;
+    width: 50%; /* Largeur maximale du formulaire */
     padding: 20px; /* Espace intérieur du formulaire */
     background-color: #f0f0f0; /* Couleur de fond */
     border-radius: 10px; /* Coins arrondis */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Ombre légère */
     display: none;
+    margin-bottom: 5%;
 
 }
 

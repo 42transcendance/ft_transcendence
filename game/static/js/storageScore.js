@@ -36,7 +36,7 @@ export function storageScoreTournament(pseudo1, pseudo2, winner){
         tournament.tournamentData.winner[0] = pseudoWinner;
     }
 
-    tournamentTable.displayTournamentTable(440,300, tournament.tournamentData);
+    tournamentTable.displayTournamentTable(tournament.tournamentData);
 
     //Ajax
 
