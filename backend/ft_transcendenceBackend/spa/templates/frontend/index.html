@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong Game</title>
-    <link href="https://cdn.sdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{% static 'css/3container-styles.css' %}">
 </head>
 <body>
-    {% if user.is_authenticated %}
     <!-- Video Background -->
     <video autoplay muted loop id="myVideo">
         <source src="{% static 'assets/bg.mp4' %}" type="video/mp4">
@@ -287,7 +286,6 @@
                                 </div>
                             </div>
                             <div class="settings-actions">
-                                <a href="{% url 'logout' %}">
                                 <button class="settings-button logout-button">Logout</button>
                             </a>
                                 <button class="settings-button delete-account-button">Delete Account</button>
@@ -515,10 +513,5 @@
     <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/tabManagement.js' %}"></script>
     <script src="{% static 'js/smallButtons.js' %}"></script>
-    {% else %}
-        <h1>Please login to access the App page</h1>
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'signup' %}">Signup</a>
-    {% endif %}
 </body>
 </html>
