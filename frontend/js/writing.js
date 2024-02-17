@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     messageInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
+            console.log("pressed");
             event.preventDefault();
             sendMessageButton.click();
         }
@@ -54,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-web socket version
+// web socket version
 
 document.addEventListener('DOMContentLoaded', function() {
     var sendMessageButton = document.querySelector('.send-button');
