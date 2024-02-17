@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/1container-styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/2container-styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/3container-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/gamecontainer.css' %}">
 </head>
 <body>
     <!-- Video Background -->
@@ -385,7 +386,49 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
+                    <div class="game-container">
+                        <div id="button-container">
+                            <button>Duel</button>
+                            <button>Tournament</button>
+                        </div>
+                        <div id="principal-container">
+                            <div id="duel-form" class="form-container">
+                                <form id="duel-game-form">
+                                    <div id="duel-input-container">
+                                        <label for="player1">Player 1:</label>
+                                        <input type="text" id="player1" name="player1" required>
+                            
+                                        <label for="player2">Player 2:</label>
+                                        <input type="text" id="player2" name="player2" required>
+                                        <button type="button">Start Game</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="tournament-form" class="form-container">
+                                <form id="tournament-game-form">
+                                    <div id="tournament-input-container" class="grid-container">
+                                        <div class="grid-item">
+                                            <label for="player1">Player 1:</label>
+                                            <input type="text" class="player-input" name="player1" required>
+                                        </div>
+                                        
+                                        <div class="grid-item">
+                                            <label for="player2">Player 2:</label>
+                                            <input type="text" class="player-input" name="player2" required>
+                                        </div>
+                                        <div class="grid-item">
+                                            <label for="player3">Player 3:</label>
+                                            <input type="text" class="player-input" name="player3" required>
+                                        </div>
+                                    </div>
+                                    <button type="button" onclick="startGame()">Start Game</button>
+                                </form>
+                            </div>
+                            
+                        </div>
+                        <div id="bottom-container"></div>
+                    </div>
                 </div>
             </div>
             <!-- THIRD TAB -->
@@ -513,5 +556,6 @@
     <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/tabManagement.js' %}"></script>
     <script src="{% static 'js/smallButtons.js' %}"></script>
+    <script src="{% static 'js/gameForm.js' %}"></script>
 </body>
 </html>
