@@ -1,183 +1,263 @@
-//board 
-let board;
-let boardWidth = 500;
-let boardHeight = 500;
-let context;
+// const boardHeight = 600;
+// const boardWidth = 925;
 
-//player
-let playerWidth = 10;
-let playerHeight = 50;
-let playerVelocityY = 0;
+const DIRECTION = {
 
-let player1 = {
-    x : 10,
-    y : boardHeight/2,
-    width : playerWidth,
-    height : playerHeight,
-    velocityY : playerVelocityY
-}
+	IDLE: 0,
+	UP: 1,
+	DOWN: 2,
+	LEFT: 3,
+	RIGHT: 4,
+};
 
-let player2= {
-    x : boardWidth - playerWidth - 10,
-    y : boardHeight/2,
-    width : playerWidth,
-    height : playerHeight,
-    velocityY : playerVelocityY
-}
+// The paddle object (The two lines that move up and down)
+let Paddle = {
 
-//ball
-let ballWidth = 10;
-let ballHeight = 10;
-let ball = {
-    x : boardWidth / 2,
-    y : boardHeight / 2,
-    width : ballWidth,
-    height : ballHeight,
-    velocityX : 1,
-    velocityY : 2
-}
+	new: function (side, name) {
 
+		return {
+			name: name,
+			width: 10,
+			height: 80,
+			x: side === 'left' ? 20 : this.canvas.width - 30,
+			y: (this.canvas.height / 2) - 35,
+			score: 0,
+			move: DIRECTION.IDLE,
+			speed: 4,
+		};
+	},
+};
 
-//
-let player1Score = 0;
-let player2Score = 0;
+var Ball = {
 
+	new: function (incrementedSpeed) {
 
-window.onload = function()
-{
-    board = document.getElementById("board");
-    board.height = boardHeight;
-    board.width = boardWidth;
-    context = board.getContext("2d"); //used for drawing on the board
+		return {
+			radius: 10,
+			x: (this.canvas.width / 2),
+			y: (this.canvas.height / 2),
+			direction: -1,
+			additionalSpeed: incrementedSpeed || 4,
+		};
+	},
+};
 
-    //draw initial player1
-    context.fillStyle = "#FF33C1";
-    context.fillRect(player1.x, player1.y, player1.width, player1.height);
+class Game {
 
+	constructor(boardWidth, boardHeight, playerName, opponentName) {
 
-    requestAnimationFrame(update)
-    document.addEventListener("keyup" , movePlayer );
-}
+		this.canvas = document.getElementById('gameCanvas');
+		this.context = this.canvas.getContext('2d');
 
-function update()
-{
-    requestAnimationFrame(update);
-    context.clearRect(0,0,board.width, board.height);
+		this.canvas.width = boardWidth;
+		this.canvas.height = boardHeight;
 
-    //draw player1
-    context.fillStyle = "#FF33C1";
-    if(!outOfBounds(player1.y + player1.velocityY))
-    {
-        player1.y += player1.velocityY;
-    }
-    context.fillRect(player1.x, player1.y, player1.width, player1.height);
+		this.canvas.style.width = (this.canvas.width) + 'px';
+		this.canvas.style.height = (this.canvas.height) + 'px';
+		this.color = '#1f2938';
 
-    //draw player2
-    if(!outOfBounds(player2.y + player2.velocityY))
-    {
-        player2.y += player2.velocityY;
-    }
-    context.fillRect(player2.x, player2.y, player2.width, player2.height);
+		this.player = Paddle.new.call(this, 'left', playerName);
+		this.opponent = Paddle.new.call(this, 'right', opponentName);
+		this.ball = Ball.new.call(this);
 
-    //draw ball
-    context.fillStyle = "#92FF46";
-    ball.x += ball.velocityX;
-    ball.y += ball.velocityY;
-    context.fillRect(ball.x, ball.y, ballWidth, ballHeight);
+		this.running = this.over = false;
+	}
 
-    //if ball touches top or bottom of convas
-    if(ball.y <=0 || (ball.y + ball.height >= boardHeight))
-    {
-        ball.velocityY *= -1; // reverse direction
-    }
+	start () {
+		this.ball.direction = Math.random() * Math.PI * 2;
+		this.startScreen();
+		this.listen();
+		this.endScreen();
+	}
 
-    //bounce the ball back
-    if(detectCollision(ball,player1))
-    {
-        if(ball.x <= player1.x + player1.width)
-        {
-            ball.velocityX *= -1;
-        }
-    }
-    else if(detectCollision(ball , player2))
-    {
-        if(ball.x + ballWidth >= player2.x)
-        {
-            ball.velocityX *= -1;
-        }
-    }
+	drawBoard () {
 
+		this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
+		this.context.fillStyle = this.color;
+		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-    //game over 
-    if(ball.x < 0)
-    {
-        player2Score += 1;
-        resetGame(1);
-    }
-    else if(ball.x + ballWidth > boardWidth)
-    {
-        player1Score +=1;
-        resetGame(-1);
-    }
+		//	Draw the dotted line in the middle of the board
+		this.context.beginPath();
+		this.context.setLineDash([7, 15]);
+		this.context.moveTo((this.canvas.width / 2), 0);
+		this.context.lineTo((this.canvas.width / 2), this.canvas.height);
+		this.context.lineWidth = 4;
+		this.context.strokeStyle = 'grey';
+		this.context.stroke();
 
-    // draw score 
-    context.font = "45px sans-serif";
-    context.fillText(player1Score, boardWidth/5, 45);
-    context.fillText(player2Score, boardWidth * 4/5 - 45, 45);
+		// Draw Score
+		this.context.font = "300px Arial";
+		this.context.strokeText(this.player.score, 150, (this.canvas.height / 2) + 110);
+		this.context.strokeText(this.opponent.score, 600, (this.canvas.height / 2) + 110);
 
-    // dotted line 
-    for (let i = 10; i < board.height; i += 25)
-    {
-        context.fillRect(board.width/2 - 10, i, 5, 5);
-    }
-}
+		//Draw Names
+		this.context.fillStyle = '#002f7a';
+		this.context.font = "100px Arial";
+		this.context.fillText(this.player.name, 30, 100);
+		this.context.fillText(this.opponent.name, this.canvas.width / 2 + 30, this.canvas.height - 30);
 
+		// Draw the ball
+		this.context.fillStyle = 'white';
+		this.context.setLineDash([]);
+		this.context.beginPath();
+		this.context.arc(this.ball.x, this.ball.y, this.ball.radius, 0, 2 * Math.PI);
+		this.context.fill();
 
-function outOfBounds(yPosition)
-{
-    return(yPosition < 0 || yPosition + playerHeight > boardHeight);
-}
+		// Draw the paddles
+		this.context.fillStyle = '#ffffff';
+		this.context.fillRect( this.player.x, this.player.y, this.player.width, this.player.height );
+		this.context.fillRect( this.opponent.x, this.opponent.y, this.opponent.width, this.opponent.height );
 
-function movePlayer(e)
-{
-    //player1
-    if(e.code == "KeyW")
-    {
-        player1.velocityY = -3;
-    }
-    else if (e.code == "KeyS")
-    {
-        player1.velocityY = 3;
-    }
+	}
 
+	update() {
+		if (this.over === false) {
 
-    //player2
-    if(e.code == "ArrowUp")
-    {
-        player2.velocityY = -3;
-    }
-    else if (e.code == "ArrowDown")
-    {
-        player2.velocityY = 3;
-    }
-}
+			// These handle the ball's movements and collisions
+			if (this.ball.direction != -1)
+			{
+				this.ball.x += Math.cos(this.ball.direction) * this.ball.additionalSpeed;
+				this.ball.y += Math.sin(this.ball.direction) * this.ball.additionalSpeed;
 
-function detectCollision(a, b)
-{
-    return a.x < b.x + b.width && 
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y;
-}
+				// Handles if the balls is scored on the player's goal
+				if (this.ball.y >= this.player.y && this.ball.y <= this.player.y + this.player.height && this.ball.x - this.ball.radius <= this.player.x + this.player.width)
+				{
+					this.ball.direction = Math.atan2(Math.sin(this.ball.direction), Math.cos(this.ball.direction) * -1);
+				}
+				else if (this.ball.x <= this.player.x + this.player.width)
+				{
+					this.ball.x = (this.canvas.width / 2);
+					this.ball.y = (this.canvas.height / 2);
+					this.opponent.score++;
+				}
+				
+				// Handles if the balls is scored on the opponent's goal
+				if ((this.ball.y >= this.opponent.y && this.ball.y <= this.opponent.y + this.opponent.height && this.ball.x + this.ball.radius >= this.opponent.x))
+				{
+					this.ball.direction = Math.atan2(Math.sin(this.ball.direction), Math.cos(this.ball.direction) * -1);
+				}
+				else if (this.ball.x >= this.opponent.x)
+				{
+					this.ball.x = (this.canvas.width / 2);
+					this.ball.y = (this.canvas.height / 2);
+					this.player.score++;
+				}
 
-function resetGame(direction)
-{
-    ball = {
-        x : boardWidth / 2,
-        y : boardHeight / 2,
-        width : ballWidth,
-        height : ballHeight,
-        velocityX : direction,
-        velocityY : 2
-    }
-}
+				// Top and Bottom walls collision
+				if ((this.ball.y + this.ball.radius) >= this.canvas.height)
+				{
+					this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
+				}
+				else if ((this.ball.y - this.ball.radius) <= 0)
+				{
+					this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
+				}
+			}
+			
+			// These handle the Player's paddle wall collisions
+			if (this.player.move === DIRECTION.UP) {
+				if ((this.player.y - this.player.speed) <= 0) this.player.y = 0;
+				else this.player.y -= this.player.speed;
+			}
+			else if (this.player.move === DIRECTION.DOWN) {
+				if (((this.player.y + this.player.height) + this.player.speed) >= this.canvas.height) this.player.y = this.canvas.height - this.player.height;
+				else this.player.y += this.player.speed;
+			}
+			// These handle the Opponent's paddle wall collisions
+			if (this.opponent.moveY === DIRECTION.UP) {
+				if ((this.opponent.y - this.opponent.speed) <= 0) this.opponent.y = 0;
+				else this.opponent.y -= this.opponent.speed;
+			}
+			else if (this.opponent.moveY === DIRECTION.DOWN) {
+				if (((this.opponent.y + this.opponent.height) + this.opponent.speed) >= this.canvas.height) this.opponent.y = this.canvas.height - this.opponent.height;
+				else this.opponent.y += this.opponent.speed;
+			}
+		}
+	}
+
+	gameLoop() {
+		this.update();
+		this.drawBoard();
+		if (this.player.score >= 5 || this.opponent.score >= 5)
+		{
+			this.running = false;
+			this.over = true;
+		}
+		if (!this.over) window.requestAnimationFrame(this.gameLoop.bind(this));
+	}
+
+	listen() {
+		if (this.running === false) {
+			this.running = true;
+			window.requestAnimationFrame(this.gameLoop.bind(this))
+		}
+		// Those ensures that if you press 2 keys at the same time, the movement wont stop when you stop pressing one of them
+		let wKeyPressed = false;
+		let sKeyPressed = false;
+
+		let ArrowUpKeyPressed = false;
+		let ArrowDownKeyPressed = false;
+
+		// Creating events for movements on keydown
+		document.addEventListener('keydown', (key) => {		
+			//console.log(key.key);	
+			// Handle w key events
+			if (key.key === 'w') {
+				this.player.move = DIRECTION.UP;
+				wKeyPressed = true;
+			}
+			// Handle s key events
+			if (key.key === 's') {
+				this.player.move = DIRECTION.DOWN;
+				sKeyPressed = true;
+			}
+			
+			// Opponent's movements
+			if (key.key === 'ArrowUp') {
+				this.opponent.moveY = DIRECTION.UP;
+				ArrowUpKeyPressed = true;
+			}
+			if (key.key === 'ArrowDown') {
+				this.opponent.moveY = DIRECTION.DOWN;
+				ArrowDownKeyPressed = true;
+			}
+		});
+
+		// Stop the player from moving when there are no keys being pressed.
+		document.addEventListener('keyup', (key) => {
+			// Player key realease
+			if (key.key === 'w') {
+				wKeyPressed = false;
+				if (sKeyPressed === true) this.player.move = DIRECTION.DOWN;
+			}
+			if (key.key === 's') {
+				sKeyPressed = false;
+				if (wKeyPressed === true) this.player.move = DIRECTION.UP;
+			}
+			if (sKeyPressed === false && wKeyPressed === false) this.player.move = DIRECTION.IDLE;
+
+			//Opponent key releases
+			if (key.key === 'ArrowUp') {
+				ArrowUpKeyPressed = false;
+				if (ArrowDownKeyPressed === true) this.opponent.moveY = DIRECTION.DOWN;
+			}
+			if (key.key === 'ArrowDown') {
+				ArrowDownKeyPressed = false;
+				if (ArrowUpKeyPressed === true) this.opponent.moveY = DIRECTION.UP;
+			}
+			if (ArrowDownKeyPressed === false && ArrowUpKeyPressed === false) this.opponent.moveY = DIRECTION.IDLE;
+		});
+	}
+
+	startScreen() {
+		this.drawBoard();
+	}
+
+	endScreen() {
+		this.drawBoard();
+	}
+};
+
+Pong = new Game(925, 600, "asdasdasdasdaCaca", "Boudin");
+
+Pong.start();
