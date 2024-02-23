@@ -26,19 +26,19 @@
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <button class="nav-button play">
+                    <button class="nav-button play" data-button="play">
                         <i class="bi bi-controller nav-icons"></i>
                     </button>
-                    <button class="nav-button chat active">
+                    <button class="nav-button chat active" data-button="chat">
                         <i class="bi bi-chat-dots nav-icons"></i>
                     </button>
-                    <button class="nav-button friends">
+                    <button class="nav-button friends" data-button="profile">
                         <i class="bi bi-person nav-icons"></i>
                     </button>
-                    <button class="nav-button achievements">
+                    <button class="nav-button achievements" data-button="achievements">
                         <i class="bi bi-award nav-icons"></i>
                     </button>
-                    <button class="nav-button settings">
+                    <button class="nav-button settings" data-button="settings">
                         <i class="bi bi-gear nav-icons"></i>
                     </button>
                     <!-- Profile picture and separator -->
@@ -103,19 +103,39 @@
                                 <i class="bi bi-arrow-bar-right"></i> Outgoing Requests <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Outgoing Requests -->
-                            <div id="outgoingRequestsContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="outgoingRequestsTabContent" class="friends-tab-content">`
+                            </div>
                         
                             <button class="friend-tab-button" id="incomingRequestsTab">
                                 <i class="bi bi-arrow-bar-left"></i> Incoming Requests <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Incoming Requests -->
-                            <div id="incomingRequestsContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="incomingRequestsTabContent" class="friends-tab-content">
+
+                                <div class="friend-item">
+                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>IncomingRequest's Name</div>
+                                    </div>
+                                </div>
+
+                            </div>
                         
                             <button class="friend-tab-button" id="blockedTab">
                                 <i class="bi bi-slash-circle"></i> Blocked <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Blocked -->
-                            <div id="blockedContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="blockedTabContent" class="friends-tab-content">
+
+                                <div class="friend-item">
+                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Blocked's Name</div>
+                                    </div>
+                                    <i class="bi bi-x-circle icon-block"></i>
+                                </div>
+
+                            </div>
                         </div>
                         <!-- Channels Container -->
                         <div id="channelsContainer" class="content-container" style="display: none;">
@@ -389,21 +409,21 @@
                     <!-- Friends List Content -->
                     <div id="friendsListContent" class="friends-list-content">
                         <!-- Friend Item Example (to be dynamically generated/updated) -->
-                        <div class="friend-item">
+                        <div class="friend-item3">
                             <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
                                 <div class="friend-nickname">Friend's Name</div>
                             </div>
                             <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <div class="friend-item">
+                        <div class="friend-item3">
                             <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
                                 <div class="friend-nickname">Friend's Name</div>
                             </div>
                             <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <div class="friend-item">
+                        <div class="friend-item3">
                             <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
                                 <div class="friend-nickname">Friend's Name</div>

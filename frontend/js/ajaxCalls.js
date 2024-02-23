@@ -124,3 +124,248 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+
+//Settings tab pfp load
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchUserSettings();
+
+    function fetchUserSettings() {
+        fetch('/api/user/settings')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.pfpUrl) {
+                    updateProfilePicture(data.pfpUrl);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching user settings:', error);
+            });
+    }
+
+    function updateProfilePicture(pfpUrl) {
+        document.querySelector('.pfp-container .user-pfp').src = pfpUrl;
+    }
+});
+
+//achievements
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchAchievements();
+
+    function fetchAchievements() {
+        // Fetch achievements from the server
+        fetch('/api/user/achievements')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Assuming the achievements are returned as an array of objects
+                if(Array.isArray(data.achievements)) {
+                    updateAchievements(data.achievements);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching achievements:', error);
+            });
+    }
+
+    function updateAchievements(achievements) {
+        const achievementsContent = document.querySelector('.achievements-content');
+        // Clearing existin achievements to avoid duplicates
+        achievementsContent.innerHTML = '';
+
+        achievements.forEach(achievement => {
+            const achievementItem = document.createElement('div');
+            achievementItem.classList.add('achievement-item');
+
+            const logoImg = document.createElement('img');
+            logoImg.src = achievement.logoUrl;
+            logoImg.alt = "Logo";
+            logoImg.classList.add('achievement-logo');
+
+            const infoDiv = document.createElement('div');
+            infoDiv.classList.add('achievement-info');
+
+            const nameDiv = document.createElement('div');
+            nameDiv.classList.add('achievement-name');
+            nameDiv.textContent = achievement.name; // Assuming each achievement object has a name
+
+            const descriptionDiv = document.createElement('div');
+            descriptionDiv.classList.add('achievement-description');
+            descriptionDiv.textContent = achievement.description; // Assuming each achievement object has a description
+
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(descriptionDiv);
+
+            achievementItem.appendChild(logoImg);
+            achievementItem.appendChild(infoDiv);
+
+            achievementsContent.appendChild(achievementItem);
+        });
+    }
+});
+
+
+//first tab - friends section
+document.addEventListener('DOMContentLoaded', function() {
+    fetchAllData();
+
+    function fetchAllData() {
+        fetchFriends();
+        fetchOutgoingRequests();
+        fetchIncomingRequests();
+        fetchBlockedContacts();
+    }
+
+    function fetchFriends() {
+        fetch('/api/friends')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    displayFriends('friendsTabContent', data);
+                } else {
+                    displayEmpty('friendsTabContent');
+                }
+            })
+            .catch(error => console.error('Error fetching friends:', error));
+    }
+
+    function fetchOutgoingRequests() {
+        fetch('/api/friend-requests/outgoing')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    displayRequests('outgoingRequestsTabContent', data);
+                } else {
+                    displayEmpty('outgoingRequestsTabContent');
+                }
+            })
+            .catch(error => console.error('Error fetching outgoing requests:', error));
+    }
+
+    function fetchIncomingRequests() {
+        fetch('/api/friend-requests/incoming')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    displayRequests('incomingRequestsTabContent', data);
+                } else {
+                    displayEmpty('incomingRequestsTabContent');
+                }
+            })
+            .catch(error => console.error('Error fetching incoming requests:', error));
+    }
+
+    function fetchBlockedContacts() {
+        fetch('/api/friends/blocked')
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    displayBlocked('blockedTabContent', data);
+                } else {
+                    displayEmpty('blockedTabContent');
+                }
+            })
+            .catch(error => console.error('Error fetching blocked contacts:', error));
+    }
+
+    function displayFriends(containerId, friends) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        friends.forEach(friend => {
+            container.innerHTML += `
+                <div class="friend-item">
+                    <img src="${friend.image}" alt="${friend.name}" class="friend-image">
+                    <div class="friend-info">
+                        <div>${friend.name}</div>
+                    </div>
+                    <i class="bi bi-chat icon-chat"></i>
+                    <i class="bi bi-controller icon-controller"></i>
+                    <i class="bi bi-x-circle icon-block"></i>
+                </div>
+            `;
+        });
+    }
+
+    function displayRequests(containerId, requests) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        requests.forEach(request => {
+            container.innerHTML += `
+                <div class="friend-item">
+                    <img src="${request.image}" alt="${request.name}" class="friend-image">
+                    <div class="friend-info">
+                        <div>${request.name}</div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function displayBlocked(containerId, blocked) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = ''; 
+        blocked.forEach(block => {
+            container.innerHTML += `
+                <div class="friend-item">
+                    <img src="${block.image}" alt="${block.name}" class="friend-image">
+                    <div class="friend-info">
+                        <div>${block.name}</div>
+                    </div>
+                    <i class="bi bi-x-circle icon-block"></i>
+                </div>
+            `;
+        });
+    }
+
+    function displayEmpty(containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `<div style='color: red;'>Empty</div>`;
+    }
+});
+
+//first tab - channels
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchChannels();
+
+    function fetchChannels() {
+        fetch('/api/channels') // Adjust
+            .then(response => response.json())
+            .then(data => displayChannels(data))
+            .catch(error => console.error('Error fetching channels:', error));
+    }
+
+    function displayChannels(channels) {
+        const container = document.getElementById('channelsTabContent');
+        container.innerHTML = '';
+        channels.forEach(channel => {
+            const channelElement = `
+                <div class="channel-item">
+                    <img src="${channel.image || 'assets/pfp.png'}" alt="${channel.name}" class="friend-image">
+                    <div class="friend-info">
+                        <div>${channel.name}</div>
+                    </div>
+                    <i class="bi bi-chat channels-icon"></i>
+                    <i class="bi bi-gear channels-icon"></i>
+                </div>
+            `;
+            container.innerHTML += channelElement;
+        });
+
+        if (channels.length === 0) {
+            container.innerHTML = '<div style="color: red;">No channels found</div>';
+        }
+    }
+});
