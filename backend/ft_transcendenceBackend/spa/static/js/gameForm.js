@@ -1,6 +1,63 @@
-function showForm() {
+function showDuelForm() {
     var duelForm = document.getElementById('duel-form');
     duelForm.style.visibility = 'visible';
+    removeWinningMessage() ;
+}
+
+function showTournamentForm() {
+    var tournamentForm = document.getElementById('tournament-form');
+    tournamentForm.style.visibility = 'visible';
+    removeWinningMessage() ;
+}
+
+function hideButtons(){
+    var duelButton = document.querySelectorAll('#button-container button')[0];
+    var tournamentButton = document.querySelectorAll('#button-container button')[1];
+    duelButton.style.visibility = 'hidden';
+    tournamentButton.style.visibility = 'hidden';
+}
+
+function showButtons(){
+    var duelButton = document.querySelectorAll('#button-container button')[0];
+    var tournamentButton = document.querySelectorAll('#button-container button')[1];
+    duelButton.style.visibility = 'visible';
+    tournamentButton.style.visibility = 'visible';
+}
+function hideCanvas() {
+    var pongGame = document.getElementById('gameCanvas');
+    pongGame.style.visibility = 'hidden';
+}
+
+function winningMsg(Pong) {
+    var message = document.createElement('div');
+    message.className = 'winning-message';
+    message.id = 'winning-message';
+    message.style = "position : absolute; top : 50%; margin-left : 35%;";
+
+    if (Pong.player.score > Pong.opponent.score){
+        var winnerName = Pong.player.name;
+        var loserName = Pong.opponent.name;
+        var winnerScore = Pong.player.score;
+        var loserScore = Pong.opponent.score;
+    } else {
+        var winnerName = Pong.opponent.name;
+        var loserName = Pong.player.name;
+        var winnerScore = Pong.opponent.score;
+        var loserScore = Pong.player.score;
+    }
+
+    message.textContent = winnerName + ' wins with a score of ' + winnerScore + '-' + loserScore + ' against ' + loserName + '.';
+    
+    var principalContainer = document.getElementById('principal-container');
+    principalContainer.appendChild(message);
+}
+
+function removeWinningMessage() {
+    var winningMessage = document.getElementById('winning-message');
+    if (winningMessage) {
+        var principalContainer = document.getElementById('principal-container');
+        principalContainer.removeChild(winningMessage);
+    }
 }
 
 function startDuelGame() {
@@ -9,14 +66,19 @@ function startDuelGame() {
 
     var player1Name = player1Input.value.trim();
     var player2Name = player2Input.value.trim();
+    player1Input.value = '';
+    player2Input.value = '';
+
 
     if (player1Name !== '' && player2Name !== '' && player1Name !== player2Name) {
         document.getElementById('duel-form').style.visibility = 'hidden';
 
-        Pong = new Game(919, 600, player1Name, player2Name);
+        Pong = new Game(920, 600, player1Name, player2Name);
+        hideButtons();
 
         var placeholderCanvas = document.getElementById('gameCanvas');
-        var gameContainer = document.getElementById('game-container');
+        placeholderCanvas.style.visibility = 'visible';
+        var gameContainer = document.getElementById('pong-container');
         gameContainer.replaceChild(Pong.canvas, placeholderCanvas);
 
         Pong.canvas.width = gameContainer.clientWidth;
@@ -30,7 +92,7 @@ function startDuelGame() {
 
 document.addEventListener('DOMContentLoaded', function () {
     var duelButton = document.querySelector('#button-container button');
-    duelButton.addEventListener('click', showForm);
+    duelButton.addEventListener('click', showDuelForm);
 
     var tournamentButton = document.querySelectorAll('#button-container button')[1];
     tournamentButton.addEventListener('click', showTournamentForm);
@@ -57,11 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return container;
     }
 });
-
-function showTournamentForm() {
-    var tournamentForm = document.getElementById('tournament-form');
-    tournamentForm.style.visibility = 'visible';
-}
 
 function addPlayerInput() {
     var tournamentInputContainer = document.getElementById('tournament-input-container');
