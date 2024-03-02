@@ -76,7 +76,7 @@
                             <!-- Content container for Friends -->
                             <div id="friendsTabContent" class="friends-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
-                                <div class="friend-item">
+                                <div class="friend-item"  data-id="uniqueUserId123">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Friend's Name</div>
@@ -87,7 +87,7 @@
                                 </div>
 
 
-                                <div class="friend-item">
+                                <div class="friend-item"  data-id="uniqueUserId124">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Friend's Name</div>
@@ -103,7 +103,15 @@
                                 <i class="bi bi-arrow-bar-right"></i> Outgoing Requests <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Outgoing Requests -->
-                            <div id="outgoingRequestsTabContent" class="friends-tab-content">`
+                            <div id="outgoingRequestsTabContent" class="friends-tab-content">
+
+                                <div class="friend-item">
+                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>IncomingRequest's</div>
+                                    </div>
+                                </div>
+
                             </div>
                         
                             <button class="friend-tab-button" id="incomingRequestsTab">
@@ -112,11 +120,13 @@
                             <!-- Content container for Incoming Requests -->
                             <div id="incomingRequestsTabContent" class="friends-tab-content">
 
-                                <div class="friend-item">
+                                <div class="friend-item"  data-id="testRequest1">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>IncomingRequest's Name</div>
+                                        <div>IncomingRequest's</div>
                                     </div>
+                                    <i class="bi bi-check-circle accept-request small-icons"></i>
+                                    <i class="bi bi-x-circle decline-request small-icons"></i>
                                 </div>
 
                             </div>
@@ -132,7 +142,7 @@
                                     <div class="friend-info">
                                         <div>Blocked's Name</div>
                                     </div>
-                                    <i class="bi bi-x-circle icon-block"></i>
+                                    <i class="bi bi-x-circle icon-unblock small-icons"></i>
                                 </div>
 
                             </div>
@@ -445,5 +455,6 @@
     <script src="js/tabManagement.js"></script>
     <script src="js/smallButtons.js"></script>
     <script src="js/ajaxCalls.js"></script>
+    <script src="js/ajaxCalls1Tab.js"></script>
 </body>
 </html>

@@ -190,7 +190,7 @@
     flex-grow: 1;
 }
 
-.icon-chat, .icon-controller, .icon-block {
+.small-icons {
     font-size: 15px;
     margin-left: auto; 
     cursor: pointer;
@@ -202,8 +202,12 @@
     color: #007bff;
 }
 
-.icon-block:hover {
+.bi-x-circle:hover {
     color: rgb(190, 44, 44);
+}
+
+.bi-check-circle:hover {
+    color: rgb(44, 190, 98);
 }
 
 .friend-image {
