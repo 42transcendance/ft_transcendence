@@ -192,6 +192,9 @@ class Game {
 		{
 			this.running = false;
 			this.over = true;
+			showButtons();
+			hideCanvas();
+			winningMsg(this);
 		}
 		if (!this.over) {
 			window.requestAnimationFrame(this.gameLoop.bind(this));

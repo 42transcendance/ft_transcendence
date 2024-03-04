@@ -1,12 +1,36 @@
 function showDuelForm() {
     var duelForm = document.getElementById('duel-form');
     duelForm.style.visibility = 'visible';
-    removeWinningMessage() ;
+    removeTournamentForm();
+    removeWinningMessage();
 }
 
 function showTournamentForm() {
+    removeTournamentForm();
+    createTournamentForm();
     var tournamentForm = document.getElementById('tournament-form');
+    var tournamentInputContainer = document.getElementById('tournament-input-container');
+
+    var addPlayerButtonContainer = createPlayerButtonContainer();
+    tournamentInputContainer.appendChild(addPlayerButtonContainer);
+
+    function createPlayerButtonContainer() {
+        var container = document.createElement('div');
+        container.className = 'grid-item';
+
+        var addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.className = 'add-player-button';
+        addButton.textContent = '+';
+        addButton.addEventListener('click', addPlayerInput);
+
+        container.appendChild(addButton);
+
+        return container;
+    }
     tournamentForm.style.visibility = 'visible';
+    var duelForm = document.getElementById('duel-form');
+    duelForm.style.visibility = 'hidden';
     removeWinningMessage() ;
 }
 
@@ -60,6 +84,14 @@ function removeWinningMessage() {
     }
 }
 
+function removeTournamentForm(){
+    var tournamentInputContainer = document.getElementById('tournament-game-form');
+    var tournamentForm = document.getElementById('tournament-form');
+    if (tournamentInputContainer){
+        tournamentForm.removeChild(tournamentInputContainer);
+    }
+}
+
 function startDuelGame() {
     var player1Input = document.getElementById('player1');
     var player2Input = document.getElementById('player2');
@@ -90,6 +122,13 @@ function startDuelGame() {
     }
 }
 
+function startTournament(){
+    var players = collectPlayerInputs();
+    if (players !== null){
+        players= shuffleArray(players);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     var duelButton = document.querySelector('#button-container button');
     duelButton.addEventListener('click', showDuelForm);
@@ -100,24 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var startGameButton = document.querySelector('#duel-form button');
     startGameButton.addEventListener('click', startDuelGame);
 
-    var tournamentInputContainer = document.getElementById('tournament-input-container');
-    var addPlayerButtonContainer = createPlayerButtonContainer();
-    tournamentInputContainer.appendChild(addPlayerButtonContainer);
-
-    function createPlayerButtonContainer() {
-        var container = document.createElement('div');
-        container.className = 'grid-item';
-
-        var addButton = document.createElement('button');
-        addButton.type = 'button';
-        addButton.className = 'add-player-button';
-        addButton.textContent = '+';
-        addButton.addEventListener('click', addPlayerInput);
-
-        container.appendChild(addButton);
-
-        return container;
-    }
 });
 
 function addPlayerInput() {
@@ -164,3 +185,82 @@ function createPlayerButtonContainer() {
 
     return container;
 }
+
+function createTournamentForm() {
+    // Create form element
+    var form = document.createElement("form");
+    form.id = "tournament-game-form";
+
+    // Create input container div
+    var inputContainer = document.createElement("div");
+    inputContainer.id = "tournament-input-container";
+    inputContainer.className = "grid-container";
+
+    // Create player input fields
+    for (var i = 1; i <= 3; i++) {
+        var gridItem = document.createElement("div");
+        gridItem.className = "grid-item";
+
+        var label = document.createElement("label");
+        label.setAttribute("for", "player" + i);
+        label.textContent = "Player " + i + ":";
+
+        var input = document.createElement("input");
+        input.type = "text";
+        input.className = "player-input";
+        input.name = "player" + i;
+        input.required = true;
+
+        gridItem.appendChild(label);
+        gridItem.appendChild(input);
+
+        inputContainer.appendChild(gridItem);
+    }
+
+    var startButton = document.createElement("button");
+    startButton.type = "button";
+    startButton.textContent = "Start Tournament";
+    startButton.style.left = "35%";
+    startButton.style.position = "relative";
+    startButton.addEventListener('click', startTournament);
+
+    form.appendChild(inputContainer);
+    form.appendChild(startButton);
+
+    document.getElementById("tournament-form").appendChild(form);
+}
+
+function collectPlayerInputs() {
+    var players = [];
+
+    var inputContainer = document.getElementById("tournament-input-container");
+    var gridItems = inputContainer.getElementsByClassName("grid-item");
+    var playerNames = new Set();
+
+    for (var i = 0; i < gridItems.length; i++) {
+        var inputField = gridItems[i].querySelector('input');
+        if (inputField) {
+            var playerName = inputField.value;
+
+            if (playerName.trim() === "") {
+                alert("Please enter a name for Player " + (i + 1));
+                return null;
+            }
+            if (playerNames.has(playerName)) {
+                alert("Player " + (i + 1) + " cannot have the same username as another player.");
+                return null;
+            }
+            playerNames.add(playerName);
+            players.push(playerName);
+        }
+    }
+    return players;
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }

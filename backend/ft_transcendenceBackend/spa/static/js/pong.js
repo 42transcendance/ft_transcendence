@@ -20,24 +20,24 @@ let Paddle = {
 			width: 10,
 			height: 80,
 			x: side === 'left' ? 20 : this.canvas.width - 30,
-			y: (this.canvas.height / 2) - 35,
+			y: (this.canvas.height / 2) - 40,
 			score: 0,
 			move: DIRECTION.IDLE,
-			speed: 4,
+			speed: 5,
 		};
 	},
 };
 
 var Ball = {
 
-	new: function (incrementedSpeed) {
+	new: function () {
 
 		return {
-			radius: 10,
+			radius: 8,
 			x: (this.canvas.width / 2),
 			y: (this.canvas.height / 2),
 			direction: -1,
-			additionalSpeed: incrementedSpeed || 4,
+			speed: 5,
 		};
 	},
 };
@@ -56,22 +56,23 @@ class Game {
 		this.canvas.style.height = (this.canvas.height) + 'px';
 		this.color = '#1f2938';
 
-		this.player = Paddle.new.call(this, 'left', playerName);
-		this.opponent = Paddle.new.call(this, 'right', opponentName);
+		this.player = Paddle.new.call(this, 'left', playerName || "Player 1");
+		this.opponent = Paddle.new.call(this, 'right', opponentName || "Player 2");
 		this.ball = Ball.new.call(this);
 
 		this.running = this.over = false;
+		this.scored = false;
 	}
 
-	start () {
-		this.ball.direction = Math.random() * Math.PI * 2;
-		this.startScreen();
+	startGame () {
+		// this.ball.direction = Math.random() * Math.PI * 2;
+		this.ball.direction = Math.PI;
 		this.listen();
 		this.endScreen();
 	}
 
 	drawBoard () {
-
+		console.log("Drawing");
 		this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
 		this.context.fillStyle = this.color;
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -114,47 +115,56 @@ class Game {
 		if (this.over === false) {
 
 			// These handle the ball's movements and collisions
-			if (this.ball.direction != -1)
-			{
-				this.ball.x += Math.cos(this.ball.direction) * this.ball.additionalSpeed;
-				this.ball.y += Math.sin(this.ball.direction) * this.ball.additionalSpeed;
+			if (this.running === true) {
+				if (this.ball.direction != -1)
+				{
+					this.ball.x += Math.cos(this.ball.direction) * this.ball.speed;
+					this.ball.y += Math.sin(this.ball.direction) * this.ball.speed;
 
-				// Handles if the balls is scored on the player's goal
-				if (this.ball.y >= this.player.y && this.ball.y <= this.player.y + this.player.height && this.ball.x - this.ball.radius <= this.player.x + this.player.width)
-				{
-					this.ball.direction = Math.atan2(Math.sin(this.ball.direction), Math.cos(this.ball.direction) * -1);
-				}
-				else if (this.ball.x <= this.player.x + this.player.width)
-				{
-					this.ball.x = (this.canvas.width / 2);
-					this.ball.y = (this.canvas.height / 2);
-					this.opponent.score++;
-				}
-				
-				// Handles if the balls is scored on the opponent's goal
-				if ((this.ball.y >= this.opponent.y && this.ball.y <= this.opponent.y + this.opponent.height && this.ball.x + this.ball.radius >= this.opponent.x))
-				{
-					this.ball.direction = Math.atan2(Math.sin(this.ball.direction), Math.cos(this.ball.direction) * -1);
-				}
-				else if (this.ball.x >= this.opponent.x)
-				{
-					this.ball.x = (this.canvas.width / 2);
-					this.ball.y = (this.canvas.height / 2);
-					this.player.score++;
-				}
+					// Handles player's's paddle collision
+					if (this.ball.y >= this.player.y && this.ball.y <= this.player.y + this.player.height && this.ball.x - this.ball.radius <= this.player.x + this.player.width) {
+						// Calculate relative position of the ball to the center of the paddle
+						let relativeIntersectY = (this.player.y + (this.player.height / 2)) - this.ball.y;
+						let normalizedRelativeIntersectY = relativeIntersectY / (this.player.height / 2);
+						let bounceAngle = normalizedRelativeIntersectY * (Math.PI / 3); // Max angle is 60 degrees
+						this.ball.direction = Math.PI * 2 - bounceAngle; // Reflect the ball's direction
+						if (this.ball.speed < 100) this.ball.speed += 0.2;
+					}
+					// Handles if the balls is scored on the player's goal
+					else if (this.ball.x <= this.player.x + this.player.width - 2)
+					{
+						this.ball.x = (this.canvas.width / 2);
+						this.ball.y = (this.canvas.height / 2);
+						this.opponent.score++;
+						this.ball.speed = 5;
+						this.handleScore();
+					}
+					// Handles opponent's's paddle collisionw
+					if ((this.ball.y >= this.opponent.y && this.ball.y <= this.opponent.y + this.opponent.height && this.ball.x + this.ball.radius >= this.opponent.x))
+					{
+						let relativeIntersectY = (this.opponent.y + (this.opponent.height / 2)) - this.ball.y; // =40
+						let normalizedRelativeIntersectY = relativeIntersectY / (this.opponent.height / 2); // =1
+						let bounceAngle = normalizedRelativeIntersectY * (Math.PI / 3); // Max angle is 60 degrees
+						this.ball.direction = Math.PI + bounceAngle; // Reflect the ball's direction
+						if (this.ball.speed < 100) this.ball.speed += 0.2;
+					}
+					// Handles if the balls is scored on the opponent's goal
+					else if (this.ball.x >= this.opponent.x - 2)
+					{
+						this.ball.x = (this.canvas.width / 2);
+						this.ball.y = (this.canvas.height / 2);
+						this.player.score++;
+						this.ball.speed = 5;
+						this.handleScore();
+					}
 
-				// Top and Bottom walls collision
-				if ((this.ball.y + this.ball.radius) >= this.canvas.height)
-				{
-					this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
-				}
-				else if ((this.ball.y - this.ball.radius) <= 0)
-				{
-					this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
+					// Top and Bottom walls collision
+					if ((this.ball.y + this.ball.radius) >= this.canvas.height) this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
+					else if ((this.ball.y - this.ball.radius) <= 0) 			this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
 				}
 			}
 			
-			// These handle the Player's paddle wall collisions
+			// These handle the Player's paddle wall collisions and movements
 			if (this.player.move === DIRECTION.UP) {
 				if ((this.player.y - this.player.speed) <= 0) this.player.y = 0;
 				else this.player.y -= this.player.speed;
@@ -163,7 +173,7 @@ class Game {
 				if (((this.player.y + this.player.height) + this.player.speed) >= this.canvas.height) this.player.y = this.canvas.height - this.player.height;
 				else this.player.y += this.player.speed;
 			}
-			// These handle the Opponent's paddle wall collisions
+			// These handle the Opponent's paddle wall collisions and movements
 			if (this.opponent.moveY === DIRECTION.UP) {
 				if ((this.opponent.y - this.opponent.speed) <= 0) this.opponent.y = 0;
 				else this.opponent.y -= this.opponent.speed;
@@ -186,7 +196,9 @@ class Game {
 			hideCanvas();
 			winningMsg(this);
 		}
-		if (!this.over) window.requestAnimationFrame(this.gameLoop.bind(this));
+		if (!this.over) {
+			window.requestAnimationFrame(this.gameLoop.bind(this));
+		}
 	}
 
 	listen() {
@@ -252,11 +264,36 @@ class Game {
 		});
 	}
 
-	startScreen() {
+	start() {
 		this.drawBoard();
+		let countdown = 5; // Initial countdown value
+		const countdownInterval = setInterval(() => {
+			this.drawBoard();
+			this.context.fillStyle = '#38515e';
+			this.context.font = "200px Arial";
+			this.context.fillText(`${countdown}`, this.canvas.width / 2 - 50, this.canvas.height / 2 - 100);
+
+			countdown--;
+
+			if (countdown < 0) {
+				clearInterval(countdownInterval); // Stop the countdown
+				this.startGame(); // Start the game
+			}
+    	}, 	1000); // Update countdown every second
+	}
+
+	handleScore() {
+		// Pause the game for 1 second
+		this.running = false;
+		setTimeout(() => {
+			this.running = true;
+		}, 1000);
 	}
 
 	endScreen() {
 		this.drawBoard();
 	}
 };
+
+
+
