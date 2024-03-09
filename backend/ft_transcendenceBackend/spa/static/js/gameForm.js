@@ -117,16 +117,143 @@ function startDuelGame() {
         Pong.canvas.height = gameContainer.clientHeight;
 
         Pong.start();
+
+        checkGameState(Pong);
+        
     } else {
         alert('Please enter different names for both players.');
     }
 }
+function checkGameState(Pong) {
+    const intervalId = setInterval(() => {
+        if (Pong.over) {
+            endGameDuel(Pong);
+            clearInterval(intervalId);
+        }
+    }, 1000);
+}
+
+function endGameDuel(Pong){
+    showButtons();
+    hideCanvas();
+    winningMsg(Pong);
+}
 
 function startTournament(){
     var players = collectPlayerInputs();
+    removeTournamentForm();
     if (players !== null){
-        players= shuffleArray(players);
+        tournamentMatchmaking(players);
     }
+}
+
+function tournamentMatchmaking(players){
+    players= shuffleArray(players);
+    annonceNextMatch(players[0], players[1],players);
+}
+
+function annonceNextMatch(player1, player2,players){
+    hideButtons();
+    var message = document.createElement('div');
+    message.className = 'annonce-message';
+    message.id = 'annonce-message';
+    message.style = "position : absolute; top : 50%; margin-left : 35%;";
+
+    message.textContent = "Next match will be " + player1 + " against " + player2 + " .";
+    
+    var principalContainer = document.getElementById('principal-container');
+    principalContainer.appendChild(message);
+    var nextButton = document.createElement("button");
+    nextButton.type = "button";
+    nextButton.textContent = "Start next match !";
+    nextButton.style.left = "40%";
+    nextButton.style.position = "relative";
+    nextButton.id = "next-match";
+    nextButton.addEventListener('click', function() {
+        startNextMatch(player1, player2,players);
+    });
+
+    document.getElementById('bottom-container').append(nextButton);
+}
+
+
+function startNextMatch(player1Name, player2Name,players){
+    var annonceMessage = document.getElementById('annonce-message');
+    if (annonceMessage) {
+        var principalContainer = document.getElementById('principal-container');
+        principalContainer.removeChild(annonceMessage);
+    }
+    removeWinningMessage();
+    var nextButton = document.getElementById('next-match');
+    if (nextButton){
+        document.getElementById('bottom-container').removeChild(nextButton);
+    }
+    Pong = new Game(920, 600, player1Name, player2Name);
+
+    var placeholderCanvas = document.getElementById('gameCanvas');
+    placeholderCanvas.style.visibility = 'visible';
+    var gameContainer = document.getElementById('pong-container');
+    gameContainer.replaceChild(Pong.canvas, placeholderCanvas);
+
+    Pong.canvas.width = gameContainer.clientWidth;
+    Pong.canvas.height = gameContainer.clientHeight;
+
+    Pong.start();
+
+    checkTournamentState(Pong,players);
+}
+
+function checkTournamentState(Pong,players) {
+    const intervalId = setInterval(() => {
+        if (Pong.over) {
+            endTournamentDuel(Pong,players);
+            clearInterval(intervalId);
+        }
+    }, 1000);
+}
+
+function endTournamentDuel(Pong,players){
+    hideCanvas();
+    let remove = Pong.opponent;
+    if (Pong.opponent.score === 5)
+        remove = Pong.player;
+    console.log(remove.name);
+    players = players.filter(e => e !== remove.name);
+    var i =0;
+    for (; i < players.length; i++){
+        if (Pong.opponent.name === players[i] || Pong.player.name === players[i])
+            break;
+    }
+    console.log(players);
+    winningMsgTournament(Pong);
+    if (players[i+1] && players[i+2]){
+        annonceNextMatch(players[i+1], players[i+2], players);
+    }else{
+        players = shuffleArray(players);
+        annonceNextMatch(players[0],players[1],players);
+    }
+}
+
+function winningMsgTournament(Pong) {
+    var message = document.createElement('div');
+    message.className = 'winning-message';
+    message.id = 'winning-message';
+    message.style = "position : absolute; top : 40%; margin-left : 35%;";
+
+    if (Pong.player.score > Pong.opponent.score){
+        var winnerName = Pong.player.name;
+        var loserName = Pong.opponent.name;
+        var winnerScore = Pong.player.score;
+        var loserScore = Pong.opponent.score;
+    } else {
+        var winnerName = Pong.opponent.name;
+        var loserName = Pong.player.name;
+        var winnerScore = Pong.opponent.score;
+        var loserScore = Pong.player.score;
+    }
+
+    message.textContent = winnerName + ' wins with a score of ' + winnerScore + '-' + loserScore + ' against ' + loserName + '.\n';
+    document.getElementById('principal-container').appendChild(message);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -187,16 +314,13 @@ function createPlayerButtonContainer() {
 }
 
 function createTournamentForm() {
-    // Create form element
     var form = document.createElement("form");
     form.id = "tournament-game-form";
 
-    // Create input container div
     var inputContainer = document.createElement("div");
     inputContainer.id = "tournament-input-container";
     inputContainer.className = "grid-container";
 
-    // Create player input fields
     for (var i = 1; i <= 3; i++) {
         var gridItem = document.createElement("div");
         gridItem.className = "grid-item";
