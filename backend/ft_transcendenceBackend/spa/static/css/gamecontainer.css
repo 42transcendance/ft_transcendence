@@ -108,6 +108,16 @@
 .add-player-button {
     height: 35px;
     cursor: pointer;
+    border-radius: 30px;
+    width: 35px;
+    margin: auto;
+    background-color: #02ff02;
+    font-weight: bold;
+    font-size: larger;
+    transition: background-color 0.2s ease; 
+}
+.add-player-button:hover {
+    background-color: #57e757;
 }
 
 .gameCanvas{
