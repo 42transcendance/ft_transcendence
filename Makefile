@@ -16,7 +16,7 @@ stop:
 prune: stop
 	@docker-compose -f $(PATH_YML) down -v
 	@docker system prune -af
-	@rm -rf /home/${USER}/pgdatabase/*
+	@rm -rf ~/pgdatabase/*
 
 	@rm -rf .env
 
