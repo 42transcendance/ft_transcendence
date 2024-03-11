@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from spa import views
 
 urlpatterns = [
@@ -26,5 +26,7 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.user_logout, name='logout'),
+    path('test/', views.connexion, name='test'),
+    path('callback/', views.callback, name='callback'),
 ]
 
