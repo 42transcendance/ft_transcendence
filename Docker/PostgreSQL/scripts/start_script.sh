@@ -1,6 +1,8 @@
 #!/bin/bash
 
 chmod a+r /postgresql.conf /pg_hba.conf
+chown djangodb /postgresql.conf
+chown djangodb /pg_hba.conf
 
 useradd djangodb -m
 
