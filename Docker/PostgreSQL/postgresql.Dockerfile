@@ -1,8 +1,7 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get -y install procps \
-    postgresql
+    apt-get -y install postgresql
 
 COPY scripts/init_db.sh /init_db.sh 
 

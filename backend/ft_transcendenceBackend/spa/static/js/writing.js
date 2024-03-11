@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var messageInput = document.querySelector('.message-input');
     var chatMessagesDiv = document.querySelector('.chat-messages');
 
-    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/ROOM_NAME/'); //REPLACE BY OUR URL
+    var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/'); //REPLACE BY OUR URL
 
     sendMessageButton.addEventListener('click', function() {
         var messageText = messageInput.value.trim();
