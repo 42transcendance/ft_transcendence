@@ -11,7 +11,7 @@
     height: 15%;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px; 
-    background-color: red;
+    background-color: rgba(102, 178, 255, 0.7); 
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -24,7 +24,7 @@
 #principal-container {
     width: auto;
     height: 70%;
-    background-color: green;
+    background-color: rgba(102, 178, 255, 0.7); 
     justify-content: center;
     position : relative
 }
@@ -34,7 +34,7 @@
     height: 15%;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px; 
-    background-color: yellow;
+    background-color: rgba(102, 178, 255, 0.7); 
 }
 
 #duel-form {
@@ -108,6 +108,16 @@
 .add-player-button {
     height: 35px;
     cursor: pointer;
+    border-radius: 30px;
+    width: 35px;
+    margin: auto;
+    background-color: #02ff02;
+    font-weight: bold;
+    font-size: larger;
+    transition: background-color 0.2s ease; 
+}
+.add-player-button:hover {
+    background-color: #57e757;
 }
 
 .gameCanvas{
