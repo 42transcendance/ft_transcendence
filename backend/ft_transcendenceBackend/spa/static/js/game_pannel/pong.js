@@ -292,5 +292,31 @@ class Game {
 	}
 };
 
+var sendMessageButton = document.querySelector('.test-send-button');
+var messageInput = document.querySelector('.test-message-input');
 
+var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
 
+sendMessageButton.addEventListener('click', function() {
+	var messageText = messageInput.value.trim();
+
+	if (messageText) {
+		chatSocket.send(JSON.stringify({ 
+			'type': '',
+			'message': messageText,
+		}));
+		messageInput.value = '';
+	}
+});
+
+messageInput.addEventListener('keypress', function(event) {
+	if (event.key === 'Enter') {
+		event.preventDefault();
+		sendMessageButton.click();
+	}
+});
+
+chatSocket.onmessage = function(e) {
+	var data = e.data;
+	console.log(data);
+};

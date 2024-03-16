@@ -8,7 +8,7 @@ build:
 
 start:
 	@utils/setup.sh
-	@docker-compose -f $(PATH_YML) up
+	docker-compose -f $(PATH_YML) up
 
 stop:
 	@docker-compose -f $(PATH_YML) stop
