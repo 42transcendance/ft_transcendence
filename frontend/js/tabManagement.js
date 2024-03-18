@@ -24,8 +24,6 @@ channelsBtn.addEventListener('click', showChannels);
 // showFriends();
 
 
-
-
 /* toggling in friends button */
 
 document.addEventListener('DOMContentLoaded', function() {

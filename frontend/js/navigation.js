@@ -1,5 +1,4 @@
 // containers visibility management
-// Function to handle the visibility and animation of containers
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
     
     if (isVisible) {
@@ -58,7 +57,7 @@ function navbarPressed(buttonPressed ) {
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
     
-            chatTab.style.display = 'block';
+            chatTab.style.display = 'flex';
             settingsTab.style.display = 'none';
             achievementsTab.style.display = 'none';
             profileTab.style.display = 'none';

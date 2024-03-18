@@ -2,10 +2,11 @@
     border: 2px solid rgba(0, 128, 255, 0.7);
     border-radius: 10px;
     padding: 0px;
-    margin-top: 120px;
+    margin-top: 18vh;
     height: 75vh;
     background-color: #ddd;
     opacity: 0.85;
+    flex-shrink: 0;
 }
 
 .career-select {
@@ -56,7 +57,7 @@
     margin-right: 15px;
 }
 
-.icon-chat, .icon-controller {
+.icon-chat, .icon-controller, .icon-settings {
     font-size: 15px;
     margin-left: auto; 
     cursor: pointer;
@@ -64,7 +65,7 @@
     color: black;
 }
 
-.icon-chat:hover, .icon-controller:hover {
+.icon-chat:hover, .icon-controller:hover, .icon-settings:hover {
     color: #007bff;
 }
 

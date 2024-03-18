@@ -56,7 +56,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- FIRST TAB -->
-            <div class="col-2 col-lg-3 first-tab">
+            <div class="col-3 col-lg-3 first-tab">
                 <div class="inner-container1 mx-1">
                     <div class="social-section">
                         <i class="bi bi-people social-icon"></i>
@@ -64,11 +64,11 @@
                     </div>
                     <div class="button-container">
                         <div class="FriendsChannels">
-                            <button class="social-button active" id="button1">FRIENDS</button>
-                            <button class="social-button" id="button2">CHANNELS</button>
+                            <button class="social-button" id="button1">FRIENDS</button>
+                            <button class="social-button active" id="button2">CHANNELS</button>
                         </div>
                         <!-- Content for Friends -->
-                        <div id="friendsContainer" class="content-container">
+                        <div id="friendsContainer" class="content-container"  style="display: none;">
                             <button class="add-friend-button">ADD FRIEND</button>
                             <button class="friend-tab-button" id="friendsTab">
                                 <i class="bi bi-people"></i> Friends <i class="bi bi-chevron-down arrow-icon"></i>
@@ -79,7 +79,7 @@
                                 <div class="friend-item"  data-id="uniqueUserId123">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>Friend's Name</div>
+                                        <div>Jack Goff</div>
                                     </div>
                                     <i class="bi bi-chat icon-chat"></i>
                                     <i class="bi bi-controller icon-controller"></i>
@@ -90,12 +90,22 @@
                                 <div class="friend-item"  data-id="uniqueUserId124">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>Friend's Name</div>
+                                        <div>Willie Stroker</div>
                                     </div>
                                     <i class="bi bi-chat icon-chat"></i>
                                     <i class="bi bi-controller icon-controller"></i>
                                     <i class="bi bi-x-circle icon-block"></i>
-                                </div>                                
+                                </div>
+                                
+                                <div class="friend-item"  data-id="uniqueUserId125">
+                                    <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Ben Dover</div>
+                                    </div>
+                                    <i class="bi bi-chat icon-chat"></i>
+                                    <i class="bi bi-controller icon-controller"></i>
+                                    <i class="bi bi-x-circle icon-block"></i>
+                                </div>  
                                 
                             </div>
                         
@@ -108,7 +118,7 @@
                                 <div class="friend-item">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>IncomingRequest's</div>
+                                        <div>Dixie Normous</div>
                                     </div>
                                 </div>
 
@@ -123,7 +133,7 @@
                                 <div class="friend-item"  data-id="testRequest1">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>IncomingRequest's</div>
+                                        <div>Chew Kok</div>
                                     </div>
                                     <i class="bi bi-check-circle accept-request small-icons"></i>
                                     <i class="bi bi-x-circle decline-request small-icons"></i>
@@ -140,7 +150,7 @@
                                 <div class="friend-item">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>Blocked's Name</div>
+                                        <div>Phat Ho</div>
                                     </div>
                                     <i class="bi bi-x-circle icon-unblock small-icons"></i>
                                 </div>
@@ -148,28 +158,36 @@
                             </div>
                         </div>
                         <!-- Channels Container -->
-                        <div id="channelsContainer" class="content-container" style="display: none;">
+                        <div id="channelsContainer" class="content-container">
                             <!-- Content for Channels -->
                             <button class="create-channel-button">CREATE CHANNEL</button>
                             <button class="join-channel-button">JOIN CHANNEL</button>
                             <div id="channelsTabContent" class="channels-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
-                                <div class="channel-item">
+                                <div class="channel-item global-chat-item">
+                                    <i class="bi bi-globe2 global-chat-icon"></i>
+                                    <div class="friend-info">
+                                        <div>Global Chat</div>
+                                    </div>
+                                    <i class="bi bi-chat channels-icon "></i>
+                                </div>
+
+                                <div class="channel-item" data-id="channelId1">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channels Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-icon "></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-icon"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
                                 </div>
 
-                                <div class="channel-item">
+                                <div class="channel-item"  data-id="channelId2">
                                     <img src="assets/pfp.png" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channelss Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-icon"></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-icon"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
                                 </div>
                             </div>
                         </div>
@@ -177,7 +195,7 @@
                 </div>
             </div>
             <!-- SECOND TAB -->
-            <div class="col-8 col-lg-6 3cols second-tab";>
+            <div class="col-6 col-lg-6 3cols second-tab";>
                 <div class="inner-container2 mx-1">
                     <div class="chat-tab">
                         <div class="chat-heading">
@@ -187,80 +205,54 @@
                         <div class="chat-messages">
                             <!-- MESSAGE EXANMPLE -->
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="assets/pfp.png" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="assets/pfp.png" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="assets/pfp.png" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="assets/pfp.png" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="assets/pfp.png" alt="User" class="user-icon">
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
-                                </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="assets/pfp.png" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
-                                </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="assets/pfp.png" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
                             
@@ -409,8 +401,7 @@
                 </div>
             </div>
             <!-- THIRD TAB -->
-            <!-- THIRD TAB -->
-            <div class="col-2 col-lg-3 third-tab">
+            <div class="col-3 col-lg-3 third-tab">
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
@@ -456,5 +447,9 @@
     <script src="js/smallButtons.js"></script>
     <script src="js/ajaxCalls.js"></script>
     <script src="js/ajaxCalls1Tab.js"></script>
+    <script src="js/globalChat.js"></script>
+    <script src="js/webSocket.js"></script>
+
+
 </body>
 </html>
