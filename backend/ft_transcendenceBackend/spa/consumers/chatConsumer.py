@@ -30,7 +30,6 @@ class chatConsumer(AsyncWebsocketConsumer):
                 'message':message
             }
         )
-        print("Received chat message from websocket connection : ", message)
     
     async def chat_message(self, event):
         message = event['message']
@@ -38,6 +37,5 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message':message   
         }))
-        print("Received chat message from group : ", message)
 
 

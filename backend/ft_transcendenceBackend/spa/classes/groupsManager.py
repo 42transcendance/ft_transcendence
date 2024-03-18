@@ -1,4 +1,5 @@
 from uuid import uuid4
+from .pong import PongGame
 
 class Group :
     def __init__(self, groupName, max_capacity) -> None:
@@ -6,6 +7,7 @@ class Group :
         self.capacity = 0
         self.name = groupName
         self.users = set()
+        self.gameInstance = None
 
 class GroupsManager :
     def __init__(self) -> None:
@@ -18,13 +20,14 @@ class GroupsManager :
             return None
     
     def list_groups(self):
-        for self.group in self.groups :
-            print(self.group.name)
+        for group in self.groups :
+            print(group.name)
 
     def join_group(self) -> str:
-        # This function returns the name of the group that is available to join
-        # Or an empty string if no group is available
-        pass
+        for group in self.groups:
+            if group.capacity == 1:
+                return group.name
+        return None
 
     def add_group(self, max_capacity) -> str:
         group_name = 'pong-' + str(uuid4())[:8]
@@ -34,18 +37,39 @@ class GroupsManager :
         newGroup = Group(group_name, max_capacity)
         self.groups.add(newGroup)
     
-        print(f"Group '{group_name}' added.")
+        # print(f"Group '{group_name}' added.")
         return group_name
 
     def remove_group (self, group_name) :
         group_to_remove = self.get_group_by_name(group_name)
         if group_to_remove:
             self.groups.remove(group_to_remove)
-            print(f"Group '{group_name}' removed.")
+            # print(f"Group '{group_name}' removed.")
             return 0
         else:
-            print(f"Group '{group_name}' does not exist.")
+            # print(f"Group '{group_name}' does not exist.")
             return 1
     
-    # def group_add_user (self):
-    # def group_remove_user (self):
+    def group_add_user (self, groupName, userChannel):
+        targetGroup = self.get_group_by_name(groupName)
+        if targetGroup == None:
+            print("Error: ", groupName, " does not exist.")
+            return (1)
+        if targetGroup.capacity == 2:
+            print("Error: ", targetGroup.name, " is full.")
+            return  (1)
+        targetGroup.users.add(userChannel)
+        targetGroup.capacity += 1
+        # if (targetGroup.capacity == 2):
+        #     targetGroup.gameInstance = PongGame()
+
+    def group_remove_user (self, groupName, userChannel):
+        targetGroup = self.get_group_by_name(groupName)
+        if targetGroup == None:
+            print("Error: ", groupName, " does not exist.")
+            return (1)
+        targetGroup.users.remove(userChannel)
+        targetGroup.capacity -= 1
+        if targetGroup.capacity == 0:
+            # print("Group is empty, being removed : ", groupName)
+            self.remove_group(groupName)

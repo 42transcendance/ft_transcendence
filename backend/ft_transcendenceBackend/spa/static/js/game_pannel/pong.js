@@ -302,8 +302,8 @@ sendMessageButton.addEventListener('click', function() {
 
 	if (messageText) {
 		chatSocket.send(JSON.stringify({ 
-			'type': '',
-			'message': messageText,
+			'type':'notification',
+			'message':messageText,
 		}));
 		messageInput.value = '';
 	}
