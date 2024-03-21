@@ -1,8 +1,7 @@
 FROM debian:bullseye
 
 RUN apt-get update && \
-    apt-get -y install procps \
-    postgresql
+    apt-get -y install postgresql
 
 COPY scripts/init_db.sh /init_db.sh 
 
@@ -16,6 +15,8 @@ COPY conf/pg_hba.conf /pg_hba.conf
 
 RUN ./start_script.sh
 
-ENTRYPOINT [ "bash", "init_db.sh" ]
+# ENTRYPOINT [ "bash", "init_db.sh" ]
 
-EXPOSE 5432
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+
+EXPOSE 5432 
