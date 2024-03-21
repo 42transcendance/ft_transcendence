@@ -105,7 +105,6 @@ function showChangeUsernameModal() {
     document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
 }
 
-// LOGOUT
 function showLogoutModal() {
     if (isModalPresent('modalLogout')) return;
 
@@ -123,8 +122,12 @@ function showLogoutModal() {
     `;
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('btnConfirmLogout').addEventListener('click', function() {
+        window.location.href = "/logout";
+    });
     document.getElementById('btnCancelLogout').addEventListener('click', () => closeModal('modalLogout'));
 }
+
 
 // DELETE ACCOUNT
 function showDeleteAccountModal() {
@@ -162,3 +165,4 @@ document.querySelector('.join-channel-button').addEventListener('click', showJoi
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.delete-account-button').addEventListener('click', showDeleteAccountModal);
+

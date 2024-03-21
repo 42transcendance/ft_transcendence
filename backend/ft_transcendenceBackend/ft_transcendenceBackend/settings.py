@@ -11,10 +11,19 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+MEDIA_ROOT = BASE_DIR/'media'
+MEDIA_URL = '/media/'
 
+env = environ.Env()
+
+API_SK= env('API_SECRET_KEY')
+API_CLIENT_KEY = env('API_CLIENT_KEY')
+JWT_SECRET_PHRASE = env('JWT_SECRET_PHRASE')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -52,7 +61,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 
 ROOT_URLCONF = 'ft_transcendenceBackend.urls'
 

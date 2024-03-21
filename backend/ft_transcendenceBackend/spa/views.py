@@ -1,82 +1,75 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from ft_transcendenceBackend.forms import LoginForm, SignUpForm, ProfileForm
-from spa.models import Profile
+from django.contrib.auth import login, logout
+from spa.models import CustomUser
 import requests
+import json
+import time
+import jwt
+import os
+from datetime import datetime
+from urllib.parse import urlencode
+from django.conf import settings
 
 
 def home(request):
-    if request.user.is_authenticated:
-        profile = Profile.objects.get_or_create(user=request.user)[0]
-        return render(request, 'frontend/index.html', {'is_user': True, 'profile': profile})
+    token = request.session.get('token')
+    custom_users = CustomUser.objects.all()
+    for user in custom_users:
+        print(f'User: {user.username}')
+        print(f'  User ID: {user.userid}')
+        print(f'  Join Date: {user.join_date}')
+        print(f'  Pfp : {user.profile_picture}')
+    return render(request, 'frontend/index.html',{'token': token})
+    
+def custom_logout(request):
+    if 'token' in request.session:
+        del request.session['token']
+    return redirect ('home')
+
+def download_image(url, destination):
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(destination, 'wb') as f:
+            f.write(response.content)
+        return True
     else:
-        return render(request, 'frontend/index.html', {'is_user': False})
-
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.error(request, 'Invalid username or password.')
-    else:
-        form = LoginForm()
-    return render(request, 'frontend/login.html', {'form': form})
-
-
-def signup(request):
-    if request.method == 'POST':
-        user_form = SignUpForm(request.POST)
-        profile_form = ProfileForm(request.POST, request.FILES)
-        if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            return redirect('home')
-    else:
-        user_form = SignUpForm()
-        profile_form = ProfileForm()
-    return render(request, 'frontend/signup.html', {'user_form': user_form, 'profile_form': profile_form}) 
-
-def user_logout(request):
-    logout(request)
-    request.user = None
-    return redirect('home')
-
-def connexion(request):
-    authorization_url = 'https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-a5afc4a5214c57269a802fc3629c48621c8edf6b99e531450eb5975de732483d&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fcallback&response_type=code'
-    return HttpResponseRedirect(authorization_url)
+        return False
 
 def callback(request):
-    CLIENT_ID = 'u-s4t2ud-a5afc4a5214c57269a802fc3629c48621c8edf6b99e531450eb5975de732483d'
-    CLIENT_SECRET = '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'
-    TOKEN_URL = 'https://api.intra.42.fr/oauth/token'
-
-    authorization_code = request.GET.get('code')
-    access_token = None
-
-    if authorization_code:
-        data = {
+    code = request.GET.get('code')
+    if code:
+        token_url = 'https://api.intra.42.fr/oauth/token'
+        response = requests.post(token_url, data={
             'grant_type': 'authorization_code',
-            'client_id': CLIENT_ID,
-            'client_secret': CLIENT_SECRET,
-            'code': authorization_code,
+            'client_id': settings.API_CLIENT_KEY,
+            'client_secret': settings.API_SK,
             'redirect_uri': 'http://localhost:8000/callback',
-        }
-
-        response = requests.post(TOKEN_URL, data=data)
-
+            'code': code
+        })
         if response.status_code == 200:
             access_token = response.json().get('access_token')
-        else:
-            return HttpResponseServerError("Error obtaining access token")
-
-    return render(request, 'frontend/test.html', {'token': access_token})
+            headers = {
+                'Authorization': 'Bearer ' + access_token
+            }
+            info_url = 'https://api.intra.42.fr/v2/me'
+            api_response = requests.get(info_url, headers=headers)
+            id_user = api_response.json().get('id')
+            
+            if CustomUser.objects.filter(userid=id_user).exists():
+                 current_user = CustomUser.objects.get(userid=id_user)
+            else :
+                login_user = api_response.json().get('login')
+                pfp_dic = api_response.json().get('image')
+                pfp_link = pfp_dic.get('link')
+                pfp_filename = f"{id_user}_profile_picture.jpg"
+                pfp_destination = os.path.join(settings.MEDIA_ROOT, 'profile_pictures', pfp_filename)
+                download_successful = download_image(pfp_link, pfp_destination)
+                current_user = CustomUser(userid=id_user, username=login_user, profile_picture=f"profile_pictures/{pfp_filename}" if download_successful else None)
+                current_user.save()
+            if api_response.status_code == 200:
+                jwt_token = jwt.encode({'access_token': access_token}, settings.JWT_SECRET_PHRASE, algorithm='HS256')
+                request.session['token'] = jwt_token
+                return redirect ('home')
+    return HttpResponseServerError('ERROR')

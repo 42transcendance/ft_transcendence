@@ -14,15 +14,20 @@
     <link rel="stylesheet" href="{% static 'css/3container-styles.css' %}">
     <link rel="stylesheet" href="{% static 'css/gamecontainer.css' %}">
     <link rel="stylesheet" href="{% static 'css/pong.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-    <!-- Video Background -->
     <video autoplay muted loop id="myVideo">
         <source src="{% static 'assets/bg.mp4' %}" type="video/mp4">
     </video>
-   
-
-    <!--navbar-->
+    {% if not token %}
+        <div class="blur-background"></div>
+        <div class="centered-text">
+            <h2>Please login with 42 to access transcendence</h2>
+            <button onclick="redirectToLogin()">Login with 42</button>
+        </div>
+    {% endif %}
+    
     <nav class="navbar navbar-expand bg-body-tertiary navbar-custom">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
@@ -547,5 +552,6 @@
     <script src="{% static 'js/game_pannel/duel.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameMessages.js' %}"></script>
     <script src="{% static 'js/game_pannel/tournament.js' %}"></script>
+    <script src="{% static 'js/login.js'%}"></script>
 </body>
 </html>
