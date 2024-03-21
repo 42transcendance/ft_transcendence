@@ -53,12 +53,3 @@ class pongConsumer(AsyncWebsocketConsumer):
     #     # Send message to WebSocket
     #     await self.send(text_data=json.dumps({"message": message}))
     
-    async def updateGameState(self, event):
-        pass
-
-    async def writeOnScreen(self, event):
-        pass
-    
-    async def startingCountDown(self, event):
-        pass
-    

@@ -11,16 +11,13 @@ function startDuelGame() {
     if (player1Name !== '' && player2Name !== '' && player1Name !== player2Name) {
         document.getElementById('duel-form').style.visibility = 'hidden';
 
-        Pong = new Game(920, 600, player1Name, player2Name);
+        Pong = new Game(player1Name, player2Name);
         hideButtons();
 
         var placeholderCanvas = document.getElementById('gameCanvas');
         placeholderCanvas.style.visibility = 'visible';
         var gameContainer = document.getElementById('pong-container');
         gameContainer.replaceChild(Pong.canvas, placeholderCanvas);
-
-        Pong.canvas.width = gameContainer.clientWidth;
-        Pong.canvas.height = gameContainer.clientHeight;
 
         Pong.start();
 

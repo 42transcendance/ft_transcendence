@@ -7,7 +7,8 @@ class Group :
         self.capacity = 0
         self.name = groupName
         self.users = set()
-        self.gameInstance = None
+        self.gameObject = None
+        self.gameThread = None
 
 class GroupsManager :
     def __init__(self) -> None:
@@ -60,8 +61,8 @@ class GroupsManager :
             return  (1)
         targetGroup.users.add(userChannel)
         targetGroup.capacity += 1
-        # if (targetGroup.capacity == 2):
-        #     targetGroup.gameInstance = PongGame()
+        if targetGroup.capacity == 1 :
+            targetGroup.gameObject = PongGame ()
 
     def group_remove_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
