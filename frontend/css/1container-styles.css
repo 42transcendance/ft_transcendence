@@ -1,16 +1,27 @@
 .inner-container1 {
+    display: flex;
+    flex-direction: column;
     border: 2px solid rgba(0, 128, 255, 0.7);
     border-radius: 10px;
     padding: 0px;
-    margin-top: 120px;
+    margin-top: 18vh;
     height: 75vh;
     background-color: #ddd;
     opacity: 0.85;
+    flex-shrink: 0;
+    
+    flex-shrink: 0;
+    box-sizing: border-box;
+
 }
 
 .container-fluid {
     overflow-x: hidden;
     overflow-y: hidden;
+}
+
+.row {
+
 }
 
 
@@ -190,7 +201,7 @@
     flex-grow: 1;
 }
 
-.icon-chat, .icon-controller, .icon-block {
+.small-icons {
     font-size: 15px;
     margin-left: auto; 
     cursor: pointer;
@@ -202,8 +213,12 @@
     color: #007bff;
 }
 
-.icon-block:hover {
+.bi-x-circle:hover {
     color: rgb(190, 44, 44);
+}
+
+.bi-check-circle:hover {
+    color: rgb(44, 190, 98);
 }
 
 .friend-image {
@@ -214,6 +229,19 @@
 }
 
 /* cards in channels tab */
+
+.global-chat-icon{
+    /* border: 2px solid black; */
+    padding: 0 2px;
+    font-size: 20px;
+    margin-right: 15px;
+    
+}
+
+.global-chat-item:hover {
+    color: #007bff; 
+    border: 2px solid rgba(102, 178, 255, 0.7);
+}
 
 .channel-item {   
     width: 100%;
