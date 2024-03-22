@@ -49,3 +49,7 @@ def user_logout(request):
     logout(request)
     request.user = None
     return redirect('home')
+
+
+def testGame(request):
+    return render(request, 'frontend/testGame.html')
