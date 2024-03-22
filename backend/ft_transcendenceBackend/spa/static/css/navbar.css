@@ -9,6 +9,8 @@
     border-radius: 10px;
     height: 45px;
     opacity: 0.8;
+    box-shadow: 10px 20px 10px rgb(21, 1, 37);
+    margin-bottom: 30px;
 }
 
 .profile-separator {
@@ -41,11 +43,11 @@
 }
 
 .nav-button.active .nav-icons {
-    color: #007bff;
+    color: #c300ff;
 }
 
 .nav-icons {
-    font-size: 20px;
+    font-size: 1.5em;
     color: black;
     display: flex;
     align-items: center;

@@ -5,8 +5,12 @@ body, html {
     min-height: 540px;
     overflow-x: auto;
     overflow-y: hidden;
+    background-image: url('/frontend/assets/universe1.jpg');
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
 }
-
+/* 
 #myVideo {
     position: fixed;
     top: 0;
@@ -15,4 +19,4 @@ body, html {
     height: 100%;
     object-fit: cover;
     z-index: -1;
-}
+} */

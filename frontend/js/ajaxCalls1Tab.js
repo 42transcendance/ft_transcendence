@@ -356,7 +356,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadChatWithFriend(friendId);
                 }
             }
-    
             if (isChannel) {
                 const channelId = isChannel.getAttribute('data-id');
                 if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {

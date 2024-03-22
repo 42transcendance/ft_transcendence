@@ -1,7 +1,7 @@
 function openChannelChat(channelId) {
     const chatMessagesContainer = document.querySelector('.chat-messages');
     chatMessagesContainer.innerHTML = '';
-
+    console.log(`Opening chat with channel ID: ${channelId}`);
     loadChannelChatHistory(channelId);
 }
 
