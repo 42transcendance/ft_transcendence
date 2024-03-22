@@ -1,3 +1,4 @@
 .env
 /Docker/Backend/conf/.pgpass
 /Docker/Backend/conf/.pg_service.conf
+**/__pycache__/

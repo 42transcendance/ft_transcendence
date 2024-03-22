@@ -47,7 +47,7 @@ function startNextMatch(player1Name, player2Name,players){
     if (nextButton){
         document.getElementById('bottom-container').removeChild(nextButton);
     }
-    Pong = new Game(920, 600, player1Name, player2Name);
+    Pong = new Game(player1Name, player2Name);
 
     var placeholderCanvas = document.getElementById('gameCanvas');
     placeholderCanvas.style.visibility = 'visible';

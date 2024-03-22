@@ -23,7 +23,14 @@ from spa import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+<<<<<<< HEAD
     path('callback/', views.callback, name='callback'),
     path('logout/', views.custom_logout, name='logout'),
+=======
+    path('login/', views.user_login, name='login'),
+    path('signup/', views.signup, name='signup'),
+    path('logout/', views.user_logout, name='logout'),
+    path('testGame/', views.testGame, name='testGame'),
+>>>>>>> origin/main
 ]
 

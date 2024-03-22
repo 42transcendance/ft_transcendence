@@ -32,7 +32,6 @@ services:
     expose:
       - 5432
 
-
 volumes:
   backend:
     driver: local
@@ -45,4 +44,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/pgdatabase
+      device: /home/${USER}/goinfre/pgdatabase

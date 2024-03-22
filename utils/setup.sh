@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directory="/home/$USER/pgdatabase"
+directory="/home/$USER/goinfre/pgdatabase"
 
 if [ ! -d "$directory" ]; then
   echo "Database directory doesn't exist. Creating it now..."

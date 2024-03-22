@@ -44,11 +44,11 @@
     margin: 10px auto; /* Equal space from both ends */
     display: block;
     border-radius: 4px;
-    border: 1px solid #007bff; /* Blue outline */
+    border: 1px solid #c300ff; /* Blue outline */
 }
 
 .modal-input:focus {
-    outline: 2px solid #007bff; /* Blue outline to indicate focus */
+    outline: 2px solid #c300ff; /* Blue outline to indicate focus */
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: Add a subtle glow effect */
 
 }
@@ -71,7 +71,7 @@
 }
 
 .modal-button-add {
-    background-color: #007bff; /* Blue background for Add */
+    background-color: #c300ff; /* Blue background for Add */
     color: white;
 }
 
