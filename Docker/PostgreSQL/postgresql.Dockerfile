@@ -15,8 +15,6 @@ COPY conf/pg_hba.conf /pg_hba.conf
 
 RUN ./start_script.sh
 
-# ENTRYPOINT [ "bash", "init_db.sh" ]
-
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+ENTRYPOINT [ "bash", "init_db.sh" ]
 
 EXPOSE 5432 
