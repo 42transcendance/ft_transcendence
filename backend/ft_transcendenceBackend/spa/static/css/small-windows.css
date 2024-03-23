@@ -21,7 +21,6 @@
     width: 23%; /* Smaller window */
     text-align: center;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* Add some depth */
-    /* Adjust max-height and overflow for content */
     max-height: 80vh;
     overflow-y: auto;
 }
@@ -137,4 +136,3 @@
     border-radius: 5px;
     display: none;
 }
-

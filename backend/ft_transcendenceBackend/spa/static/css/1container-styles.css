@@ -1,17 +1,28 @@
 .inner-container1 {
-    border: 2px solid rgba(0, 128, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgba(250, 30, 232, 0.7);
     border-radius: 10px;
     padding: 0px;
-    margin-top: 120px;
+    margin-top: 18vh;
     height: 75vh;
     background-color: #ddd;
     opacity: 0.85;
+    flex-shrink: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    box-shadow: 10px 20px 10px rgb(21, 1, 37);
+    margin-bottom: 30px;
 }
 
 .container-fluid {
     overflow-x: hidden;
     overflow-y: hidden;
 }
+
+/* .row {
+
+} */
 
 
 /* Social section */
@@ -20,7 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 128, 255, 0.7);
+    background-color: rgba(250, 30, 232, 0.7);
     border-radius: 8px 8px 0 0;
     padding: 5px;
     margin: 0px;
@@ -63,8 +74,8 @@
 }
 
 .social-button.active {
-    color: #007bff;
-    border-bottom: 2px solid rgba(0, 128, 255);
+    color: #c300ff;
+    border-bottom: 2px solid rgb(255, 0, 255);
     padding: 5px;
 }
 
@@ -87,6 +98,7 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+    font-size: 1em;
 }
 
 .add-friend-button:hover {
@@ -110,6 +122,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3px;
+    font-size: 1em;;
 }
 
 .create-channel-button:hover, .join-channel-button:hover {
@@ -121,7 +134,7 @@
 
 .friend-tab-button {
     width: 95%;
-    border: 2px solid rgba(102, 178, 255, 0.7);
+    border: 2px solid rgba(226, 107, 250, 0.7);
     background-color: transparent;
     padding: 10px;
     cursor: pointer;
@@ -130,7 +143,8 @@
     justify-content: flex-start;
     margin: 10px auto;
     border-radius: 5px;
-    background-color: rgba(102, 178, 255, 0.7);
+    background-color: rgba(226, 107, 250, 0.7);
+    font-size: 1.15em;
 }
 
 .friend-tab-button.active-tab {
@@ -156,7 +170,7 @@
 .friends-tab-content {
     width: 95%;
     padding: 10px;
-    border: 2px solid rgba(102, 178, 255, 0.7);
+    border: 2px solid rgba(173, 102, 255, 0.7);
     text-align: left;
     justify-content: flex-start;
     border-top: none;
@@ -171,11 +185,13 @@
 
 /* cards in friends tab */
 .friend-item {
-    border: 2px solid rgba(102, 178, 255, 0.7);    
+    max-width: 100%;
+    border: 2px solid rgba(173, 102, 255, 0.7);    
     width: 95%;
     background-color: transparent;
     display: flex;
-    justify-content: flex-start; 
+    flex-wrap: wrap;
+    justify-content: center;
     margin: 1px auto;
     margin-bottom: 10px;
     border-radius: 10px;
@@ -187,33 +203,64 @@
 }
 
 .friend-info {
-    flex-grow: 1;
+    /* flex-grow: 1; */
+    margin-right: auto;
+    font-size: 1.1em;
 }
 
-.icon-chat, .icon-controller, .icon-block {
+.friend-icons {
+    justify-content: center;
+}
+
+/* .small-icons {
     font-size: 15px;
     margin-left: auto; 
     cursor: pointer;
     padding: 0 5px; 
     color: black;
-}
+} */
 
 .icon-chat:hover, .icon-controller:hover {
-    color: #007bff;
+    color: #c300ff;
 }
 
-.icon-block:hover {
+.bi-x-circle:hover {
     color: rgb(190, 44, 44);
 }
 
+.bi-check-circle:hover {
+    color: rgb(44, 190, 98);
+}
+
 .friend-image {
-    width: 25px;
-    height: 25px;
+    display: flex;
+    width: 2em;
+    height: 2em;
     border-radius: 25%;
+    /* margin-right: 15px; */
+    align-items: center;
+    align-content: center;
+    justify-content: center;
     margin-right: 15px;
+
 }
 
 /* cards in channels tab */
+
+.global-chat-icon{
+    /*  */
+    padding: 0 2px;
+    font-size: 20px;
+    margin-right: 0.6em;
+    margin-left: 0.1em;
+    font-size: 2em;
+    
+}
+
+.global-chat-item:hover {
+    color: #c300ff; 
+    border: 2px solid rgba(173, 102, 255, 0.7);
+}
 
 .channel-item {   
     width: 100%;

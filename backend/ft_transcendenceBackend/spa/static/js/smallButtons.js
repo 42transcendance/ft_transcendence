@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 </div>
             </div>
-        `;
+        `;  
         
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         addModalEventListeners();

@@ -3,7 +3,8 @@
     height: 100%; 
     background-color: #3498db;
     border: 2px solid #2980b9; 
-    border-radius: 10px; 
+    border-radius: 10px;
+    display: none;
 }
 
 #button-container{

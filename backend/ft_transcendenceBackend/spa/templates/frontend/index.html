@@ -14,43 +14,41 @@
     <link rel="stylesheet" href="{% static 'css/gamecontainer.css' %}">
     <link rel="stylesheet" href="{% static 'css/pong.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
+    <link rel="stylesheet" href="{% static 'css/small-windows.css' %}"
 </head>
 <body>
-<<<<<<< HEAD
-    <video autoplay muted loop id="myVideo">
-        <source src="{% static 'assets/bg.mp4' %}" type="video/mp4">
-    </video>
-    {% if not token %}
-        <div class="blur-background"></div>
-        <div class="centered-text">
-            <h2>Please login with 42 to access transcendence</h2>
-            <button onclick="redirectToLogin()">Login with 42</button>
-        </div>
-    {% endif %}
-    
-=======
-    <!-- Video Background -->
-   
 
+    <!-- Video Background -->
+    <!-- <video autoplay muted loop id="myVideo">
+        <source src="assets/bg.mp4" type="video/mp4">
+    </video> -->
+    
+    {% if not token %}
+    <div class="blur-background"></div>
+    <div class="centered-text">
+        <h2 class="login-message">Please login with 42 to access transcendence</h2>
+        <button id="login-button" onclick="redirectToLogin()">Login with 42</button>
+    </div>
+    {% endif %}
     <!--navbar-->
->>>>>>> origin/main
     <nav class="navbar navbar-expand bg-body-tertiary navbar-custom">
         <div class="container-fluid">
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <button class="nav-button play">
+                    <button class="nav-button play" data-button="play">
                         <i class="bi bi-controller nav-icons"></i>
                     </button>
-                    <button class="nav-button chat active">
+                    <button class="nav-button chat active" data-button="chat">
                         <i class="bi bi-chat-dots nav-icons"></i>
                     </button>
-                    <button class="nav-button friends">
+                    <button class="nav-button friends" data-button="profile">
                         <i class="bi bi-person nav-icons"></i>
                     </button>
-                    <button class="nav-button achievements">
+                    <button class="nav-button achievements" data-button="achievements">
                         <i class="bi bi-award nav-icons"></i>
                     </button>
-                    <button class="nav-button settings">
+                    <button class="nav-button settings" data-button="settings">
                         <i class="bi bi-gear nav-icons"></i>
                     </button>
                     <!-- Profile picture and separator -->
@@ -68,7 +66,7 @@
     <div class="container-fluid">
         <div class="row">
             <!-- FIRST TAB -->
-            <div class="col-2 col-lg-3 first-tab">
+            <div class="col-3 col-lg-3 first-tab">
                 <div class="inner-container1 mx-1">
                     <div class="social-section">
                         <i class="bi bi-people social-icon"></i>
@@ -76,8 +74,8 @@
                     </div>
                     <div class="button-container">
                         <div class="FriendsChannels">
-                            <button class="social-button active" id="button1">FRIENDS</button>
-                            <button class="social-button" id="button2">CHANNELS</button>
+                            <button class="social-button" id="button1">FRIENDS</button>
+                            <button class="social-button active" id="button2">CHANNELS</button>
                         </div>
                         <!-- Content for Friends -->
                         <div id="friendsContainer" class="content-container"  style="display: none;">
@@ -88,26 +86,42 @@
                             <!-- Content container for Friends -->
                             <div id="friendsTabContent" class="friends-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
-                                <div class="friend-item">
+                                <div class="friend-item"  data-id="uniqueUserId123">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>Friend's Name</div>
+                                        <div>Jack Goff</div>
                                     </div>
-                                    <i class="bi bi-chat icon-chat"></i>
-                                    <i class="bi bi-controller icon-controller"></i>
-                                    <i class="bi bi-x-circle icon-block"></i>
+                                    <div class="friend-icons">
+                                        <i class="bi bi-chat icon-chat"></i>
+                                        <i class="bi bi-controller icon-controller"></i>
+                                        <i class="bi bi-x-circle icon-block"></i>
+                                    </div>
                                 </div>
 
 
-                                <div class="friend-item">
+                                <div class="friend-item"  data-id="uniqueUserId124">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
-                                        <div>Friend's Name</div>
+                                        <div>Willie Stroker</div>
                                     </div>
-                                    <i class="bi bi-chat icon-chat"></i>
-                                    <i class="bi bi-controller icon-controller"></i>
-                                    <i class="bi bi-x-circle icon-block"></i>
-                                </div>                                
+                                    <div class="friend-icons">
+                                        <i class="bi bi-chat icon-chat"></i>
+                                        <i class="bi bi-controller icon-controller"></i>
+                                        <i class="bi bi-x-circle icon-block"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="friend-item"  data-id="uniqueUserId125">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Ben Dover</div>
+                                    </div>
+                                    <div class="friend-icons">
+                                        <i class="bi bi-chat icon-chat"></i>
+                                        <i class="bi bi-controller icon-controller"></i>
+                                        <i class="bi bi-x-circle icon-block"></i>
+                                    </div>
+                                </div>  
                                 
                             </div>
                         
@@ -115,19 +129,49 @@
                                 <i class="bi bi-arrow-bar-right"></i> Outgoing Requests <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Outgoing Requests -->
-                            <div id="outgoingRequestsContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="outgoingRequestsTabContent" class="friends-tab-content">
+
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Dixie Normous</div>
+                                    </div>
+                                </div>
+
+                            </div>
                         
                             <button class="friend-tab-button" id="incomingRequestsTab">
                                 <i class="bi bi-arrow-bar-left"></i> Incoming Requests <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Incoming Requests -->
-                            <div id="incomingRequestsContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="incomingRequestsTabContent" class="friends-tab-content">
+
+                                <div class="friend-item"  data-id="testRequest1">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Chew Kok</div>
+                                    </div>
+                                    <i class="bi bi-check-circle accept-request small-icons"></i>
+                                    <i class="bi bi-x-circle decline-request small-icons"></i>
+                                </div>
+
+                            </div>
                         
                             <button class="friend-tab-button" id="blockedTab">
                                 <i class="bi bi-slash-circle"></i> Blocked <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Blocked -->
-                            <div id="blockedContent" class="friends-tab-content" style="display:none;"></div>
+                            <div id="blockedTabContent" class="friends-tab-content">
+
+                                <div class="friend-item">
+                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                    <div class="friend-info">
+                                        <div>Phat Ho</div>
+                                    </div>
+                                    <i class="bi bi-x-circle icon-unblock small-icons"></i>
+                                </div>
+
+                            </div>
                         </div>
                         <!-- Channels Container -->
                         <div id="channelsContainer" class="content-container">
@@ -136,22 +180,30 @@
                             <button class="join-channel-button">JOIN CHANNEL</button>
                             <div id="channelsTabContent" class="channels-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
-                                <div class="channel-item">
+                                <div class="channel-item global-chat-item">
+                                    <i class="bi bi-globe2 global-chat-icon"></i>
+                                    <div class="friend-info">
+                                        <div>Global Chat</div>
+                                    </div>
+                                    <i class="bi bi-chat channels-icon "></i>
+                                </div>
+
+                                <div class="channel-item" data-id="channelId1">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channels Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-icon "></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-icon"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
                                 </div>
 
-                                <div class="channel-item">
+                                <div class="channel-item"  data-id="channelId2">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channelss Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-icon"></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-icon"></i> <!-- Controller icon -->
+                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
+                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
                                 </div>
                             </div>
                         </div>
@@ -159,7 +211,7 @@
                 </div>
             </div>
             <!-- SECOND TAB -->
-            <div class="col-8 col-lg-6 3cols second-tab";>
+            <div class="col-6 col-lg-6 3cols second-tab";>
                 <div class="inner-container2 mx-1">
                     <div class="chat-tab">
                         <div class="chat-heading">
@@ -169,80 +221,54 @@
                         <div class="chat-messages">
                             <!-- MESSAGE EXANMPLE -->
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
+                                </div>
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
+
                             <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
+                                <div class="user-icon-container">
                                     <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
+                                <div class="message-details">
+                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
+                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
                                         <span class="message-time">10:30 AM</span>
                                     </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
-                                </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
-                                </div>
-                            </div>
-                            <div class="chat-message">
-                                <span class="nickname">User's Nickname</span>
-                                <div class="message-content">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                    <i class="bi bi-three-dots-vertical options-icon"></i>
                                 </div>
                             </div>
                             
@@ -269,7 +295,7 @@
                             <div class="user-info">
                                 <div class="username-label">Username:</div>
                                 <div class="username-and-button">
-                                    <div class="current-username">{{user.username}}</div>
+                                    <div class="current-username">CurrentUsername</div>
                                     <button class="change-username-button">Change</button>
                                 </div>
                             </div>
@@ -300,7 +326,6 @@
                             </div>
                             <div class="settings-actions">
                                 <button class="settings-button logout-button">Logout</button>
-                            </a>
                                 <button class="settings-button delete-account-button">Delete Account</button>
                             </div>
                         </div>
@@ -342,13 +367,13 @@
                     <div class="profile-tab">
                         <!-- User Profile Heading -->
                         <div class="user-profile-heading">
-                            <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-pfp">
+                            <img id="userPfp" src="{% static 'assets/pfp.png' %}" alt="User" class="user-pfp">
                             <div class="user-details">
-                                <div class="username">Username</div>
+                                <div id="username" class="username">Username</div>
                                 <div class="additional-info">
-                                    <span>Joined: xx/xx/xxxx</span>
-                                    <span>Ranking: #1</span>
-                                    <span>Matches Played: 99</span>
+                                    <span id="joinedDate">Joined: xx/xx/xxxx</span>
+                                    <span id="ranking">Ranking: #1</span>
+                                    <span id="matchesPlayed">Matches Played: 99</span>
                                 </div>
                             </div>
                         </div>
@@ -365,23 +390,13 @@
                                         <div class="game-date">Win</div>
                                         <div class="game-score">Score: 3-1</div>
                                     </div>
-                                </div>   
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 1-3</div>
-                                    </div>
-                                </div>
+                                </div>  
                                 
                             </div>
                         
                             <!-- Achievements Section -->
                             <div class="user-achievements">
-                                <div class="section-heading">Achievements</div>
+                                <div class="section-heading">Achievementszzz</div>
                                 <div class="achievement-item">
                                     <img src="path_to_achievement_icon.png" alt="Achievement" class="achievement-logo">
                                     <div class="achievement-info">
@@ -427,122 +442,44 @@
                         <div id="bottom-container"></div>
                     </div>
                 </div>
+            </div>                  
+                </div>
             </div>
             <!-- THIRD TAB -->
-            <div class="col-2 col-lg-3 third-tab">
+            <div class="col-3 col-lg-3 third-tab">
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
-                        <span class="career-text">Career</span>
+                        <span class="career-text">Career's</span>
                     </div>
-                    <div class="button-container">
-                        <div class="FriendsChannels">
-                            <button class="social-button active" id="button4">LIST FRIENDS</button>
-                            <button class="social-button" id="button3">HISTORIC</button>
-                        </div>
-                        <div id="friendslistContainer" class="content-container">
-                            <div id="friendsListContent" class="friends-list-content">
-                                <!--EXAMPLE (needs to be removed)-->
-                                <div class="friend-item">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>
-
-
-                                <div class="friend-item">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>     
-                                
-                                <div class="friend-item">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div>
-
-
-                                <div class="friend-item">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Friend's Name</div>
-                                    </div>
-                                    <i class="bi bi-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-controller icon-controller"></i> <!-- Controller icon -->
-                                </div> 
+                    <!-- Friends List Content -->
+                    <div id="friendsListContent" class="friends-list-content">
+                        <!-- Friend Item Example (to be dynamically generated/updated) -->
+                        <div class="friend-item3">
+                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
                             </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <div id="historicContainer" class="content-container" style="display: none;">
-                            <!-- Content for Channels -->
-                            <div id="HistoricTabContent" class="Historic-tab-content">
-                                <!--EXAMPLE (needs to be removed)-->
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 3-1</div>
-                                    </div>
-                                </div>   
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 1-3</div>
-                                    </div>
-                                </div>
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 6-7</div>
-                                    </div>
-                                </div>
-                                <div class="game-item lose">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-20</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Lose</div>
-                                        <div class="game-score">Score: 6-8</div>
-                                    </div>
-                                </div>
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 9-1</div>
-                                    </div>
-                                </div>
+                        <div class="friend-item3">
+                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
                             </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
                         </div>
-                        <!-- Content for Friends -->
+                        <div class="friend-item3">
+                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                            <div class="friend-info">
+                                <div class="friend-nickname">Friend's Name</div>
+                            </div>
+                            <i class="bi bi-person icon-friend-profile"></i>
+                        </div>
+                        <!-- Additional friend items will be similar -->
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -559,5 +496,12 @@
     <script src="{% static 'js/game_pannel/gameMessages.js' %}"></script>
     <script src="{% static 'js/game_pannel/tournament.js' %}"></script>
     <script src="{% static 'js/login.js'%}"></script>
+    <script src="{% static 'js/channelChat.js' %}"></script>
+    <script src="{% static 'js/ajaxCalls.js' %}"></script>
+    <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script>
+    <script src="{% static 'js/globalChat.js' %}"></script>
+    <script src="{% static 'js/webSocket.js' %}"></script>
+
+
 </body>
 </html>
