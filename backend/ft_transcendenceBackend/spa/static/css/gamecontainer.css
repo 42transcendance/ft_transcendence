@@ -1,8 +1,8 @@
 
 .game-container {
     height: 100%; 
-    background-color: #3498db;
-    border: 2px solid #2980b9; 
+    background-color: rgb(250 30 232 / 70%);
+    border: 2px solid rgb(240, 1, 208); 
     border-radius: 10px;
     display: none;
 }
@@ -12,7 +12,7 @@
     height: 15%;
     border-top-right-radius: 10px;
     border-top-left-radius: 10px; 
-    background-color: rgba(102, 178, 255, 0.7); 
+    background-color: rgb(250 30 232 / 70%); 
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -25,7 +25,7 @@
 #principal-container {
     width: auto;
     height: 70%;
-    background-color: rgba(102, 178, 255, 0.7); 
+    background-color: rgb(250 30 232 / 70%); 
     justify-content: center;
     position : relative
 }
@@ -35,7 +35,7 @@
     height: 15%;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px; 
-    background-color: rgba(102, 178, 255, 0.7); 
+    background-color: rgb(250 30 232 / 70%); 
 }
 
 #duel-form {

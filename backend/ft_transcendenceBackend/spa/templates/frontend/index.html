@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/pong.css' %}">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
-    <link rel="stylesheet" href="{% static 'css/small-windows.css' %}"
+    <link rel="stylesheet" href="{% static 'css/small-windows.css' %}">
 </head>
 <body>
 
@@ -31,6 +31,9 @@
         <button id="login-button" onclick="redirectToLogin()">Login with 42</button>
     </div>
     {% endif %}
+    <div id="loading-container">
+        <div class="loader"></div>
+      </div>
     <!--navbar-->
     <nav class="navbar navbar-expand bg-body-tertiary navbar-custom">
         <div class="container-fluid">
@@ -497,8 +500,8 @@
     <script src="{% static 'js/game_pannel/tournament.js' %}"></script>
     <script src="{% static 'js/login.js'%}"></script>
     <script src="{% static 'js/channelChat.js' %}"></script>
-    <script src="{% static 'js/ajaxCalls.js' %}"></script>
-    <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script>
+    <!-- <script src="{% static 'js/ajaxCalls.js' %}"></script>
+    <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script> -->
     <script src="{% static 'js/globalChat.js' %}"></script>
     <script src="{% static 'js/webSocket.js' %}"></script>
 

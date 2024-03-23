@@ -17,3 +17,8 @@ function redirectToLogin() {
 window.onload = function() {
         removeBlurAndText();
 };
+
+window.addEventListener("load", function() {
+    const loader = document.getElementById("loading-container");
+    loader.style.display = "none";
+  });
