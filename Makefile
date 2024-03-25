@@ -14,11 +14,13 @@ stop:
 	@docker-compose -f $(PATH_YML) stop
 
 prune: stop
+	
 	@docker run --rm -v /goinfre/$(USER)/pgdatabase/:/pgdatabase alpine sh -c 'rm -rf /pgdatabase/* && echo "Cleanup complete"'
 	@rm -rf /goinfre/$(USER)/pgdatabase/
 	@docker-compose -f $(PATH_YML) down -v
 	@docker system prune -af
-	
+	@rm -rf ./backend/ft_transcendenceBackend/media/profile_pictures/*
+
 	@rm -rf .env
 
 	@rm -rf ./Docker/Backend/conf/.pgpass

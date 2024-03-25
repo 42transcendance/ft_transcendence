@@ -4,11 +4,18 @@ from .pong import PongGame
 class Group :
     def __init__(self, groupName, max_capacity) -> None:
         self.max_capacity = max_capacity
+        self.ready = 0
         self.capacity = 0
         self.name = groupName
         self.users = set()
         self.gameObject = None
-        self.gameThread = None
+
+    def createGame (self, player, opponent):
+        if self.gameObject == None:
+            self.gameObject = PongGame(player, opponent)
+    
+    def userReady (self):
+        self.ready += 1
 
 class GroupsManager :
     def __init__(self) -> None:
@@ -61,8 +68,6 @@ class GroupsManager :
             return  (1)
         targetGroup.users.add(userChannel)
         targetGroup.capacity += 1
-        if targetGroup.capacity == 1 :
-            targetGroup.gameObject = PongGame ()
 
     def group_remove_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
