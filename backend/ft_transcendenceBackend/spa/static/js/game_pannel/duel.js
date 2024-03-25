@@ -19,7 +19,7 @@ function startDuelGame() {
         var gameContainer = document.getElementById('pong-container');
         gameContainer.replaceChild(Pong.canvas, placeholderCanvas);
 
-        Pong.start();
+        Pong.connect();
 
         checkGameState(Pong);
         

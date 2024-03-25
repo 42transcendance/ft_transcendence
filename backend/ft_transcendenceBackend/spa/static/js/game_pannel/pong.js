@@ -1,3 +1,4 @@
+
 class Game {
 	constructor(playerName, opponentName) {
 
@@ -18,7 +19,6 @@ class Game {
 	}
 
 	connect() {
-		// Assuming you're using WebSocket for communication
 		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
 	
 		this.pongSocket.onopen = () => {
@@ -26,7 +26,7 @@ class Game {
 		  this.connected = true;
 		  this.waitForReadySignal();
 		};
-	
+		
 		this.pongSocket.onmessage = (event) => {
 			const message = JSON.parse(event.data);
 			console.log(message);
@@ -41,10 +41,12 @@ class Game {
 		  console.error('WebSocket error:', error);
 		};
 	}
-		waitForReadySignal() {
+	
+	waitForReadySignal() {
 		const checkReady = () => {
 			if (!this.ready) {
-			setTimeout(checkReady, 1000); // Check every second
+				console.log("Waiting For Game start...");
+				setTimeout(checkReady, 1000); // Check every second
 			}
 		};
 		checkReady();
