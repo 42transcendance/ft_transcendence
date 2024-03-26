@@ -1,7 +1,6 @@
 function removeBlurAndText() {
     var blurBackground = document.getElementById('blurBackground');
     var centeredText = document.getElementById('centeredText');
-    console.log("remove");
     if (blurBackground) {
         blurBackground.parentNode.removeChild(blurBackground);
     }

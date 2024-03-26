@@ -25,6 +25,8 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('callback/', views.callback, name='callback'),
     path('logout/', views.custom_logout, name='logout'),
+    path('get_user_details/', views.get_user_details, name='get_user_details'),
+    path('send_friend_request/', views.send_firend_request, name='send_friend_request'),
     # path('testGame/', views.testGame, name='testGame'),
 ]
 

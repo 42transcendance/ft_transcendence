@@ -1,16 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserProfile();
     fetchGameHistory();
-    fetchAchievements();
 
     function fetchUserProfile() {
-        // to be replaced with actual API endpoint
-        fetch('/api/user/profile') 
-            .then(response => response.json())
-            .then(data => {
+        $.ajax({
+            url: '/get_user_details/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
                 updateProfilePage(data);
-            })
-            .catch(error => console.error('Error:', error));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
     function fetchGameHistory() {
@@ -23,23 +26,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error:', error));
     }
 
-    function fetchAchievements() {
-        // to be replaced with actual API endpoint
-        fetch('/api/user/achievements') 
-            .then(response => response.json())
-            .then(data => {
-                addAchievementItems(data.achievements);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
     function updateProfilePage(data) {
         // Replacing keys with actual ones from our API response
-        document.getElementById('username').textContent = data.username;
-        document.getElementById('userPfp').src = data.profilePictureUrl || 'assets/pfp.png';
-        document.getElementById('joinedDate').textContent = `Joined: ${data.joinedDate}`;
-        document.getElementById('ranking').textContent = `Ranking: ${data.rank}`;
-        document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.gamesPlayed}`;
+        document.getElementById('username').textContent = data.user_details.username;
+        document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
+        document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
+        // document.getElementById('ranking').textContent = `Ranking: ${data.rank}`;
+        // document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.gamesPlayed}`;
     }
 
     function addGameHistoryItems(gameHistory) {
@@ -68,24 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         container.appendChild(gameItem);
-    }
-
-    function addAchievementItems(achievements) {
-        const achievementsContainer = document.querySelector('.user-achievements'); 
-
-        achievements.forEach(achievement => {
-            const achievementItem = document.createElement('div');
-            achievementItem.classList.add('achievement-item');
-
-            achievementItem.innerHTML = `
-                <img src="${achievement.iconUrl}" alt="Achievement" class="achievement-logo">
-                <div class="achievement-info">
-                    <div class="achievement-name">${achievement.name}</div>
-                    <div class="achievement-description">${achievement.description}</div>
-                </div>
-            `;
-            achievementsContainer.appendChild(achievementItem);
-        });
     }
 });
 
@@ -132,91 +107,28 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchUserSettings();
 
     function fetchUserSettings() {
-        fetch('/api/user/settings')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if(data.pfpUrl) {
-                    updateProfilePicture(data.pfpUrl);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching user settings:', error);
-            });
-    }
-
-    function updateProfilePicture(pfpUrl) {
-        document.querySelector('.pfp-container .user-pfp').src = pfpUrl;
-    }
-});
-
-//achievements
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    fetchAchievements();
-
-    function fetchAchievements() {
-        // Fetch achievements from the server
-        fetch('/api/user/achievements')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Assuming the achievements are returned as an array of objects
-                if(Array.isArray(data.achievements)) {
-                    updateAchievements(data.achievements);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching achievements:', error);
-            });
-    }
-
-    function updateAchievements(achievements) {
-        const achievementsContent = document.querySelector('.achievements-content');
-        // Clearing existin achievements to avoid duplicates
-        achievementsContent.innerHTML = '';
-
-        achievements.forEach(achievement => {
-            const achievementItem = document.createElement('div');
-            achievementItem.classList.add('achievement-item');
-
-            const logoImg = document.createElement('img');
-            logoImg.src = achievement.logoUrl;
-            logoImg.alt = "Logo";
-            logoImg.classList.add('achievement-logo');
-
-            const infoDiv = document.createElement('div');
-            infoDiv.classList.add('achievement-info');
-
-            const nameDiv = document.createElement('div');
-            nameDiv.classList.add('achievement-name');
-            nameDiv.textContent = achievement.name; // Assuming each achievement object has a name
-
-            const descriptionDiv = document.createElement('div');
-            descriptionDiv.classList.add('achievement-description');
-            descriptionDiv.textContent = achievement.description; // Assuming each achievement object has a description
-
-            infoDiv.appendChild(nameDiv);
-            infoDiv.appendChild(descriptionDiv);
-
-            achievementItem.appendChild(logoImg);
-            achievementItem.appendChild(infoDiv);
-
-            achievementsContent.appendChild(achievementItem);
+        $.ajax({
+            url: '/get_user_details/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                updateProfilePicture(data);
+                updateSettingsUsername(data);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
         });
     }
+
+    function updateProfilePicture(data) {
+        document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
+        document.querySelector('.profile-pic').src = data.user_details.userPfp;
+    }
+    function updateSettingsUsername(data){
+        document.querySelector('.current-username').textContent = data.user_details.username;
+    }
 });
-
-
 //first tab - channels
 
 document.addEventListener('DOMContentLoaded', function() {

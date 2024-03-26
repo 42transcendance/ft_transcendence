@@ -50,28 +50,6 @@ function removeRequestFromUI(requestId) {
 }
 
 
-//websocket for outgoing requests
-
-let webSocket;
-
-function connectWebSocket() {
-    const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
-    webSocket = new WebSocket(`${wsScheme}://${window.location.host}/ws/friends/`);
-
-    webSocket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        handleWebSocketMessage(data);
-    };
-
-    webSocket.onclose = function(e) {
-        console.error('WebSocket closed unexpectedly');
-        // Attempt to reconnect
-        setTimeout(function() {
-            connectWebSocket();
-        }, 1000);
-    };
-}
-
 function handleWebSocketMessage(data) {
     switch(data.type) {
         case 'friend_request_accepted':
@@ -100,11 +78,10 @@ function handleWebSocketMessage(data) {
 }
 
 function acceptFriendRequest(requestId) {
-    // Optimistically update the UI
+    console.log(requestId);
     removeRequestFromUI(requestId);
     showNotification("Friend request accepted", "rgb(81, 171, 81)");
 
-    // Attempt to send the accept request to the server
     fetch('/api/friend-request/accept', {
         method: 'POST',
         headers: {

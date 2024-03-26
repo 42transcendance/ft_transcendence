@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function addMessageToChatUI(message, sender) {
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
-    const userIconHTML = `<div class="user-icon-container"><img src="assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
+    const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
     const messageDetailsHTML = `
         <div class="message-details">
             <span class="nickname">${sender}</span>
