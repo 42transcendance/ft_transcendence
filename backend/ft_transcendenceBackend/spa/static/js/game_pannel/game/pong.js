@@ -1,40 +1,38 @@
-
 class Game {
 	constructor() {		
 		this.principalContainer = document.getElementById('principal-container');
 		this.canvas = document.getElementById('gameCanvas');
 		this.context = this.canvas.getContext('2d');
 		
-		this.canvas.width = this.principalContainer.clientWidth;
-		this.canvas.height = this.principalContainer.clientHeight;
+		this.canvas.width = 600;
+		this.canvas.height = 400;
 
-		this.canvas.style.width = this.principalContainer.clientWidth + 'px';
-		this.canvas.style.height = this.principalContainer.clientHeight + 'px';
+		this.canvas.style.width = this.canvas.width + 'px';
+		this.canvas.style.height = this.canvas.height + 'px';
 
 		this.color = '#1f2938';
 	}
 
-	listen() {
-		this.pongSocket.onmessage = (event) => {
-			const wsData = JSON.parse(event.data);
-			if (wsData.type === 'game.starting') {
-				//console.log('Both players are ready. Starting game...');
-				this.game_running = true;
-				// Start the game here
-			}
-			if (wsData.type === 'game.state') {
-				this.drawBoard(wsData);
-			}
-		};
+	wsListen() {
+        this.pongSocket.onmessage = (event) => {
+            const wsData = JSON.parse(event.data);
+            if (wsData.type === 'game.starting') {
+                this.game_running = true;
+                // Start the game here
+                this.drawFrame(); // Start the animation loop
+            } else if (wsData.type === 'game.state') {
+				console.log("Received update")
+                this.lastGameState = wsData;
+            }
+        };
 
-		this.pongSocket.onerror = (error) => {
-			console.error('WebSocket error:', error);
-		  };
-	}
+        this.pongSocket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+    }
 
 	drawBoard(wsData) {
 		const diff = this.canvas.width / wsData.width;
-		console.log('diff : ', diff)
 		// console.log(wsData);
 		this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
 		this.context.fillStyle = this.color;
@@ -61,13 +59,16 @@ class Game {
 		this.context.fillRect( (wsData.leftPlayer.x * diff), (wsData.leftPlayer.y * diff), (wsData.leftPlayer.width * diff), (wsData.leftPlayer.height * diff));
 		this.context.fillRect( (wsData.rightPlayer.x * diff), (wsData.rightPlayer.y * diff), (wsData.rightPlayer.width * diff), (wsData.rightPlayer.height * diff));
 
+		//Draw The Score
+		this.context.font = (wsData.defaultFontSize * diff) + "px " + wsData.defaultFont;
+		this.context.strokeText(wsData.player_score, this.canvas.width / 8, ((wsData.defaultFontSize) * diff));
+		this.context.strokeText(wsData.opponent_score, this.canvas.width * 0.6, ((wsData.defaultFontSize) * diff));
 	}
 
 	connect() {
 		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
 	
 		this.pongSocket.onopen = () => {
-			console.log('Connected to server');
 			this.connected = true;
 
 			this.pongSocket.send(JSON.stringify({ 
@@ -78,7 +79,7 @@ class Game {
 			this.waitForReadySignal();
 		};
 
-		this.listen();
+		this.wsListen();
 	}
 	
 	waitForReadySignal() {
@@ -91,6 +92,17 @@ class Game {
 		};
 		checkReady();
 	}
+
+	drawFrame() {
+        // This function will be called recursively using requestAnimationFrame
+        // Draw the current game state
+        this.drawBoard(this.lastGameState);
+
+        // Request the next animation frame
+        if (this.game_running) {
+            requestAnimationFrame(() => this.drawFrame());
+        }
+    }
 
 	startGame (defaultState) {
 

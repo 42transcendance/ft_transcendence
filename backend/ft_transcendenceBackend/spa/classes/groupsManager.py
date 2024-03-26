@@ -1,18 +1,32 @@
 from uuid import uuid4
 from .pong import PongGame
+import threading
+import asyncio
 
 class Group :
     def __init__(self, groupName, max_capacity) -> None:
         self.max_capacity = max_capacity
         self.ready = 0
         self.capacity = 0
-        self.name = groupName
+        self.groupChannel = groupName
         self.users = set()
         self.gameObject = None
+        self.gameThread = None
 
     def createGame (self, player, opponent):
-        if self.gameObject == None:
-            self.gameObject = PongGame(player, opponent)
+        if self.gameObject is None:
+            self.gameObject = PongGame(player, opponent, self.groupChannel)
+
+    def startGameThread(self):
+        if self.gameThread is None:
+            self.gameThread = threading.Thread(target=self.game_thread_target)
+            self.gameThread.daemon = True
+            self.gameThread.start()
+
+    def game_thread_target(self):
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(self.gameObject.gameLoop())
     
     def userReady (self):
         self.ready += 1
@@ -23,18 +37,18 @@ class GroupsManager :
 
     def get_group_by_name(self, group_name):
             for group in self.groups:
-                if group.name == group_name:
+                if group.groupChannel == group_name:
                     return group
             return None
     
     def list_groups(self):
         for group in self.groups :
-            print(group.name)
+            print(group.groupChannel)
 
     def join_group(self) -> str:
         for group in self.groups:
             if group.capacity == 1:
-                return group.name
+                return group.groupChannel
         return None
 
     def add_group(self, max_capacity) -> str:
@@ -64,7 +78,7 @@ class GroupsManager :
             print("Error: ", groupName, " does not exist.")
             return (1)
         if targetGroup.capacity == 2:
-            print("Error: ", targetGroup.name, " is full.")
+            print("Error: ", targetGroup.groupChannel, " is full.")
             return  (1)
         targetGroup.users.add(userChannel)
         targetGroup.capacity += 1

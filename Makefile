@@ -3,6 +3,7 @@ PATH_YML = ./docker-compose.yml
 all: build start
 
 build:
+	@utils/setApiKeys.sh
 	@utils/setup.sh
 	docker-compose -f $(PATH_YML) build
 
@@ -12,9 +13,6 @@ start:
 
 stop:
 	@docker-compose -f $(PATH_YML) stop
-
-setup:
-	@utils/setup.sh
 
 prune: stop
 	

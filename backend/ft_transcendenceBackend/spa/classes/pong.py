@@ -1,5 +1,11 @@
+import time
+from channels.layers import get_channel_layer
+import asyncio
+
 STD_WIDTH = 300
 STD_HEIGHT = 200
+
+channel_layer = get_channel_layer()
 
 class Paddle :
     def __init__(self, name, side) -> None:
@@ -14,11 +20,11 @@ class Ball :
         self.x = STD_WIDTH / 2
         self.y = STD_HEIGHT / 2
         self.radius = 3
-        self.direction = -1
+        self.direction = 0
         self.speed = 5
 
 class PongGame :
-    def __init__(self, leftPlayer, rightPlayer) -> None:
+    def __init__(self, leftPlayer, rightPlayer, groupChannel) -> None:
         self.width = STD_WIDTH
         self.height = STD_HEIGHT
         self.leftPlayer = Paddle(leftPlayer, 'left')
@@ -26,13 +32,18 @@ class PongGame :
         self.ball = Ball()
         self.player_score = 0
         self.opponent_score = 0
-    # def gameLoop (self):
-        # pass
+        self.defaultFontSize = 150
+        self.defaultFont = "Arial"
+        self.groupChannel = groupChannel
 
     def to_dict(self):
         return {
             'width': self.width,
             'height': self.height,
+            'player_score': self.player_score,
+            'opponent_score': self.opponent_score,
+            'defaultFontSize': self.defaultFontSize,
+            'defaultFont': self.defaultFont,
             'leftPlayer': {
                 'name': self.leftPlayer.name,
                 'x': self.leftPlayer.x,
@@ -54,6 +65,27 @@ class PongGame :
                 'direction': self.ball.direction,
                 'speed': self.ball.speed
             },
-            'player_score': self.player_score,
-            'opponent_score': self.opponent_score
         }
+    
+    async def gameLoop(self):
+        end_time = 0
+        while end_time <= 30:
+            print(end_time)
+            if self.ball.direction == 0:
+                self.ball.x -= 1
+                if self.ball.x - self.ball.radius <= 0:
+                    self.ball.x = 0
+                    self.ball.direction = 1
+            elif self.ball.direction == 1:
+                self.ball.x += 1
+                if self.ball.x + self.ball.radius >= self.width:
+                    self.ball.x = self.width
+                    self.ball.direction = 0
+            await channel_layer.group_send(
+            self.groupChannel,
+            {
+                'type': 'send.game.state',
+                'gameState': self,
+            })
+            await asyncio.sleep(0.016)
+            end_time += 0.016
