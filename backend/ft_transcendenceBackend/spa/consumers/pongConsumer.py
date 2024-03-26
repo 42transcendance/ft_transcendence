@@ -9,6 +9,7 @@ pongGroupsManager = GroupsManager()
 
 class pongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.ready = 0
         self.group_name = pongGroupsManager.join_group()
         if self.group_name != None:
             pongGroupsManager.group_add_user(self.group_name, self.channel_name)
@@ -17,6 +18,8 @@ class pongConsumer(AsyncWebsocketConsumer):
             pongGroupsManager.group_add_user(self.group_name, self.channel_name)
 
         await self.channel_layer.group_add( self.group_name, self.channel_name )
+        self.groupObject = pongGroupsManager.get_group_by_name(self.group_name)
+
         await self.accept()
     
     async def disconnect(self, close_code):
@@ -26,30 +29,26 @@ class pongConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
-        message_data = data.get('message')
 
-        # print('Type : [' + message_type + ']')
-        # print('Message : ', message_data)
-        # print("List of groups : ")
-        # pongGroupsManager.list_groups()
-        # print("Group of user : ", self.group_name)
+        if message_type == 'user.ready':
+            self.groupObject.createGame('Player1', 'Player2')
+            if self.ready == 0:
+                self.groupObject.userReady()
+                self.ready += 1
+            await self.channel_layer.group_send(
+            self.group_name,
+            {
+                'type': 'send_game_state',
+                'gameState': self.groupObject.gameObject,
+            })
 
-    #     if message_type == "notification":
-    #         await self.send_to_group(self.group_name, message_data)
+    async def send_game_state(self, event):
+        game_state = event['gameState']
+        game_state_json = {
+            'type': 'game.state',  # Adding the type message
+            **game_state.to_dict()  # Use dictionary unpacking to include other properties
+        }
 
-    # async def send_to_group(self, group_name, message):
-    #     channel_layer = self.channel_layer
-    #     await channel_layer.group_send(
-    #         group_name,
-    #         {
-    #             "type": "chat.message",  # Assuming you have a method named chat_message to handle messages in the group
-    #             "message": message,
-    #         }
-    #     )
-
-    # async def chat_message(self, event):
-    #     message = event["message"]
-
-    #     # Send message to WebSocket
-    #     await self.send(text_data=json.dumps({"message": message}))
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps(game_state_json))
     
