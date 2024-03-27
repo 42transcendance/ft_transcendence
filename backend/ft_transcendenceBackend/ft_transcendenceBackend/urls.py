@@ -26,7 +26,14 @@ urlpatterns = [
     path('callback/', views.callback, name='callback'),
     path('logout/', views.custom_logout, name='logout'),
     path('get_user_details/', views.get_user_details, name='get_user_details'),
-    path('send_friend_request/', views.send_firend_request, name='send_friend_request'),
+    path('send_friend_request/', views.send_friend_request, name='send_friend_request'),
+    path('accept_friend_request/', views.accept_friend_request, name='accept_friend_request'),
+    path('decline_friend_request/', views.decline_friend_request, name='decline_friend_request'),
+    path('get_incoming_requests/', views.get_incoming_requests, name='get_incoming_resquests'),
+    path('get_outgoing_requests/', views.get_outgoing_requests, name='get_outgoing_requests'),
+    path('get_friends/', views.get_friends, name='get_friends'),
+    path('get_block_list/', views.get_block_list, name='get_block_list'),
+    path('block_user/', views.block_user, name='block_user'),
     # path('testGame/', views.testGame, name='testGame'),
 ]
 

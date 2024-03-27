@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <i class="bi bi-person icon-friend-profile"></i>
             `;
-
             friendsListContainer.appendChild(friendItem);
         });
     }

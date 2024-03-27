@@ -77,59 +77,31 @@ function handleWebSocketMessage(data) {
     }
 }
 
-function acceptFriendRequest(requestId) {
-    console.log(requestId);
+function acceptFriendRequest(requestId, username) {
     removeRequestFromUI(requestId);
-    showNotification("Friend request accepted", "rgb(81, 171, 81)");
 
-    fetch('/api/friend-request/accept', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ requestId: requestId }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            // Handle response error (optional)
-            console.error('Request failed', response.statusText);
+    $.ajax({
+        url: '/accept_friend_request/',
+        method: 'GET',
+        data: { 'friend_username': username },
+        success: function(data) {
+            // displayFriends('friendsTabContent', data);
+            showNotification("Friend request accepted", "rgb(81, 171, 81)");
         }
-        return response.json();
-    })
-    .then(data => {
-        // Additional actions upon successful server response (if needed)
-        console.log('Request accepted:', data);
-    })
-    .catch(error => {
-        // Handle network error
-        console.error('Network error:', error);
     });
 }
 
-function declineFriendRequest(requestId) {
-    console.log(`Declining friend request with ID: ${requestId}`);
-
-    // Simulate backend response and remove the request from UI
-    fetch('/api/declineFriendRequest', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ requestId: requestId }),
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log("Friend request declined successfully");
-            removeRequestFromUI(requestId); // Assuming you have a function to remove the request from the UI
-            showNotification("Friend request declined", "rgb(168, 64, 64)"); // Display a notification for the declined request
-        } else {
-            console.error("Failed to decline friend request");
-        }
-    })
-    .catch(error => console.error('Error:', error));
-
+function declineFriendRequest(requestId,username) {
     removeRequestFromUI(requestId);
-    showNotification("Friend request declined", "rgb(168, 64, 64)"); // Red color for decline
+
+    $.ajax({
+        url: '/decline_friend_request/',
+        method: 'GET',
+        data: { 'friend_username': username },
+        success: function(data) {
+            showNotification("Friend request declined", "rgb(168, 64, 64)");
+        }
+    });
 }
 
 function loadChatWithFriend(friendId) {
@@ -172,55 +144,78 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchFriends() {
-        fetch('/api/friends')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    displayFriends('friendsTabContent', data);
+        $.ajax({
+            url: '/get_friends/', 
+            method: 'GET',
+            dataType: 'json',
+            success: function(friends) {
+                console.log(friends);
+                if (friends.length > 0) {
+                    displayFriends('friendsTabContent', friends);
                 } else {
                     displayEmpty('friendsTabContent');
                 }
-            })
-            .catch(error => console.error('Error fetching friends:', error));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
     function fetchOutgoingRequests() {
-        fetch('/api/friend-requests/outgoing')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    displayRequests('outgoingRequestsTabContent', data, 'outgoing');
+        $.ajax({
+            url: '/get_outgoing_requests/', 
+            method: 'GET',
+            dataType: 'json',
+            success: function(waiting_requests) {
+                console.log(waiting_requests);
+                if (waiting_requests.length > 0) {
+                    displayRequests('outgoingRequestsTabContent', waiting_requests, 'outgoing');
                 } else {
                     displayEmpty('outgoingRequestsTabContent');
                 }
-            })
-            .catch(error => console.error('Error fetching outgoing requests:', error));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
-    function fetchIncomingRequests() {
-        fetch('/api/friend-requests/incoming')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    displayRequests('incomingRequestsTabContent', data, 'incoming');
-                } else {
-                    displayEmpty('incomingRequestsTabContent');
-                }
-            })
-            .catch(error => console.error('Error fetching incoming requests:', error));
-    }
+function fetchIncomingRequests() {
+    $.ajax({
+        url: '/get_incoming_requests/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(waiting_requests) {
+            console.log(waiting_requests);
+            if (waiting_requests.length > 0) {
+                displayRequests('incomingRequestsTabContent', waiting_requests, 'incoming');
+            } else {
+                displayEmpty('incomingRequestsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
 
     function fetchBlockedContacts() {
-        fetch('/api/friends/blocked')
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    displayBlocked('blockedTabContent', data);
+        $.ajax({
+            url: '/get_block_list/', 
+            method: 'GET',
+            dataType: 'json',
+            success: function(block_list) {
+                if (block_list.length > 0) {
+                    displayBlocked('blockedTabContent', block_list);
                 } else {
                     displayEmpty('blockedTabContent');
                 }
-            })
-            .catch(error => console.error('Error fetching blocked contacts:', error));
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
     function displayFriends(containerId, friends) {
@@ -228,16 +223,16 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '';
         friends.forEach(friend => {
             container.innerHTML += `
-                <div class="friend-item" data-id="${friend.id}">
-                    <img src="${friend.image}" alt="${friend.name}" class="friend-image">
+                <div class="friend-item" data-id="${friend.userid}">
+                    <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
                     <div class="friend-info">
-                        <div>${friend.name}</div>
+                        <div>${friend.username}</div>
                     </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.userid}"></i>
+                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.userid}"></i>
+                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.userid}"></i>
                 </div>
-            `;
+            `;  
         });
     }    
 
@@ -248,15 +243,15 @@ document.addEventListener('DOMContentLoaded', function() {
             let actionIcons = '';
             if (type === 'incoming') {
                 actionIcons = `
-                    <i class="bi bi-check-circle accept-request small-icons" data-id="${request.id}"></i>
-                    <i class="bi bi-x-circle decline-request small-icons" data-id="${request.id}"></i>
+                    <i class="bi bi-check-circle accept-request small-icons" data-id="${request.userid}"></i>
+                    <i class="bi bi-x-circle decline-request small-icons" data-id="${request.userid}"></i>
                 `;
             }
             container.innerHTML += `
-                <div class="friend-item" data-id="${request.id}">
-                    <img src="${request.image}" alt="${request.name}" class="friend-image">
+                <div class="friend-item" data-id="${request.userid}">
+                    <img src="${request.userPfp}" alt="${request.username}" class="friend-image">
                     <div class="friend-info">
-                        <div>${request.name}</div>
+                        <div>${request.username}</div>
                     </div>
                     ${actionIcons}
                 </div>
@@ -269,12 +264,12 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '';
         blocked.forEach(block => {
             container.innerHTML += `
-                <div class="friend-item" data-id="${block.id}">
-                    <img src="${block.image}" alt="${block.name}" class="friend-image">
+                <div class="friend-item" data-id="${block.userid}">
+                    <img src="${block.userPfp}" alt="${block.username}" class="friend-image">
                     <div class="friend-info">
-                        <div>${block.name}</div>
+                        <div>${block.username}</div>
                     </div>
-                    <i class="bi bi-x-circle icon-unblock small-icons" data-id="${block.id}"></i>
+                    <i class="bi bi-x-circle icon-unblock small-icons" data-id="${block.uesrid}"></i>
                 </div>
             `;
         });
@@ -289,23 +284,26 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('accept-request')) {
 			const friendItem = event.target.closest('.friend-item');
+            const usernameElement = friendItem.querySelector('.friend-info > div');
+            const username = usernameElement.textContent.trim();
 			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
 			console.log("Accepting request with ID: " + requestId);
 			if (requestId) {
-				acceptFriendRequest(requestId);
+				acceptFriendRequest(requestId, username);
 			}
 		}
 		else if (event.target.classList.contains('decline-request')) {
 			const friendItem = event.target.closest('.friend-item');
+            const usernameElement = friendItem.querySelector('.friend-info > div');
+            const username = usernameElement.textContent.trim();
 			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
-			console.log("Declining request with ID: " + requestId);
+			console.log("Declining request with ID: " + requestId + username);
 			if (requestId) {
-                declineFriendRequest(requestId);
+                declineFriendRequest(requestId,username);
 			}
         }
 		else if (event.target.classList.contains('icon-unblock')) {
-            // Logic to unblock user here...
-            showNotification("User unblocked", "rgb(81, 171, 81)"); // Green color
+            showNotification("User unblocked", "rgb(81, 171, 81)"); 
         }
 		else if (event.target.classList.contains('icon-controller')) {
             showNotification("Invitation Sent", "rgb(81, 171, 81)"); // Green color
@@ -393,8 +391,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addModalEventListeners(userId) {
         document.getElementById('btnConfirmBlock').addEventListener('click', function() {
-            document.getElementById('confirmBlockModal').remove();
-            blockUser(userId);
+            $.ajax({
+                url: '/block_user/',
+                method: 'GET',
+                data: { 'friend_username': username },
+                success: function(data) {
+                    console.log("not friends anymore");
+                    showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+                    removeModal('confirmBlockModal');
+                }
+            });
         });
         document.getElementById('btnCancelBlock').addEventListener('click', function() {
             document.getElementById('confirmBlockModal').remove();

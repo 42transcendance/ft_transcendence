@@ -24,13 +24,12 @@ function showAddFriendModal() {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     document.getElementById('btnCancelAddFriend').addEventListener('click', () => closeModal('modalAddFriend'));
     document.getElementById('btnAddFriend').addEventListener('click', function() {
-        console.log("called");
         let inputText = document.getElementById('inputFriendUsername').value;;
         $.ajax({
             url: '/send_friend_request/',
             method: 'GET',
             data: { 'search_term': inputText },
-            success: function(data) {
+            success: function() {
                 document.getElementById('inputFriendUsername').value = '';
                 closeModal('modalAddFriend');
                 console.log("friend request send !");

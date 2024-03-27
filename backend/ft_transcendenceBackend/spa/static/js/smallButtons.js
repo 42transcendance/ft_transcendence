@@ -34,8 +34,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function addModalEventListeners() {
         document.getElementById('btnConfirmBlock').addEventListener('click', function() {
-            showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
-            removeModal('confirmBlockModal');
+            $.ajax({
+                url: '/block_user/',
+                method: 'GET',
+                data: { 'friend_username': username },
+                success: function(data) {
+                    console.log("not friends anymore");
+                    showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+                    removeModal('confirmBlockModal');
+                }
+            });
+            
         });
 
         document.getElementById('btnCancelBlock').addEventListener('click', function() {
