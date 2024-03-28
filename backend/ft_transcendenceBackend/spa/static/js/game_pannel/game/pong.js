@@ -46,13 +46,6 @@ class Game {
 		this.context.lineWidth = 4;
 		this.context.strokeStyle = 'grey';
 		this.context.stroke();
-
-		// Draw the ball
-		this.context.fillStyle = 'white';
-		this.context.setLineDash([]);
-		this.context.beginPath();
-		this.context.arc((wsData.ball.x * diff), (wsData.ball.y * diff), (wsData.ball.radius * diff), 0, 2 * Math.PI);
-		this.context.fill();
 		
 		//Draw The paddle
 		this.context.fillStyle = '#ffffff';
@@ -63,6 +56,13 @@ class Game {
 		this.context.font = (wsData.defaultFontSize * diff) + "px " + wsData.defaultFont;
 		this.context.strokeText(wsData.player_score, this.canvas.width / 8, ((wsData.defaultFontSize) * diff));
 		this.context.strokeText(wsData.opponent_score, this.canvas.width * 0.6, ((wsData.defaultFontSize) * diff));
+
+		// Draw the ball
+		this.context.fillStyle = 'white';
+		this.context.setLineDash([]);
+		this.context.beginPath();
+		this.context.arc((wsData.ball.x * diff), (wsData.ball.y * diff), (wsData.ball.radius * diff), 0, 2 * Math.PI);
+		this.context.fill();
 	}
 
 	connect() {
@@ -103,10 +103,6 @@ class Game {
             requestAnimationFrame(() => this.drawFrame());
         }
     }
-
-	startGame (defaultState) {
-
-	}
 };
 
 // var sendMessageButton = document.querySelector('.test-send-button');

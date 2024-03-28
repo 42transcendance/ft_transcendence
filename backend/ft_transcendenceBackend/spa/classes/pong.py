@@ -21,7 +21,7 @@ class Ball :
         self.y = STD_HEIGHT / 2
         self.radius = 3
         self.direction = 0
-        self.speed = 5
+        self.speed = 2
 
 class PongGame :
     def __init__(self, leftPlayer, rightPlayer, groupChannel) -> None:
@@ -35,6 +35,7 @@ class PongGame :
         self.defaultFontSize = 150
         self.defaultFont = "Arial"
         self.groupChannel = groupChannel
+        self.rebounds = 0
 
     def to_dict(self):
         return {
@@ -68,24 +69,23 @@ class PongGame :
         }
     
     async def gameLoop(self):
-        end_time = 0
-        while end_time <= 30:
-            print(end_time)
+        while self.rebounds <= 100:
             if self.ball.direction == 0:
-                self.ball.x -= 1
+                self.ball.x -= 1 * self.ball.speed
                 if self.ball.x - self.ball.radius <= 0:
                     self.ball.x = 0
                     self.ball.direction = 1
+                    self.rebounds += 1
             elif self.ball.direction == 1:
-                self.ball.x += 1
+                self.ball.x += 1 * self.ball.speed
                 if self.ball.x + self.ball.radius >= self.width:
                     self.ball.x = self.width
                     self.ball.direction = 0
+                    self.rebounds += 1
             await channel_layer.group_send(
             self.groupChannel,
             {
                 'type': 'send.game.state',
                 'gameState': self,
             })
-            await asyncio.sleep(0.016)
-            end_time += 0.016
+            await asyncio.sleep(1 / 65)

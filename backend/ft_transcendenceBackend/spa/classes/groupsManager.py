@@ -1,6 +1,5 @@
 from uuid import uuid4
 from .pong import PongGame
-import threading
 import asyncio
 
 class Group :
@@ -11,22 +10,15 @@ class Group :
         self.groupChannel = groupName
         self.users = set()
         self.gameObject = None
-        self.gameThread = None
+        self.gameTask = None
 
     def createGame (self, player, opponent):
         if self.gameObject is None:
             self.gameObject = PongGame(player, opponent, self.groupChannel)
 
-    def startGameThread(self):
-        if self.gameThread is None:
-            self.gameThread = threading.Thread(target=self.game_thread_target)
-            self.gameThread.daemon = True
-            self.gameThread.start()
-
-    def game_thread_target(self):
-        asyncio.set_event_loop(asyncio.new_event_loop())
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(self.gameObject.gameLoop())
+    def startGameTask(self):
+        if self.gameTask is None:
+            self.gameTask = asyncio.create_task(self.gameObject.gameLoop())
     
     def userReady (self):
         self.ready += 1

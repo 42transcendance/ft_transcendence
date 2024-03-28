@@ -10,7 +10,7 @@ pongGroupsManager = GroupsManager()
 class pongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.ready = 0
-        self.update = 0
+
         self.group_name = pongGroupsManager.join_group()
 
         if self.group_name != None:
@@ -45,7 +45,7 @@ class pongConsumer(AsyncWebsocketConsumer):
                 'gameState': self.groupObject.gameObject,
             })
             if self.groupObject.ready == 2:
-                self.groupObject.startGameThread()
+                self.groupObject.startGameTask()
                 await self.channel_layer.group_send(
                 self.group_name,
                 {
@@ -54,15 +54,13 @@ class pongConsumer(AsyncWebsocketConsumer):
                 })
 
     async def send_game_state(self, event):
-        print(self.update)
         game_state = event['gameState']
         game_state_json = {
-            'type': 'game.state',  # Adding the type message
-            **game_state.to_dict()  # Use dictionary unpacking to include other properties
+            'type': 'game.state',
+            **game_state.to_dict()
         }
-        # Send message to WebSocket
+
         await self.send(text_data=json.dumps(game_state_json))
-        self.update += 1
     
     async def game_starting(self, event):
         message = event['message']
