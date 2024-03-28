@@ -104,6 +104,17 @@ function declineFriendRequest(requestId,username) {
     });
 }
 
+function unblockBlockedUser(username){
+    $.ajax({
+        url: '/unblock_friend/',
+        method : 'GET',
+        data : {'friend_username' : username},
+        success: function(data){
+            showNotification("User unblocked", "rgb(81, 171, 81)"); 
+        }
+    });
+}
+
 function loadChatWithFriend(friendId) {
     console.log("start here");    
     const chatMessagesContainer = document.querySelector('.chat-messages');
@@ -303,16 +314,22 @@ function fetchIncomingRequests() {
 			}
         }
 		else if (event.target.classList.contains('icon-unblock')) {
-            showNotification("User unblocked", "rgb(81, 171, 81)"); 
+            const friendItem = event.target.closest('.friend-item');
+            const usernameElement = friendItem.querySelector('.friend-info > div');
+            const username = usernameElement.textContent.trim();
+			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
+            unblockBlockedUser(username);
         }
 		else if (event.target.classList.contains('icon-controller')) {
             showNotification("Invitation Sent", "rgb(81, 171, 81)"); // Green color
         }
 		else if (event.target.classList.contains('icon-block')) {
             const friendItem = event.target.closest('.friend-item');
+            const usernameElement = friendItem.querySelector('.friend-info > div');
+            const username = usernameElement.textContent.trim();
             const userId = friendItem ? friendItem.getAttribute('data-id') : null;
             if (userId) {
-                showConfirmBlockModal(userId);
+                showConfirmBlockModal(userId,username);
             }
             else {
                 console.error("User ID not found.");
@@ -371,7 +388,7 @@ function fetchIncomingRequests() {
     //     addModalEventListeners(blockIcon);
     // }
 
-    function showConfirmBlockModal(userId) {
+    function showConfirmBlockModal(userId,username) {
         const modalHtml = `
             <div id="confirmBlockModal" class="modal-overlay">
                 <div class="modal-content">
@@ -386,13 +403,13 @@ function fetchIncomingRequests() {
         `;
         
         document.body.insertAdjacentHTML('beforeend', modalHtml);
-        addModalEventListeners(userId);
+        addModalEventListeners(userId, username);
     }
 
-    function addModalEventListeners(userId) {
+    function addModalEventListeners(userId, username) {
         document.getElementById('btnConfirmBlock').addEventListener('click', function() {
             $.ajax({
-                url: '/block_user/',
+                url: '/block_friend/',
                 method: 'GET',
                 data: { 'friend_username': username },
                 success: function(data) {

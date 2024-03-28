@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function addModalEventListeners() {
         document.getElementById('btnConfirmBlock').addEventListener('click', function() {
             $.ajax({
-                url: '/block_user/',
+                url: '/block_friend/',
                 method: 'GET',
                 data: { 'friend_username': username },
                 success: function(data) {

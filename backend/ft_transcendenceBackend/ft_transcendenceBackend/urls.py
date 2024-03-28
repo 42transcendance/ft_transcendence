@@ -19,21 +19,23 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from spa import views
+from spa import friend_requests
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('callback/', views.callback, name='callback'),
     path('logout/', views.custom_logout, name='logout'),
-    path('get_user_details/', views.get_user_details, name='get_user_details'),
-    path('send_friend_request/', views.send_friend_request, name='send_friend_request'),
-    path('accept_friend_request/', views.accept_friend_request, name='accept_friend_request'),
-    path('decline_friend_request/', views.decline_friend_request, name='decline_friend_request'),
-    path('get_incoming_requests/', views.get_incoming_requests, name='get_incoming_resquests'),
-    path('get_outgoing_requests/', views.get_outgoing_requests, name='get_outgoing_requests'),
-    path('get_friends/', views.get_friends, name='get_friends'),
-    path('get_block_list/', views.get_block_list, name='get_block_list'),
-    path('block_user/', views.block_user, name='block_user'),
+    path('get_user_details/', friend_requests.get_user_details, name='get_user_details'),
+    path('send_friend_request/', friend_requests.send_friend_request, name='send_friend_request'),
+    path('accept_friend_request/', friend_requests.accept_friend_request, name='accept_friend_request'),
+    path('decline_friend_request/', friend_requests.decline_friend_request, name='decline_friend_request'),
+    path('get_incoming_requests/', friend_requests.get_incoming_requests, name='get_incoming_resquests'),
+    path('get_outgoing_requests/', friend_requests.get_outgoing_requests, name='get_outgoing_requests'),
+    path('get_friends/', friend_requests.get_friends, name='get_friends'),
+    path('get_block_list/', friend_requests.get_block_list, name='get_block_list'),
+    path('block_friend/', friend_requests.block_friend, name='block_friend'),
+    path('unblock_friend/', friend_requests.unblock_friend, name='unblock_friend'),
     # path('testGame/', views.testGame, name='testGame'),
 ]
 
