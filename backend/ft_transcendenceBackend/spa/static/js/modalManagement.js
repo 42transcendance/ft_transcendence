@@ -32,7 +32,11 @@ function showAddFriendModal() {
             success: function() {
                 document.getElementById('inputFriendUsername').value = '';
                 closeModal('modalAddFriend');
-                console.log("friend request send !");
+                showNotification("Friend request sent !", "rgb(81, 171, 81)"); 
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                showNotification("Friend not found", "rgb(168, 64, 64)"); 
             }
         });
     });
@@ -116,6 +120,27 @@ function showChangeUsernameModal() {
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
+    document.getElementById('btnChangeUsername').addEventListener('click', function() {
+        let inputText = document.getElementById('inputNewUsername').value;;
+        console.log("click");
+        $.ajax({
+            url: '/update_username/',
+            method: 'GET',
+            data: { 'search_term': inputText },
+            success: function() {
+                document.getElementById('inputNewUsername').value = '';
+                closeModal('modalChangeUsername');
+                showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                document.getElementById('inputNewUsername').value = '';
+                closeModal('modalChangeUsername');
+                showNotification("New username unvailble", "rgb(168, 64, 64)"); 
+            }
+        });
+    });
+    
 }
 
 function showLogoutModal() {

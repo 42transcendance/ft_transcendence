@@ -15,7 +15,7 @@ stop:
 
 setup:
 	@utils/setup.sh
-
+	
 prune: stop
 	
 	@docker run --rm -v /goinfre/$(USER)/pgdatabase/:/pgdatabase alpine sh -c 'rm -rf /pgdatabase/* && echo "Cleanup complete"'

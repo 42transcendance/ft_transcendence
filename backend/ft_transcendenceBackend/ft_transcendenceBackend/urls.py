@@ -20,6 +20,7 @@ from django.contrib import admin
 from django.urls import path, include
 from spa import views
 from spa import friend_requests
+from spa.usersManagement import update_username
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('get_block_list/', friend_requests.get_block_list, name='get_block_list'),
     path('block_friend/', friend_requests.block_friend, name='block_friend'),
     path('unblock_friend/', friend_requests.unblock_friend, name='unblock_friend'),
+    path('update_username/', update_username.update_username, name='update_username'),
     # path('testGame/', views.testGame, name='testGame'),
 ]
 
