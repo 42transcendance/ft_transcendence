@@ -4,17 +4,17 @@ import asyncio
 
 class Group :
     def __init__(self, groupName, max_capacity) -> None:
+        self.groupChannel = groupName
         self.max_capacity = max_capacity
         self.ready = 0
         self.capacity = 0
-        self.groupChannel = groupName
         self.users = set()
         self.gameObject = None
         self.gameTask = None
 
-    def createGame (self, player, opponent):
+    def createGame (self):
         if self.gameObject is None:
-            self.gameObject = PongGame(player, opponent, self.groupChannel)
+            self.gameObject = PongGame(self.groupChannel)
 
     def startGameTask(self):
         if self.gameTask is None:
@@ -27,43 +27,49 @@ class GroupsManager :
     def __init__(self) -> None:
         self.groups = set()
 
+    # Return a group object by taking the groupname, returns none if group wasnt found
     def get_group_by_name(self, group_name):
             for group in self.groups:
                 if group.groupChannel == group_name:
                     return group
             return None
     
+    # List groups and users inside them
     def list_groups(self):
         for group in self.groups :
             print(group.groupChannel)
-
-    def join_group(self) -> str:
+            for user in group.users:
+                print('Users in group : ', user)
+    
+    # Joins group if possible, otherwise creates a new group and joins it
+    def join_group(self, userChannel) -> str:
         for group in self.groups:
             if group.capacity == 1:
+                self.group_add_user(group.groupChannel, userChannel)
                 return group.groupChannel
-        return None
+        groupChannel = self.add_group(2)
+        self.group_add_user(groupChannel, userChannel)
+        return groupChannel
 
+    # Add a group and gives it a random uuid4 name
     def add_group(self, max_capacity) -> str:
         group_name = 'pong-' + str(uuid4())[:8]
         while self.get_group_by_name(group_name):
             group_name = str(uuid4())[:8]
-    
         newGroup = Group(group_name, max_capacity)
         self.groups.add(newGroup)
-    
-        # print(f"Group '{group_name}' added.")
         return group_name
 
+    # Removes a group
     def remove_group (self, group_name) :
         group_to_remove = self.get_group_by_name(group_name)
         if group_to_remove:
             self.groups.remove(group_to_remove)
-            # print(f"Group '{group_name}' removed.")
             return 0
         else:
-            # print(f"Group '{group_name}' does not exist.")
             return 1
     
+    # Adds a user (userChannel) to a group (groupName)
     def group_add_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
         if targetGroup == None:
@@ -75,6 +81,7 @@ class GroupsManager :
         targetGroup.users.add(userChannel)
         targetGroup.capacity += 1
 
+    # Removes a user from a group, and removes the group if it becomes empty
     def group_remove_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
         if targetGroup == None:
@@ -83,5 +90,4 @@ class GroupsManager :
         targetGroup.users.remove(userChannel)
         targetGroup.capacity -= 1
         if targetGroup.capacity == 0:
-            # print("Group is empty, being removed : ", groupName)
             self.remove_group(groupName)

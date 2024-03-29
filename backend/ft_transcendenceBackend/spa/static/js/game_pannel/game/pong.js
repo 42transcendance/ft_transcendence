@@ -16,14 +16,21 @@ class Game {
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
-            if (wsData.type === 'game.starting') {
-                this.game_running = true;
-                // Start the game here
-                this.drawFrame(); // Start the animation loop
-            } else if (wsData.type === 'game.state') {
-				console.log("Received update")
+			if (wsData.type === 'game.starting') {
+				this.game_running = true
+				this.inputsListen();
+			}
+            else if (wsData.type === 'game.state') {
                 this.lastGameState = wsData;
+				this.drawBoard(wsData);
             }
+			else if (wsData.type === 'countdown') {
+				this.drawBoard(this.lastGameState);
+				this.drawCountdown(this.lastGameState, wsData.countdown)
+			}
+			else {
+				console.log("Unrecognised type message")
+			}
         };
 
         this.pongSocket.onerror = (error) => {
@@ -31,16 +38,23 @@ class Game {
         };
     }
 
+	drawCountdown(wsData, count) {
+		const diff = this.canvas.width / wsData.width;
+		this.context.strokeStyle = 'white';
+		this.context.setLineDash([])
+		this.context.font = ((wsData.defaultFontSize * diff) / 2)+ "px " + wsData.defaultFont;
+		this.context.strokeText(count, (this.canvas.width / 2) - wsData.defaultFontSize / 4, ((wsData.height / 3 * 2) * diff));
+	}
+
 	drawBoard(wsData) {
 		const diff = this.canvas.width / wsData.width;
-		// console.log(wsData);
 		this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
 		this.context.fillStyle = this.color;
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
 		//	Draw the dotted line in the middle of the board
 		this.context.beginPath();
-		this.context.setLineDash([7, 15]);
+		this.context.setLineDash([7, 17]);
 		this.context.moveTo((this.canvas.width / 2), 0);
 		this.context.lineTo((this.canvas.width / 2), this.canvas.height);
 		this.context.lineWidth = 4;
@@ -49,13 +63,14 @@ class Game {
 		
 		//Draw The paddle
 		this.context.fillStyle = '#ffffff';
-		this.context.fillRect( (wsData.leftPlayer.x * diff), (wsData.leftPlayer.y * diff), (wsData.leftPlayer.width * diff), (wsData.leftPlayer.height * diff));
-		this.context.fillRect( (wsData.rightPlayer.x * diff), (wsData.rightPlayer.y * diff), (wsData.rightPlayer.width * diff), (wsData.rightPlayer.height * diff));
+		this.context.fillRect( (wsData.leftPlayerPaddle.x * diff), (wsData.leftPlayerPaddle.y * diff), (wsData.leftPlayerPaddle.width * diff), (wsData.leftPlayerPaddle.height * diff));
+		this.context.fillRect( (wsData.rightPlayerPaddle.x * diff), (wsData.rightPlayerPaddle.y * diff), (wsData.rightPlayerPaddle.width * diff), (wsData.rightPlayerPaddle.height * diff));
 
 		//Draw The Score
+		this.context.setLineDash([]);
 		this.context.font = (wsData.defaultFontSize * diff) + "px " + wsData.defaultFont;
-		this.context.strokeText(wsData.player_score, this.canvas.width / 8, ((wsData.defaultFontSize) * diff));
-		this.context.strokeText(wsData.opponent_score, this.canvas.width * 0.6, ((wsData.defaultFontSize) * diff));
+		this.context.strokeText(wsData.leftPlayerScore, this.canvas.width / 8, ((wsData.defaultFontSize) * diff));
+		this.context.strokeText(wsData.rightPlayerScore, this.canvas.width * 0.6, ((wsData.defaultFontSize) * diff));
 
 		// Draw the ball
 		this.context.fillStyle = 'white';
@@ -75,17 +90,15 @@ class Game {
 				'type':'user.ready',
 				'message':'This user is ready to start an online game.',
 			}));
-
 			this.waitForReadySignal();
 		};
-
 		this.wsListen();
 	}
 	
 	waitForReadySignal() {
 		const checkReady = () => {
 			if (!this.game_running) {
-				console.log("Waiting For Game start...");
+				console.log("Searching for opponent...");
 				//Insert loading screen here
 				setTimeout(checkReady, 1000); // Check every second
 			}
@@ -93,43 +106,49 @@ class Game {
 		checkReady();
 	}
 
-	drawFrame() {
-        // This function will be called recursively using requestAnimationFrame
-        // Draw the current game state
-        this.drawBoard(this.lastGameState);
+	inputsListen() {
+		// Creating events for movements on keydown
+		let wkeypressed = false
+		let skeypressed = false
 
-        // Request the next animation frame
-        if (this.game_running) {
-            requestAnimationFrame(() => this.drawFrame());
-        }
-    }
-};
+		document.addEventListener('keydown', (key) => {
+			if (key.key === 'w') {
+				if (wkeypressed == false) {
+					this.pongSocket.send(JSON.stringify({ 
+						'type':'user.input',
+						'message':'wPress',
+					}));
+					wkeypressed = true
+				}
+			}
 
-// var sendMessageButton = document.querySelector('.test-send-button');
-// var messageInput = document.querySelector('.test-message-input');
+			if (key.key === 's') {
+				if (skeypressed == false) {
+					this.pongSocket.send(JSON.stringify({ 
+						'type':'user.input',
+						'message':'sPress',
+					}));
+					skeypressed = true
+				}
+			}
+		});
 
-// var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
-
-// sendMessageButton.addEventListener('click', function() {
-// var messageText = messageInput.value.trim();
-
-// 	if (messageText) {
-// 		chatSocket.send(JSON.stringify({ 
-// 			'type':'notification',
-// 			'message':messageText,
-// 		}));
-// 		messageInput.value = '';
-// 	}
-// });
-
-// messageInput.addEventListener('keypress', function(event) {
-// 	if (event.key === 'Enter') {
-// 		event.preventDefault();
-// 		sendMessageButton.click();
-// 	}
-// });
-
-// chatSocket.onmessage = function(e) {
-// 	var data = e.data;
-// 	console.log(data);
-// };
+		document.addEventListener('keyup', (key) => {
+			// Player key realease
+			if (key.key === 'w') {
+				this.pongSocket.send(JSON.stringify({ 
+					'type':'user.input',
+					'message':'wRelease',
+				}));
+				wkeypressed = false
+			}
+			if (key.key === 's') {
+				this.pongSocket.send(JSON.stringify({ 
+					'type':'user.input',
+					'message':'sRelease',
+				}));
+				skeypressed = false
+			}
+		});
+	}
+}

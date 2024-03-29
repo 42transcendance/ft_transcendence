@@ -45,7 +45,7 @@ def callback(request):
             'grant_type': 'authorization_code',
             'client_id': settings.API_CLIENT_KEY,
             'client_secret': settings.API_SK,
-            'redirect_uri': 'http://10.12.2.4:8000/callback',
+            'redirect_uri': 'http://localhost:8000/callback',
             'code': code
         })
         if response.status_code == 200:
