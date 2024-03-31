@@ -1,6 +1,7 @@
 import time
 from channels.layers import get_channel_layer
 import asyncio
+import math
 
 STD_WIDTH = 300
 STD_HEIGHT = 200
@@ -22,7 +23,7 @@ class Ball :
         self.x = STD_WIDTH / 2
         self.y = STD_HEIGHT / 2
         self.radius = 3
-        self.direction = 0
+        self.direction = math.pi
         self.speed = 2
 
 class PongGame :
@@ -39,7 +40,7 @@ class PongGame :
         self.defaultFontSize = 150
         self.defaultFont = "Arial"
         self.groupChannel = groupChannel
-        self.rebounds = 0
+        self.interval = None
 
         self.leftPlayerChannel = None
         self.rightPlayerChannel = None
@@ -131,9 +132,44 @@ class PongGame :
             elif self.rightPlayerPaddle.y > self.height - self.rightPlayerPaddle.height:
                 self.rightPlayerPaddle.y = self.height - self.rightPlayerPaddle.height
 
+    async def updateBallPosition(self):
+        self.ball.x += math.cos(self.ball.direction) * self.ball.speed
+        self.ball.y += math.sin(self.ball.direction) * self.ball.speed
 
-    async def countdown (self):
-        start = 5
+        if self.ball.y >= self.leftPlayerPaddle.y and self.ball.y <= self.leftPlayerPaddle.y + self.leftPlayerPaddle.height and self.ball.x - self.ball.radius <= self.leftPlayerPaddle.x + self.leftPlayerPaddle.width:
+            relativeIntersectY = (self.leftPlayerPaddle.y + (self.leftPlayerPaddle.height / 2)) - self.ball.y
+            normalizedRelativeIntersectY = relativeIntersectY / (self.leftPlayerPaddle.height / 2)
+            bounceAngle = normalizedRelativeIntersectY * (math.pi / 3)
+            self.ball.direction = math.pi * 2 - bounceAngle
+            self.ball.speed += 0.5
+
+        elif self.ball.x <= self.leftPlayerPaddle.x + self.leftPlayerPaddle.width - 2:
+            self.ball.x = self.width / 2
+            self.ball.y = self.height / 2
+            self.leftPlayerScore += 1
+            self.interval = time.time()
+
+        if self.ball.y >= self.rightPlayerPaddle.y and self.ball.y <= self.rightPlayerPaddle.y + self.rightPlayerPaddle.height and self.ball.x + self.ball.radius >= self.rightPlayerPaddle.x:
+            relativeIntersectY = (self.rightPlayerPaddle.y + (self.rightPlayerPaddle.height / 2)) - self.ball.y
+            normalizedRelativeIntersectY = relativeIntersectY / (self.rightPlayerPaddle.height / 2)
+            bounceAngle = normalizedRelativeIntersectY * (math.pi / 3)
+            self.ball.direction = math.pi + bounceAngle
+            self.ball.speed += 0.5
+
+        elif self.ball.x >= self.rightPlayerPaddle.x - 2:
+            self.ball.x = self.width / 2
+            self.ball.y = self.height / 2
+            self.rightPlayerScore += 1
+            self.interval = time.time()
+
+        if ((self.ball.y + self.ball.radius) >= self.height):
+            self.ball.direction = math.atan2(math.sin(self.ball.direction) * -1, math.cos(self.ball.direction))
+        elif ((self.ball.y - self.ball.radius) <= 0):
+            self.ball.direction = math.atan2(math.sin(self.ball.direction) * -1, math.cos(self.ball.direction))
+
+
+    async def countdown (self, time):
+        start = time
         while start > 0:
             await channel_layer.group_send(
             self.groupChannel,
@@ -145,26 +181,18 @@ class PongGame :
             await asyncio.sleep(1)
 
     async def gameLoop(self):
-        await self.countdown()
-        while self.leftPlayerScore < 5 and self.rightPlayerScore < 5 and self.rebounds < 50:
+        await self.countdown(5)
+        while self.leftPlayerScore < 5 and self.rightPlayerScore < 5:
             await self.updatePaddlePositions()
-            if self.ball.direction == 0:
-                self.ball.x -= 1 * self.ball.speed
-                if self.ball.x - self.ball.radius <= 0:
-                    self.ball.x = 0
-                    self.ball.direction = 1
-                    self.rebounds += 1
-            elif self.ball.direction == 1:
-                self.ball.x += 1 * self.ball.speed
-                if self.ball.x + self.ball.radius >= self.width:
-                    self.ball.x = self.width
-                    self.ball.direction = 0
-                    self.rebounds += 1
-            
+            if self.interval != None:
+                if time.time() - self.interval >= 1:
+                    self.interval = None
+            else:
+                await self.updateBallPosition()
             await channel_layer.group_send(
             self.groupChannel,
             {
                 'type': 'send.game.state',
                 'gameState': self,
             })
-            await asyncio.sleep(1 / 65)
+            await asyncio.sleep(1 / 60)

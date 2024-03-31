@@ -37,7 +37,7 @@ class Game {
             console.error('WebSocket error:', error);
         };
     }
-
+	
 	drawCountdown(wsData, count) {
 		const diff = this.canvas.width / wsData.width;
 		this.context.strokeStyle = 'white';
