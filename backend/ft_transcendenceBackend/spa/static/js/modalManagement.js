@@ -241,8 +241,6 @@ function closeModal(modalId) {
     }
 }
 
-
-
 // Closing modal function
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
@@ -259,5 +257,3 @@ document.querySelector('.change-username-button').addEventListener('click', show
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.delete-account-button').addEventListener('click', showDeleteAccountModal);
 document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
-
-``

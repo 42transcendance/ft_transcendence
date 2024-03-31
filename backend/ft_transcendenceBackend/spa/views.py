@@ -88,6 +88,3 @@ def callback(request):
                 request.session['token'] = jwt_token
                 return redirect ('home')
     return HttpResponseServerError('ERROR')
-
-# def testGame (request):
-#     return render(request, 'frontend/testGame.html')

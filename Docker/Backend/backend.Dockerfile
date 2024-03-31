@@ -15,8 +15,6 @@ COPY ./conf/.pg_service.conf /pg_service.conf
 
 COPY ./conf/.pgpass /.pgpass
 
-ENTRYPOINT ["tail", "-f", "/dev/null"]        
-
-# ENTRYPOINT [ "bash", "start_django.sh" ]
+ENTRYPOINT [ "bash", "start_django.sh" ]
 
 EXPOSE 8000
