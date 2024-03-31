@@ -188,6 +188,60 @@ function showDeleteAccountModal() {
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     document.getElementById('btnCancelDeleteAccount').addEventListener('click', () => closeModal('modalDeleteAccount'));
 }
+//CHANGE THE PROFILE PICTURE
+function showUploadProfilePictureModal() {
+    const modalHtml = `
+        <div id="modalUploadProfilePicture" class="modal-overlay">
+            <div class="modal-content">
+                <h3>Upload Profile Picture</h3>
+                <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
+                <div class="modal-buttons">
+                    <button id="btnUploadPicture" class="modal-button modal-button-add">Upload</button>
+                    <button id="btnCancelUpload" class="modal-button modal-button-cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
+
+    document.getElementById('btnUploadPicture').addEventListener('click', function() {
+        const fileInput = document.getElementById('inputProfilePicture');
+        const file = fileInput.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+            
+            $.ajax({
+                url: '/upload_profile_picture/',
+                method: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function(response) {
+                    closeModal('modalUploadProfilePicture');
+                    showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)"); 
+                }
+            });
+        }
+    });
+}
+
+// Function to close the modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.remove();
+    }
+}
+
+
 
 // Closing modal function
 function closeModal(modalId) {
@@ -204,4 +258,6 @@ document.querySelector('.join-channel-button').addEventListener('click', showJoi
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.delete-account-button').addEventListener('click', showDeleteAccountModal);
+document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
 
+``

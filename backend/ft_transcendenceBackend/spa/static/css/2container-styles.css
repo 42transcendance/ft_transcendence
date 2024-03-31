@@ -416,6 +416,10 @@
     margin-right: 15px;
 }
 
+.user-pfp:hover {
+    cursor: pointer;
+}
+
 .user-details {
     display: flex;
     flex-direction: column;

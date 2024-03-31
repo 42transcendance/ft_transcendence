@@ -15,16 +15,16 @@ def home(request):
     user_id, username = extract_user_info_from_token(token)
     if user_id is not None:
         print(user_id, username)
-        # custom_users = CustomUser.objects.all()
-        # for user in custom_users:
-        #     print(f'User: {user.username}')
-        #     print(f'  User ID: {user.userid}')
-        #     print(f'  Join Date: {user.join_date}')
-        #     print(f'  Pfp : {user.profile_picture}')
+        custom_users = CustomUser.objects.all()
+        for user in custom_users:
+            print(f'User: {user.username}')
+            print(f'  User ID: {user.userid}')
+            print(f'  Join Date: {user.join_date}')
+            print(f'  Pfp : {user.profile_picture}')
 
-        #     print("  Incoming Friend Requests:")
-        #     for friend_request in user.incoming_friends_requests.all():
-        #         print(f'    {friend_request.username}')
+            print("  Incoming Friend Requests:")
+            for friend_request in user.incoming_friends_requests.all():
+                print(f'    {friend_request.username}')
     return render(request, 'frontend/index.html',{'token': token})
     
 def custom_logout(request):
@@ -44,6 +44,8 @@ def extract_user_info_from_token(token):
     except jwt.InvalidTokenError:
         return None, None
 
+
+
 def callback(request):
     code = request.GET.get('code')
     if code:
@@ -55,7 +57,6 @@ def callback(request):
             'redirect_uri': 'http://localhost:8000/callback',
             'code': code
         })
-        print("code :", code)
         print(response.json())
         if response.status_code == 200:
             access_token = response.json().get('access_token')
