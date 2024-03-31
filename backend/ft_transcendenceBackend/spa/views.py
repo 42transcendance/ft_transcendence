@@ -52,7 +52,7 @@ def callback(request):
             'grant_type': 'authorization_code',
             'client_id': settings.API_CLIENT_KEY,
             'client_secret': settings.API_SK,
-            'redirect_uri': 'http://10.12.2.6:8000/callback',
+            'redirect_uri': 'http://localhost:8000/callback',
             'code': code
         })
         print("code :", code)
@@ -82,9 +82,7 @@ def callback(request):
                 download_successful = download_image(pfp_link, pfp_destination)
                 current_user = CustomUser(userid=id_user, username=login_user, profile_picture=f"profile_pictures/{pfp_filename}" if download_successful else None)
                 current_user.save()
-                print("pb in token : ??")
             if api_response.status_code == 200:
-                print("no pb")
                 jwt_token = jwt.encode({'user_id': current_user.userid, 'username': current_user.username}, settings.JWT_SECRET_PHRASE, algorithm='HS256')
                 request.session['token'] = jwt_token
                 return redirect ('home')

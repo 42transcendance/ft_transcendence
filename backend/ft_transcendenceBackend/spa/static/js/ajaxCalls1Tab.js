@@ -77,44 +77,6 @@ function handleWebSocketMessage(data) {
     }
 }
 
-function acceptFriendRequest(requestId, username) {
-    removeRequestFromUI(requestId);
-
-    $.ajax({
-        url: '/accept_friend_request/',
-        method: 'GET',
-        data: { 'friend_username': username },
-        success: function(data) {
-            // displayFriends('friendsTabContent', data);
-            showNotification("Friend request accepted", "rgb(81, 171, 81)");
-        }
-    });
-}
-
-function declineFriendRequest(requestId,username) {
-    removeRequestFromUI(requestId);
-
-    $.ajax({
-        url: '/decline_friend_request/',
-        method: 'GET',
-        data: { 'friend_username': username },
-        success: function(data) {
-            showNotification("Friend request declined", "rgb(168, 64, 64)");
-        }
-    });
-}
-
-function unblockBlockedUser(username){
-    $.ajax({
-        url: '/unblock_friend/',
-        method : 'GET',
-        data : {'friend_username' : username},
-        success: function(data){
-            showNotification("User unblocked", "rgb(81, 171, 81)"); 
-        }
-    });
-}
-
 function loadChatWithFriend(friendId) {
     console.log("start here");    
     const chatMessagesContainer = document.querySelector('.chat-messages');
@@ -160,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             dataType: 'json',
             success: function(friends) {
-                console.log(friends);
                 if (friends.length > 0) {
                     displayFriends('friendsTabContent', friends);
                 } else {
@@ -291,6 +252,47 @@ function fetchIncomingRequests() {
         container.innerHTML = `<div style='color: red;'>Empty</div>`;
     }
 
+    function acceptFriendRequest(requestId, username) {
+        removeRequestFromUI(requestId);
+    
+        $.ajax({
+            url: '/accept_friend_request/',
+            method: 'GET',
+            data: { 'friend_username': username },
+            success: function(data) {
+                fetchIncomingRequests();
+                fetchFriends();
+                showNotification("Friend request accepted", "rgb(81, 171, 81)");
+            }
+        });
+    }
+    
+    function declineFriendRequest(requestId,username) {
+        removeRequestFromUI(requestId);
+    
+        $.ajax({
+            url: '/decline_friend_request/',
+            method: 'GET',
+            data: { 'friend_username': username },
+            success: function(data) {
+                fetchIncomingRequests();
+                showNotification("Friend request declined", "rgb(168, 64, 64)");
+            }
+        });
+    }
+    
+    function unblockBlockedUser(username){
+        $.ajax({
+            url: '/unblock_friend/',
+            method : 'GET',
+            data : {'friend_username' : username},
+            success: function(data){
+                showNotification("User unblocked", "rgb(81, 171, 81)");
+                fetchBlockedContacts();
+            }
+        });
+    }
+
     // Handling click events for icons using event delegation
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('accept-request')) {
@@ -413,7 +415,8 @@ function fetchIncomingRequests() {
                 method: 'GET',
                 data: { 'friend_username': username },
                 success: function(data) {
-                    console.log("not friends anymore");
+                    fetchFriends();
+                    fetchBlockedContacts();
                     showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
                     removeModal('confirmBlockModal');
                 }
