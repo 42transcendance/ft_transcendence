@@ -48,8 +48,11 @@ def upload_profile_picture(request):
             return JsonResponse({'error': 'User not found'}, status=404)
         
         profile_picture = request.FILES['profile_picture']
+
+        file_extension = os.path.splitext(profile_picture.name)[-1].lower()
         
-        filename = f"{user_id}_profile_picture.png"
+        filename = f"{user_id}_profile_picture{file_extension}"
+        
         filepath = os.path.join(settings.MEDIA_ROOT, 'profile_pictures', filename)
 
         if current_user.profile_picture and filename == os.path.basename(str(current_user.profile_picture)):
