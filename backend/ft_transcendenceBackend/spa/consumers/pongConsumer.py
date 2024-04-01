@@ -59,7 +59,6 @@ class pongConsumer(AsyncWebsocketConsumer):
             'type': 'game.state',
             **game_state.to_dict(),
         }
-
         await self.send(text_data=json.dumps(game_state_json))
     
     async def game_starting(self, event):
