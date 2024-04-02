@@ -29,7 +29,7 @@ class Game {
 				this.drawCountdown(this.lastGameState, wsData.countdown)
 			}
 			else {
-				console.log("Unrecognised type message")
+				console.log("Unrecognised type message : " + wsData.type)
 			}
         };
 

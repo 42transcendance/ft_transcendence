@@ -5,10 +5,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class chatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        if not self.scope["session"]:
-            self.close()
     
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
+
+        if self.user_id == None or self.username == None:
+            self.close()
+
         self.room_group_name = 'global'
         
         self.send(text_data=json.dumps({
