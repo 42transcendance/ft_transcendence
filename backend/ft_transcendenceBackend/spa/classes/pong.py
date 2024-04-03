@@ -1,5 +1,7 @@
 import time
 from channels.layers import get_channel_layer
+from ..models import CustomUser, Game, GameHistory
+from asgiref.sync import sync_to_async
 import asyncio
 import math
 
@@ -151,7 +153,7 @@ class PongGame :
         elif self.ball.x <= self.leftPlayerPaddle.x + self.leftPlayerPaddle.width - 2:
             self.ball.x = self.width / 2
             self.ball.y = self.height / 2
-            self.leftPlayerScore += 1
+            self.rightPlayerScore += 1
             self.interval = time.time()
 
         if self.ball.y >= self.rightPlayerPaddle.y and self.ball.y <= self.rightPlayerPaddle.y + self.rightPlayerPaddle.height and self.ball.x + self.ball.radius >= self.rightPlayerPaddle.x:
@@ -164,7 +166,7 @@ class PongGame :
         elif self.ball.x >= self.rightPlayerPaddle.x - 2:
             self.ball.x = self.width / 2
             self.ball.y = self.height / 2
-            self.rightPlayerScore += 1
+            self.leftPlayerScore += 1
             self.interval = time.time()
 
         if ((self.ball.y + self.ball.radius) >= self.height):
@@ -184,6 +186,25 @@ class PongGame :
             })
             start -= 1
             await asyncio.sleep(1)
+    async def addGameHistory(self):
+        response = self.to_dict()
+        player1username = response['leftPlayerName']
+        player2username = response['rightPlayerName']
+        player1score = response['leftPlayerScore']
+        player2score = response['rightPlayerScore']
+
+        user1 = sync_to_async(CustomUser.objects.get)(username=player1username)
+        user2 = sync_to_async(CustomUser.objects.get)(username=player2username)
+
+        game =  sync_to_async(Game.objects.create)(
+            player1=user1,
+            player2=user2,
+            player1_score=player1score,
+            player2_score=player2score,
+        )
+
+        game_history_entry1 =  sync_to_async(GameHistory.objects.create)(user=user1, game=game)
+        game_history_entry2 =  sync_to_async(GameHistory.objects.create)(user=user2, game=game)
 
     async def gameLoop(self):
         await self.countdown(5)
@@ -206,5 +227,5 @@ class PongGame :
             {
                 'type': 'ending.game',
                 'gamestate': self,
-            }
-        )
+            })
+        await self.addGameHistory()

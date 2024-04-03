@@ -475,11 +475,11 @@
     text-align: right;
 }
 
-.game-item.win {
+.game-item.Win {
     background-color: rgba(71, 213, 71, 0.7);
 }
 
-.game-item.lose {
+.game-item.Loose {
     background-color: rgba(255, 0, 0, 0.7);
 }
 

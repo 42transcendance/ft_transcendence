@@ -16,54 +16,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function fetchGameHistory() {
-        // to be replaced with actual API endpoint
-        fetch('/api/user/game-history') 
-            .then(response => response.json())
-            .then(data => {
-                addGameHistoryItems(data.gameHistory);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
     function updateProfilePage(data) {
-        // Replacing keys with actual ones from our API response
+
         document.getElementById('username').textContent = data.user_details.username;
         document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
         document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-        // document.getElementById('ranking').textContent = `Ranking: ${data.rank}`;
-         document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
+        document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
     }
 
-    function addGameHistoryItems(gameHistory) {
-        const gameHistoryContainer = document.querySelector('.game-history'); // Ensure you have this container in your HTML
-
-        gameHistory.forEach(game => {
-            addGameHistoryItem(game, gameHistoryContainer);
+    function fetchGameHistory() {
+        $.ajax({
+            url: '/get_game_history/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                addGameHistoryItems(data.gameHistory);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
         });
     }
-
-    function addGameHistoryItem(game, container) {
-        // Creating a game history item element
-        const gameItem = document.createElement('div');
-        gameItem.classList.add('game-item');
-        gameItem.classList.add(game.outcome); // 'win' or 'lose'
-
-        // Adding game details to the game history item
-        gameItem.innerHTML = `
-            <div class="game-details">
-                <div class="game-opponent">Versus: ${game.opponent}</div>
-                <div class="game-result">${game.date}</div>
-            </div>
-            <div class="game-info">
-                <div class="game-date">${game.outcome}</div>
-                <div class="game-score">Score: ${game.score}</div>
-            </div>
-        `;
-        container.appendChild(gameItem);
+    
+    
+    function addGameHistoryItems(gameHistory) {
+        const gameHistoryContainer = document.querySelector('.game-history');
+        gameHistoryContainer.innerHTML = '';
+    
+        gameHistory.forEach(game => {
+            gameHistoryContainer.innerHTML += `
+                <div class="game-item ${game.outcome}">
+                    <div class="game-details">
+                        <div class="game-opponent">Versus: ${game.opponent}</div>
+                        <div class="game-result">${game.date}</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-date">${game.outcome}</div>
+                        <div class="game-score">Score: ${game.score}</div>
+                    </div>
+                </div>
+            `;  
+        });
     }
+    
 });
-
 
 // friends list 3rd container, profile page
 

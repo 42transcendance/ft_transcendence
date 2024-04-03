@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse
-from spa.models import CustomUser
+from spa.models import CustomUser, GameHistory, Game
 from django.conf import settings
 from .usersManagement.pfp_utils import download_image, get_base64_image
 from .friend_requests import * 
@@ -19,12 +19,16 @@ def home(request):
         for user in custom_users:
             print(f'User: {user.username}')
             print(f'  User ID: {user.userid}')
-            print(f'  Join Date: {user.join_date}')
+            print(f' add_game_history Join Date: {user.join_date}')
             print(f'  Pfp : {user.profile_picture}')
 
-            print("  Incoming Friend Requests:")
-            for friend_request in user.incoming_friends_requests.all():
-                print(f'    {friend_request.username}')
+            print("  Gaming:")
+            for game_history_entry in GameHistory.objects.filter(user=user):
+                game = game_history_entry.game
+                print(f'    {game.player1.username}')
+                print(f'    {game.player1_score}')
+                print(f'    {game.player2.username}')
+                print(f'    {game.player2_score}')
     return render(request, 'frontend/index.html',{'token': token})
     
 def custom_logout(request):

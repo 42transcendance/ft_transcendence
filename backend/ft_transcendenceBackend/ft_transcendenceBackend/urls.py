@@ -22,6 +22,7 @@ from spa import views
 from spa import friend_requests
 from spa.usersManagement import update_username
 from spa.usersManagement import pfp_utils
+from spa.usersManagement import game_history
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,6 +41,7 @@ urlpatterns = [
     path('unblock_friend/', friend_requests.unblock_friend, name='unblock_friend'),
     path('update_username/', update_username.update_username, name='update_username'),
     path('upload_profile_picture/', pfp_utils.upload_profile_picture, name='upload_profile_picture'),
+    path('get_game_history/', game_history.get_game_history, name='get_game_history'),
     # path('testGame/', views.testGame, name='testGame'),
 ]
 
