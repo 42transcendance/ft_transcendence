@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
         document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
         // document.getElementById('ranking').textContent = `Ranking: ${data.rank}`;
-        // document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.gamesPlayed}`;
+         document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
     }
 
     function addGameHistoryItems(gameHistory) {

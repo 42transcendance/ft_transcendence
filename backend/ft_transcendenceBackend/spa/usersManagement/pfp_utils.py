@@ -43,7 +43,7 @@ def upload_profile_picture(request):
         token = request.session.get('token')
         user_id, username = extract_user_info_from_token(token)
         try:
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
         
