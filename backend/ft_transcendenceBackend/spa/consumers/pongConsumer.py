@@ -1,15 +1,22 @@
 import json
 import time
 
+from ..views import extract_user_info_from_token
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from ..classes.groupsManager import GroupsManager
+from ..classes.DuelGroupsManager import DuelGroupsManager
 
-pongGroupsManager = GroupsManager()
+pongGroupsManager = DuelGroupsManager()
 
 class pongConsumer(AsyncWebsocketConsumer):
     # On Connection, The new user is added  to a game group
     async def connect(self):
+        self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
+
+        if self.user_id == None or self.username == None:
+            self.close()
+
         self.group_name = pongGroupsManager.join_group(self.channel_name)
         await self.channel_layer.group_add( self.group_name, self.channel_name )
         self.groupObject = pongGroupsManager.get_group_by_name(self.group_name)
@@ -30,13 +37,13 @@ class pongConsumer(AsyncWebsocketConsumer):
             self.groupObject.createGame()
             self.groupObject.userReady()
 
-            self.side = self.groupObject.gameObject.setPlayerChannel(self.channel_name)
+            self.side = self.groupObject.gameObject.setPlayer(self.channel_name, self.username)
 
             await self.channel_layer.group_send(
             self.group_name,
             {
                 'type': 'send.game.state',
-                'gameState': self.groupObject.gameObject,
+                'gamestate': self.groupObject.gameObject,
             })
             if self.groupObject.ready == 2:
                 self.groupObject.startGameTask()
@@ -54,12 +61,11 @@ class pongConsumer(AsyncWebsocketConsumer):
                 await self.groupObject.gameObject.setDirection('right', message)
 
     async def send_game_state(self, event):
-        game_state = event['gameState']
+        game_state = event['gamestate']
         game_state_json = {
             'type': 'game.state',
             **game_state.to_dict(),
         }
-
         await self.send(text_data=json.dumps(game_state_json))
     
     async def game_starting(self, event):
@@ -75,3 +81,11 @@ class pongConsumer(AsyncWebsocketConsumer):
             'type': 'countdown',
             'countdown':countdown,
         }))
+    
+    async def ending_game(self, event):
+        game_state = event['gamestate']
+        await self.send(text_data=json.dumps({
+            'type': 'ending.game',
+            **game_state.to_dict(),
+        }))
+        

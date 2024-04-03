@@ -2,10 +2,10 @@ from uuid import uuid4
 from .pong import PongGame
 import asyncio
 
-class Group :
-    def __init__(self, groupName, max_capacity) -> None:
+class DuelGroup :
+    def __init__(self, groupName) -> None:
         self.groupChannel = groupName
-        self.max_capacity = max_capacity
+        self.max_capacity = 2
         self.ready = 0
         self.capacity = 0
         self.users = set()
@@ -23,7 +23,7 @@ class Group :
     def userReady (self):
         self.ready += 1
 
-class GroupsManager :
+class DuelGroupsManager :
     def __init__(self) -> None:
         self.groups = set()
 
@@ -52,11 +52,11 @@ class GroupsManager :
         return groupChannel
 
     # Add a group and gives it a random uuid4 name
-    def add_group(self, max_capacity) -> str:
+    def add_group(self) -> str:
         group_name = 'pong-' + str(uuid4())[:8]
         while self.get_group_by_name(group_name):
             group_name = str(uuid4())[:8]
-        newGroup = Group(group_name, max_capacity)
+        newGroup = DuelGroup(group_name)
         self.groups.add(newGroup)
         return group_name
 

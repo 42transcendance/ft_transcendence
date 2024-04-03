@@ -25,10 +25,10 @@ function connectWebSocket() {
 
     function handleWebSocketMessage(data) {
         switch(data.type) {
-            case 'private':
+            case 'private.message':
                 displayPrivateMessage(data);
                 break;
-            case 'global':
+            case 'global.message':
                 displayGlobalMessage(data);
                 break;
             case 'notification':

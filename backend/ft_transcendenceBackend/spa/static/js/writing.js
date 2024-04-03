@@ -12,11 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addMessageToChatUI(messageText, 'You');
         if (currentChatContext === 'global') {
-            sendMessage('global', messageText);
-			console.log("global");
+            sendMessage('global.message', messageText);
         } else if (currentChatContext === 'private' && currentRecipientId) {
-            sendMessage('private', messageText, currentRecipientId);
-			console,log("private");
+            sendMessage('private.message', messageText, currentRecipientId);
 		}
 
         messageInput.value = '';

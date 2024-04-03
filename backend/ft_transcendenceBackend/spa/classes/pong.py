@@ -15,7 +15,6 @@ class Paddle :
         self.x = 7 if side == 'left' else STD_WIDTH - (7 + self.width)
         self.y = STD_HEIGHT / 2 - self.height / 2
         self.speed = 2
-
         self.direction = 'idle'
 
 class Ball :
@@ -42,12 +41,14 @@ class PongGame :
         self.groupChannel = groupChannel
         self.interval = None
 
+        self.leftPlayerName = None
+        self.rightPlayerName = None
         self.leftPlayerChannel = None
         self.rightPlayerChannel = None
 
         self.leftPlayerDirection = 'idle'
         self.rightPlayerDirection = 'idle'
-    
+
     async def setDirection(self, paddle, message):
         if message == 'wPress':
             if paddle == 'left':
@@ -68,22 +69,24 @@ class PongGame :
                 self.rightPlayerDirection = 'idle'
     
 
-    def setPlayerChannel (self, channel):
+    def setPlayer (self, userChannel, userName):
         if self.leftPlayerChannel is None:
-            self.leftPlayerChannel = channel
+            self.leftPlayerChannel = userChannel
+            self.leftPlayerName = userName
             return ('left')
         elif self.rightPlayerChannel is None:
-            self.rightPlayerChannel = channel
+            self.rightPlayerChannel = userChannel
+            self.rightPlayerName = userName
             return ('right')
     
     def to_dict(self):
         return {
             'width': self.width,
             'height': self.height,
-            'leftPlayerScore': self.leftPlayerScore,
-            'rightPlayerScore': self.rightPlayerScore,
             'defaultFontSize': self.defaultFontSize,
             'defaultFont': self.defaultFont,
+            'leftPlayerName': self.leftPlayerName,
+            'leftPlayerScore': self.leftPlayerScore,
             'leftPlayerPaddle': {
                 'x': self.leftPlayerPaddle.x,
                 'y': self.leftPlayerPaddle.y,
@@ -91,6 +94,8 @@ class PongGame :
                 'height': self.leftPlayerPaddle.height,
                 'speed': self.leftPlayerPaddle.speed,
             },
+            'rightPlayerName': self.rightPlayerName,
+            'rightPlayerScore': self.rightPlayerScore,
             'rightPlayerPaddle': {
                 'x': self.rightPlayerPaddle.x,
                 'y': self.rightPlayerPaddle.y,
@@ -193,6 +198,13 @@ class PongGame :
             self.groupChannel,
             {
                 'type': 'send.game.state',
-                'gameState': self,
+                'gamestate': self,
             })
             await asyncio.sleep(1 / 60)
+        await channel_layer.group_send(
+            self.groupChannel,
+            {
+                'type': 'ending.game',
+                'gamestate': self,
+            }
+        )
