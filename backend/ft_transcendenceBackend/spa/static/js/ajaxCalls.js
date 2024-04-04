@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     function updateProfilePage(data) {
 
         document.getElementById('username').textContent = data.user_details.username;
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function addGameHistoryItems(gameHistory) {
         const gameHistoryContainer = document.querySelector('.game-history');
-        gameHistoryContainer.innerHTML = '';
+        gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
     
         gameHistory.forEach(game => {
             gameHistoryContainer.innerHTML += `
@@ -158,5 +157,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 

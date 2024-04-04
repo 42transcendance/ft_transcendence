@@ -22,7 +22,8 @@ def get_game_history(request):
         user_id, username = extract_user_info_from_token(token)
         try:
             user = CustomUser.objects.get(userid=user_id)
-            game_history = Game.objects.filter(Q(player1=user) | Q(player2=user))
+            game_history = Game.objects.filter(Q(player1=user) | Q(player2=user)).order_by('-date_played')
+            
             game_history_json = []
             for game in game_history:
                 if (game.player1.username == user.username):

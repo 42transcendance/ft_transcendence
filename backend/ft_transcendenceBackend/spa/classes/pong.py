@@ -186,25 +186,6 @@ class PongGame :
             })
             start -= 1
             await asyncio.sleep(1)
-    async def addGameHistory(self):
-        response = self.to_dict()
-        player1username = response['leftPlayerName']
-        player2username = response['rightPlayerName']
-        player1score = response['leftPlayerScore']
-        player2score = response['rightPlayerScore']
-
-        user1 = sync_to_async(CustomUser.objects.get)(username=player1username)
-        user2 = sync_to_async(CustomUser.objects.get)(username=player2username)
-
-        game =  sync_to_async(Game.objects.create)(
-            player1=user1,
-            player2=user2,
-            player1_score=player1score,
-            player2_score=player2score,
-        )
-
-        game_history_entry1 =  sync_to_async(GameHistory.objects.create)(user=user1, game=game)
-        game_history_entry2 =  sync_to_async(GameHistory.objects.create)(user=user2, game=game)
 
     async def gameLoop(self):
         await self.countdown(5)
@@ -228,4 +209,16 @@ class PongGame :
                 'type': 'ending.game',
                 'gamestate': self,
             })
-        await self.addGameHistory()
+        response = self.to_dict()
+        player1username = response['leftPlayerName']
+        player2username = response['rightPlayerName']
+        player1score = response['leftPlayerScore']
+        player2score = response['rightPlayerScore']
+
+        user1 = await sync_to_async(CustomUser.objects.get)(username=player1username)
+        user2 = await sync_to_async(CustomUser.objects.get)(username=player2username)
+
+        game =  await sync_to_async(Game.objects.create)(player1=user1, player2=user2, player1_score=player1score,player2_score=player2score)
+
+        game_history_entry1 =  await sync_to_async(GameHistory.objects.create)(user=user1, game=game)
+        game_history_entry2 =  await sync_to_async(GameHistory.objects.create)(user=user2, game=game)

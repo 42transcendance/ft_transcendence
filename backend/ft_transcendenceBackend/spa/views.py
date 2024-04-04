@@ -14,21 +14,13 @@ def home(request):
     token = request.session.get('token')
     user_id, username = extract_user_info_from_token(token)
     if user_id is not None:
-        print(user_id, username)
-        custom_users = CustomUser.objects.all()
-        for user in custom_users:
-            print(f'User: {user.username}')
-            print(f'  User ID: {user.userid}')
-            print(f' add_game_history Join Date: {user.join_date}')
-            print(f'  Pfp : {user.profile_picture}')
-
-            print("  Gaming:")
-            for game_history_entry in GameHistory.objects.filter(user=user):
-                game = game_history_entry.game
-                print(f'    {game.player1.username}')
-                print(f'    {game.player1_score}')
-                print(f'    {game.player2.username}')
-                print(f'    {game.player2_score}')
+        print("  Gaming:")
+        for game_history_entry in GameHistory.objects.all():
+            game = game_history_entry.game
+            print(f'    {game.player1.username}')
+            print(f'    {game.player1_score}')
+            print(f'    {game.player2.username}')
+            print(f'    {game.player2_score}')
     return render(request, 'frontend/index.html',{'token': token})
     
 def custom_logout(request):

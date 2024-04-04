@@ -1,4 +1,6 @@
 // Function to check if a modal is already present
+import { fetchUserProfile } from "./ajaxCalls";
+
 function isModalPresent(modalId) {
     return document.getElementById(modalId) !== null;
 }
@@ -132,7 +134,7 @@ function showChangeUsernameModal() {
                 document.getElementById('inputNewUsername').value = '';
                 closeModal('modalChangeUsername');
                 showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                location.reload();
+                fetchUserProfile();
             },
             error: function(xhr, status, error) {
                 document.getElementById('inputNewUsername').value = '';
@@ -222,7 +224,7 @@ function showUploadProfilePictureModal() {
                 success: function(response) {
                     closeModal('modalUploadProfilePicture');
                     showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                    location.reload();
+                    fetchUserProfile();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
