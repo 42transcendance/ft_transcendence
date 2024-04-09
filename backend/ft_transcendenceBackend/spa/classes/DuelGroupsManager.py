@@ -47,7 +47,7 @@ class DuelGroupsManager :
             if group.capacity == 1:
                 self.group_add_user(group.groupChannel, userChannel)
                 return group.groupChannel
-        groupChannel = self.add_group(2)
+        groupChannel = self.add_group()
         self.group_add_user(groupChannel, userChannel)
         return groupChannel
 
