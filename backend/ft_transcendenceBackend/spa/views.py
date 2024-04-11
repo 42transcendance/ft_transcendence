@@ -14,6 +14,12 @@ def home(request):
     token = request.session.get('token')
     user_id, username = extract_user_info_from_token(token)
     if user_id is not None:
+        custom_users = CustomUser.objects.all()
+        for user in custom_users:
+            print(f'User: {user.username}')
+            print(f'  User ID: {user.userid}')
+            print(f'  Join Date: {user.join_date}')
+            print(f'  Pfp : {user.profile_picture}')
         print("  Gaming:")
         for game_history_entry in GameHistory.objects.all():
             game = game_history_entry.game
@@ -28,7 +34,7 @@ def custom_logout(request):
         del request.session['token']
     return redirect ('home')
 
-# To be move on a util pyfile
+
 def extract_user_info_from_token(token):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_PHRASE, algorithms=['HS256'])

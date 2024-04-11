@@ -488,7 +488,7 @@
 }
 
 /* Achievements Section */
-.user-achievements {
+.user-stats {
     width: 45%;
     background-color: #f0f0f0;
     border-radius: 8px;
@@ -533,7 +533,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .game-history, .user-achievements {
+    .game-history, .user-stats {
         width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
@@ -545,3 +545,16 @@
     } */
 }
 
+.game-history, .user-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-message {
+    color: red; /* or gray */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}

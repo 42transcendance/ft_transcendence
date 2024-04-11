@@ -26,28 +26,32 @@ def get_game_history(request):
             
             game_history_json = []
             for game in game_history:
+                player1_username = game.player1.username
+                player2_username = game.player2.username
                 if (game.player1.username == user.username):
-                    opponent = game.player2.username
+                    opponent = player2_username
                     if (game.player1_score > game.player2_score):
                         outcome = 'Win'
-                    else :
+                    else:
                         outcome = 'Loose'
-                else :
-                    opponent = game.player1.username
+                else:
+                    opponent = player1_username
                     if (game.player1_score < game.player2_score):
                         outcome = 'Win'
-                    else :
+                    else:
                         outcome = 'Loose'
                 score = f"{game.player1_score}-{game.player2_score}"
                 game_history_json.append({
+                    'player1_username': player1_username,
+                    'player2_username': player2_username,
                     'opponent': opponent,
                     'date': game.date_played.strftime('%Y-%m-%d'),
                     'outcome': outcome,
                     'score': score
                 })
-            return JsonResponse({'gameHistory': game_history_json})
+            
+            return JsonResponse({'gameHistory': game_history_json, 'currentUser': user.username})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:
         return JsonResponse({'error': 'Token not found in session'}, status=400)
-    

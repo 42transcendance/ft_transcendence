@@ -29,34 +29,93 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             dataType: 'json',
             success: function(data) {
-                addGameHistoryItems(data.gameHistory);
+                if (data.gameHistory.length > 0) {
+                    addGameHistoryItems(data.gameHistory, data.currentUser);
+                } else {
+                    displayEmpty('.game-history', '.user-stats');
+                }
             },
             error: function(xhr, status, error) {
                 console.error(error);
             }
         });
     }
-    
-    
-    function addGameHistoryItems(gameHistory) {
-        const gameHistoryContainer = document.querySelector('.game-history');
-        gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
-    
-        gameHistory.forEach(game => {
-            gameHistoryContainer.innerHTML += `
-                <div class="game-item ${game.outcome}">
-                    <div class="game-details">
-                        <div class="game-opponent">Versus: ${game.opponent}</div>
-                        <div class="game-result">${game.date}</div>
-                    </div>
-                    <div class="game-info">
-                        <div class="game-date">${game.outcome}</div>
-                        <div class="game-score">Score: ${game.score}</div>
-                    </div>
-                </div>
-            `;  
-        });
+
+    function displayEmpty(historycontainer, statcontainer) {
+        const container = document.querySelector(historycontainer);
+        container.innerHTML = '<div class="section-heading">Game History</div>';
+        container.innerHTML += `<div class="empty-message">No game played online.</div>`;
+        container.classList.add('centered');
+
+        const stat = document.querySelector(statcontainer);
+        stat.innerHTML += `<div class="empty-message">Need 1 game to see stats.</div>`;
+        stat.classList.add('centered');
     }
+
+    
+    
+    function addGameHistoryItems(gameHistory,currentUser) {
+
+        let totalGames = gameHistory.length;
+        let wins = gameHistory.filter(game => game.outcome === 'Win').length;
+        let losses = totalGames - wins;
+        let winRate = (totalGames > 0) ? ((wins / totalGames) * 100).toFixed(2) : 0;
+        let lossRate = 100 - winRate;
+        
+        let totalScore = 0;
+        for (let i = 0; i < gameHistory.length; i++) {
+            const game = gameHistory[i];
+            if (game.player1_username === currentUser) {
+                totalScore += parseInt(game.score.split('-')[0]);
+            } else if (game.player2_username === currentUser) {
+                totalScore += parseInt(game.score.split('-')[1]);
+            }
+        }  
+       
+        let avgScore = (totalGames > 0) ? (totalScore / totalGames).toFixed(2) : 0;
+        
+        // Calculate win streak
+        let winStreak = 0;
+        for (let i = 0; i < gameHistory.length; i++) {
+            if (gameHistory[i].outcome === 'Win') {
+                winStreak++;
+            } else {
+                break;
+            }
+        }
+
+        // Display the circle
+        const statsContainer = document.querySelector('.user-stats');
+        statsContainer.innerHTML = `
+            <div class="section-heading">Statistics</div>
+            <div class="bar" style="position: relative; width: 200px; height: 30px; border: 1px solid #000;">
+                <div class="loss" style="position: absolute; top: 0; left: 0; height: 100%; width: ${lossRate}%; background-color: red;"></div>
+                <div class="win" style="position: absolute; top: 0; left: ${lossRate}%; height: 100%; width: ${winRate}%; background-color: green;"></div>
+                <div class="win-rate-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black;">${winRate}% Win</div>
+            </div>
+            <div class="avg-score" style="color: ${avgScoreColor(avgScore)};">Average Score: ${avgScore}</div>
+            <div class="win-streak" style="color: ${winStreakColor(winStreak)};">Win Streak: ${winStreak}</div>
+        `;
+    }
+    
+
+    function avgScoreColor(avgScore) {
+        if (avgScore >= 3) {
+            return 'green';
+        } else {
+            return 'red';
+        }
+    }
+    
+    function winStreakColor(winStreak) {
+        if (winStreak === 0) {
+            return 'black';
+        } else {
+            let blue = Math.round((winStreak / 15) * 255);
+            return `rgb(0, 0, ${blue})`;
+        }
+    }
+    
     
 });
 

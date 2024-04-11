@@ -214,6 +214,7 @@ class PongGame :
         player2username = response['rightPlayerName']
         player1score = response['leftPlayerScore']
         player2score = response['rightPlayerScore']
+        print("usernames : ", player1username, player2username)
 
         user1 = await sync_to_async(CustomUser.objects.get)(username=player1username)
         user2 = await sync_to_async(CustomUser.objects.get)(username=player2username)
