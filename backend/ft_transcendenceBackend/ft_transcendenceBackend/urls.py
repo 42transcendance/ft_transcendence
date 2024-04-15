@@ -40,6 +40,5 @@ urlpatterns = [
     path('unblock_friend/', friend_requests.unblock_friend, name='unblock_friend'),
     path('update_username/', update_username.update_username, name='update_username'),
     path('upload_profile_picture/', pfp_utils.upload_profile_picture, name='upload_profile_picture'),
-    # path('testGame/', views.testGame, name='testGame'),
 ]
 
