@@ -48,20 +48,29 @@ document.addEventListener('DOMContentLoaded', function() {
         container.classList.add('centered');
 
         const stat = document.querySelector(statcontainer);
-        stat.innerHTML += `<div class="empty-message">Need 1 game to see stats.</div>`;
+        stat.innerHTML += `  <div class="section-heading">Statistics</div><div class="empty-message">Need 1 game to see stats.</div>`;
         stat.classList.add('centered');
     }
 
     
     
-    function addGameHistoryItems(gameHistory,currentUser) {
+    function addGameHistoryItems(gameHistory, currentUser) {
+        const gameHistoryContainer = document.querySelector('.game-history'); 
+        gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
+
+        gameHistory.forEach(game => {
+            addGameHistoryItem(game, gameHistoryContainer);
+        });
 
         let totalGames = gameHistory.length;
         let wins = gameHistory.filter(game => game.outcome === 'Win').length;
         let losses = totalGames - wins;
         let winRate = (totalGames > 0) ? ((wins / totalGames) * 100).toFixed(2) : 0;
         let lossRate = 100 - winRate;
-        
+    
+        let greenLength = (winRate / 100) * (2 * Math.PI * 70);
+        let redLength = (lossRate / 100) * (2 * Math.PI * 70);
+    
         let totalScore = 0;
         for (let i = 0; i < gameHistory.length; i++) {
             const game = gameHistory[i];
@@ -71,10 +80,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 totalScore += parseInt(game.score.split('-')[1]);
             }
         }  
-       
+    
         let avgScore = (totalGames > 0) ? (totalScore / totalGames).toFixed(2) : 0;
-        
-        // Calculate win streak
+    
         let winStreak = 0;
         for (let i = 0; i < gameHistory.length; i++) {
             if (gameHistory[i].outcome === 'Win') {
@@ -83,40 +91,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
             }
         }
-
-        // Display the circle
+    
         const statsContainer = document.querySelector('.user-stats');
         statsContainer.innerHTML = `
-            <div class="section-heading">Statistics</div>
-            <div class="bar" style="position: relative; width: 200px; height: 30px; border: 1px solid #000;">
-                <div class="loss" style="position: absolute; top: 0; left: 0; height: 100%; width: ${lossRate}%; background-color: red;"></div>
-                <div class="win" style="position: absolute; top: 0; left: ${lossRate}%; height: 100%; width: ${winRate}%; background-color: green;"></div>
-                <div class="win-rate-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: black;">${winRate}% Win</div>
+        <div class="section-heading">Statistics</div>
+            <div class="donut-chart-container">
+                <svg width="200" height="200">
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#ddd" stroke-width="15"></circle>
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#4CAF50" stroke-width="15" stroke-dasharray="${greenLength} ${redLength}" transform="rotate(-90 100 100)"></circle>
+                    <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="26">${winRate}%</text>
+                </svg>
             </div>
-            <div class="avg-score" style="color: ${avgScoreColor(avgScore)};">Average Score: ${avgScore}</div>
-            <div class="win-streak" style="color: ${winStreakColor(winStreak)};">Win Streak: ${winStreak}</div>
+            <div class="avg-score">Average Score: <span style="color: ${avgScoreColor(avgScore)};">${avgScore}</span></div>
+            <div class="win-streak">Win Streak: <span style="color: ${winStreakColor(winStreak)};">${winStreak}</span></div>
         `;
     }
     
 
     function avgScoreColor(avgScore) {
-        if (avgScore >= 3) {
-            return 'green';
-        } else {
-            return 'red';
-        }
+        let red = 255 * (1 - avgScore / 5);
+        let green = 255 * (avgScore / 5);
+    
+        let redHex = Math.round(red).toString(16).padStart(2, '0');
+        let greenHex = Math.round(green).toString(16).padStart(2, '0');
+
+        return `#${redHex}${greenHex}00`;
     }
     
     function winStreakColor(winStreak) {
         if (winStreak === 0) {
             return 'black';
         } else {
-            let blue = Math.round((winStreak / 15) * 255);
-            return `rgb(0, 0, ${blue})`;
+            let green = Math.round((winStreak / 15) * 255);
+            return `rgb(0, ${green}, 0)`;
         }
     }
-    
-    
+    function addGameHistoryItem(game, container) {
+        const gameItem = document.createElement('div');
+        gameItem.classList.add('game-item');
+        gameItem.classList.add(game.outcome);
+
+        gameItem.innerHTML = `
+            <div class="game-details">
+                <div class="game-opponent">Versus: ${game.opponent}</div>
+                <div class="game-result">${game.date}</div>
+            </div>
+            <div class="game-info">
+                <div class="game-date">${game.outcome}</div>
+                <div class="game-score">Score: ${game.score}</div>
+            </div>
+        `;
+        container.appendChild(gameItem);
+    }
 });
 
 // friends list 3rd container, profile page
