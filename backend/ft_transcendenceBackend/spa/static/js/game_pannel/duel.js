@@ -14,7 +14,7 @@ function startDuelGame() {
         Pong = new Game();
         hideButtons();
 
-        Pong.connect();
+        Pong.start();
 
         checkGameState(Pong);
         

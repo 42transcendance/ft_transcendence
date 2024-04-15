@@ -20,6 +20,16 @@ class DuelGroup :
         if self.gameTask is None:
             self.gameTask = asyncio.create_task(self.gameObject.gameLoop())
     
+    async def stopGameTask(self):
+        if self.gameTask is not None:
+            self.gameTask.cancel()
+            try:
+                await self.gameTask
+            except asyncio.CancelledError:
+                pass
+            finally:
+                self.gameTask = None
+    
     def userReady (self):
         self.ready += 1
 
@@ -73,7 +83,7 @@ class DuelGroupsManager :
     def group_add_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
         if targetGroup == None:
-            print("Error: ", groupName, " does not exist.")
+            print("Error group_add_user: ", groupName, " does not exist.")
             return (1)
         if targetGroup.capacity == 2:
             print("Error: ", targetGroup.groupChannel, " is full.")
@@ -85,7 +95,7 @@ class DuelGroupsManager :
     def group_remove_user (self, groupName, userChannel):
         targetGroup = self.get_group_by_name(groupName)
         if targetGroup == None:
-            print("Error: ", groupName, " does not exist.")
+            print("Error group_remove_user: ", groupName, " does not exist.")
             return (1)
         targetGroup.users.remove(userChannel)
         targetGroup.capacity -= 1
