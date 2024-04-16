@@ -129,15 +129,22 @@ function createTournamentForm() {
         inputContainer.appendChild(gridItem);
     }
 
+    var ButtonDiv = document.createElement("div");
+
     var startButton = document.createElement("button");
+    ButtonDiv.style.display = "flex";
+    ButtonDiv.style.justifyContent = "center";
+    ButtonDiv.appendChild(startButton);
     startButton.type = "button";
     startButton.textContent = "Start Tournament";
-    startButton.style.left = "35%";
-    startButton.style.position = "relative";
+    startButton.classList = "send-button";
+    
+    // startButton.style.left = "35%";
+    // startButton.style.position = "relative";
     startButton.addEventListener('click', startTournament);
 
     form.appendChild(inputContainer);
-    form.appendChild(startButton);
+    form.appendChild(ButtonDiv);
 
     document.getElementById("tournament-form").appendChild(form);
 }

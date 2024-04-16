@@ -47,9 +47,7 @@
                     <button class="nav-button friends" data-button="profile">
                         <i class="bi bi-person nav-icons"></i>
                     </button>
-                    <button class="nav-button achievements" data-button="achievements">
-                        <i class="bi bi-award nav-icons"></i>
-                    </button>
+
                     <button class="nav-button settings" data-button="settings">
                         <i class="bi bi-gear nav-icons"></i>
                     </button>
@@ -148,7 +146,7 @@
             </div>
             <!-- SECOND TAB -->
             <div class="col-6 col-lg-6 3cols second-tab";>
-                <div class="inner-container2 mx-1">
+                <div class="inner-container2 mx-1" id="inner-container2">
                     <div class="chat-tab">
                         <div class="chat-heading">
                             <i class="bi bi-chat-dots chat-icon"></i>
@@ -266,40 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="achievements-tab">
-                        <!-- Achievements Heading -->
-                        <div class="achievements-heading">
-                            <i class="bi bi-award achievements-icon"></i>
-                            <span class="social-text">Achievements</span>
-                        </div>
-                        
-                        <!-- Achievements Content -->
-                        <div class="achievements-content">
-                            <!-- Achievement Item -->
-                            <div class="achievement-item">
-                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
-                                <div class="achievement-info">
-                                    <div class="achievement-name">Achievement Name</div>
-                                    <div class="achievement-description">Description goes here...</div>
-                                </div>
-                            </div>
-                            <div class="achievement-item">
-                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
-                                <div class="achievement-info">
-                                    <div class="achievement-name">Achievement Name</div>
-                                    <div class="achievement-description">Description goes here...</div>
-                                </div>
-                            </div>
-                            <div class="achievement-item">
-                                <img src="path_to_logo" alt="Logo" class="achievement-logo">
-                                <div class="achievement-info">
-                                    <div class="achievement-name">Achievement Name</div>
-                                    <div class="achievement-description">Description goes here...</div>
-                                </div>
-                            </div>
-                            <!-- Repeat for other achievements -->
-                        </div>
-                    </div>
+                    
                     <div class="profile-tab">
                         <!-- User Profile Heading -->
                         <div class="user-profile-heading">
@@ -330,7 +295,7 @@
                                 
                             </div>
                         
-                            <!-- Achievements Section -->
+                            <!-- Achievements Section
                             <div class="user-achievements">
                                 <div class="section-heading">Achievementszzz</div>
                                 <div class="achievement-item">
@@ -347,13 +312,13 @@
                                         <div class="achievement-description">Description of the achievement 2.</div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="game-container">
                         <div id="button-container">
-                            <button>Duel</button>
-                            <button>Tournament</button>
+                            <button class="send-button">Duel</button>
+                            <button class="send-button">Tournament</button>
                         </div>
                         <div id="principal-container">
                             <div id="duel-form" class="form-container">
@@ -364,7 +329,7 @@
                             
                                         <label for="player2">Player 2:</label>
                                         <input type="text" id="player2" name="player2" required>
-                                        <button type="button">Start Game</button>
+                                        <button type="button" class="send-button">Start Game</button>
                                     </div>
                                 </form>
                             </div>

@@ -123,6 +123,7 @@ function showChangeUsernameModal() {
     document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
     document.getElementById('btnChangeUsername').addEventListener('click', function() {
         let inputText = document.getElementById('inputNewUsername').value;;
+        userUsername = document.getElementById('inputNewUsername').value;
         console.log("click");
         $.ajax({
             url: '/update_username/',
@@ -131,7 +132,7 @@ function showChangeUsernameModal() {
             success: function() {
                 document.getElementById('inputNewUsername').value = '';
                 closeModal('modalChangeUsername');
-                showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
+                showNotification("Username has been changed !", "rgb(81, 171, 81)");
                 location.reload();
             },
             error: function(xhr, status, error) {

@@ -1,3 +1,11 @@
+function adjustGameContainerSize() {
+    const gameContainer = document.getElementById('inner-container2');
+    if (gameContainer) {
+        const width = gameContainer.offsetWidth; 
+        const height = (2 / 3) * width; 
+        gameContainer.style.height = `${height}px`;
+    }
+}
 
 // containers visibility management
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
@@ -27,13 +35,11 @@ function navbarPressed(buttonPressed ) {
     // Define icons and tabs
     var chatIcon = document.querySelector('.chat');
     var settingsIcon = document.querySelector('.settings');
-    var achievementsIcon = document.querySelector('.achievements');
     var profileIcon = document.querySelector('.friends');
     var gameIcon = document.querySelector('.play');
 
     var chatTab = document.querySelector('.chat-tab');
     var settingsTab = document.querySelector('.settings-tab');
-    var achievementsTab = document.querySelector('.achievements-tab');
     var profileTab = document.querySelector('.profile-tab');
     var gameTab = document.querySelector('.game-container');
 
@@ -42,8 +48,11 @@ function navbarPressed(buttonPressed ) {
     var secondTab = document.querySelector('.second-tab');
     var thirdTab = document.querySelector('.third-tab');
 
+    const gameContainer = document.getElementById('inner-container2');
+
     switch (buttonPressed) {
         case 'play':
+            adjustGameContainerSize();
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
@@ -51,51 +60,39 @@ function navbarPressed(buttonPressed ) {
             // Hide all tabs' content
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
-            achievementsTab.style.display = 'none';
             profileTab.style.display = 'none';
             gameTab.style.display = 'block';
             break;
         case 'chat':
+            gameContainer.style.height = `${"75"}vh`;
             setContainerVisibility(firstTab, true, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
     
             chatTab.style.display = 'flex';
             settingsTab.style.display = 'none';
-            achievementsTab.style.display = 'none';
             profileTab.style.display = 'none';
             gameTab.style.display = 'none';
             break;
-        case 'settings':
+            case 'settings':
+            gameContainer.style.height = `${"75"}vh`;
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
     
             chatTab.style.display = 'none';
             settingsTab.style.display = 'block';
-            achievementsTab.style.display = 'none';
-            profileTab.style.display = 'none';
-            gameTab.style.display = 'none';
-            break;
-        case 'achievements':
-            setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
-            setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
-            setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
-    
-            chatTab.style.display = 'none';
-            settingsTab.style.display = 'none';
-            achievementsTab.style.display = 'block';
             profileTab.style.display = 'none';
             gameTab.style.display = 'none';
             break;
         case 'profile':
+            gameContainer.style.height = `${"75"}vh`;
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
     
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
-            achievementsTab.style.display = 'none';
             profileTab.style.display = 'block';
             gameTab.style.display = 'none';
             break;
