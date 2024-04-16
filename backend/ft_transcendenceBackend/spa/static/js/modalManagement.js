@@ -124,6 +124,7 @@ function showChangeUsernameModal() {
     document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
     document.getElementById('btnChangeUsername').addEventListener('click', function() {
         let inputText = document.getElementById('inputNewUsername').value;;
+        userUsername = document.getElementById('inputNewUsername').value;
         console.log("click");
         $.ajax({
             url: '/update_username/',

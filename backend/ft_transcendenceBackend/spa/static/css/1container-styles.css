@@ -1,7 +1,7 @@
 .inner-container1 {
     display: flex;
     flex-direction: column;
-    border: 2px solid rgba(250, 30, 232, 0.7);
+    border: 2px solid rgba(124, 48, 155, 0.7);
     border-radius: 10px;
     padding: 0px;
     margin-top: 18vh;
@@ -31,7 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(250, 30, 232, 0.7);
+    background-color: rgba(124, 48, 155, 0.7);
     border-radius: 8px 8px 0 0;
     padding: 5px;
     margin: 0px;
@@ -74,8 +74,8 @@
 }
 
 .social-button.active {
-    color: #c300ff;
-    border-bottom: 2px solid rgb(255, 0, 255);
+    color: rgba(164, 94, 202);
+    border-bottom: 2px solid rgba(164, 94, 202);
     padding: 5px;
 }
 
@@ -134,7 +134,7 @@
 
 .friend-tab-button {
     width: 95%;
-    border: 2px solid rgba(226, 107, 250, 0.7);
+    border: 2px solid rgba(146, 128, 224, 0.7);
     background-color: transparent;
     padding: 10px;
     cursor: pointer;
@@ -143,7 +143,7 @@
     justify-content: flex-start;
     margin: 10px auto;
     border-radius: 5px;
-    background-color: rgba(226, 107, 250, 0.7);
+    background-color: rgba(146, 128, 224, 0.7);
     font-size: 1.15em;
 }
 
@@ -221,7 +221,7 @@
 } */
 
 .icon-chat:hover, .icon-controller:hover {
-    color: #c300ff;
+    color: rgba(164, 94, 202);
 }
 
 .bi-x-circle:hover {
@@ -258,7 +258,7 @@
 }
 
 .global-chat-item:hover {
-    color: #c300ff; 
+    color: rgba(164, 94, 202); 
     border: 2px solid rgba(173, 102, 255, 0.7);
 }
 

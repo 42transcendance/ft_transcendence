@@ -42,6 +42,5 @@ urlpatterns = [
     path('update_username/', update_username.update_username, name='update_username'),
     path('upload_profile_picture/', pfp_utils.upload_profile_picture, name='upload_profile_picture'),
     path('get_game_history/', game_history.get_game_history, name='get_game_history'),
-    # path('testGame/', views.testGame, name='testGame'),
 ]
 

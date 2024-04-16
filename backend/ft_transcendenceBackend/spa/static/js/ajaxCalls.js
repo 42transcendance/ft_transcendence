@@ -193,6 +193,10 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(data) {
                 updateProfilePicture(data);
                 updateSettingsUsername(data);
+                if (data.user_details.userid) {
+                    userId = data.user_details.userid;
+                    userUsername = data.user_details.username;
+                }
             },
             error: function(xhr, status, error) {
                 console.error(error);

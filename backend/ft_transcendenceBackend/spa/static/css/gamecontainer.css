@@ -1,18 +1,18 @@
 
 .game-container {
     height: 100%; 
-    background-color: rgb(250 30 232 / 70%);
-    border: 2px solid rgb(240, 1, 208); 
-    border-radius: 10px;
+    background-color: rgba(124, 48, 155, 0.7);
+    /* border: 2px solid rgba(103, 40, 128, 0.7);  */
+    border-radius: 8px;
     display: none;
 }
 
 #button-container{
     width: auto;
     height: 15%;
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px; 
-    background-color: rgb(250 30 232 / 70%); 
+    /* border-top-right-radius: 10px;
+    border-top-left-radius: 10px;  */
+    /* background-color: rgba(124, 48, 155, 0.7);  */
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -25,7 +25,7 @@
 #principal-container {
     width: auto;
     height: 70%;
-    background-color: rgb(250 30 232 / 70%); 
+    /* background-color: rgba(124, 48, 155, 0.7);  */
     justify-content: center;
     position : relative
 }
@@ -33,9 +33,9 @@
 #bottom-container {
     width: auto;
     height: 15%;
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px; 
-    background-color: rgb(250 30 232 / 70%); 
+    /* border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;  */
+    /* background-color: rgba(124, 48, 155, 0.7);  */
 }
 
 #duel-form {
@@ -62,12 +62,13 @@
 #duel-game-form input {
     width: 50%; /* Take full width */
     height: 20px;
+    margin-bottom: 10px;
 }
 
-#duel-game-form button {
+/* #duel-game-form button {
     height: 35px;
     cursor: pointer;
-}
+} */
 
 .grid-container {
     display: grid;
@@ -94,6 +95,8 @@
     position: absolute;
     top: 0;
     left: 25%;
+    padding: 10px;
+
 }
 
 #tournament-input-container {

@@ -1,5 +1,7 @@
 let currentChatContext = 'global';
 let currentRecipientId = null;
+let userId = null;
+let userUsername = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     const sendMessageButton = document.querySelector('.send-button');
@@ -10,15 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const messageText = messageInput.value.trim();
         if (!messageText) return;
 
-        addMessageToChatUI(messageText, 'You');
+        // addMessageToChatUI(messageText, 'You');
         if (currentChatContext === 'global') {
-            sendMessage('global.message', messageText);
+            sendMessage('global.message', messageText, userId);
         } else if (currentChatContext === 'private' && currentRecipientId) {
-            sendMessage('private.message', messageText, currentRecipientId);
+            sendMessage('private.message', messageText, userId, currentRecipientId);
 		}
 
         messageInput.value = '';
-        scrollToBottom(chatMessagesDiv);
     });
 
     messageInput.addEventListener('keypress', function(event) {
@@ -29,35 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function addMessageToChatUI(message, sender) {
-    const messageElement = document.createElement('div');
-    messageElement.className = 'chat-message';
-    const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
-    const messageDetailsHTML = `
-        <div class="message-details">
-            <span class="nickname">${sender}</span>
-            <div class="text-and-time">
-                <div class="message-text">${message}</div>
-                <span class="message-time">${getCurrentTime()}</span>
-            </div>
-        </div>
-    `;
-    messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-    document.querySelector('.chat-messages').appendChild(messageElement);
-}
-
-function getCurrentTime() {
-    const now = new Date();
-    return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-}
 
 function scrollToBottom(element) {
     element.scrollTop = element.scrollHeight;
 }
 
-function sendMessage(type, message) {
+
+function sendMessage(type, message, sender, id=null) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-        const messageData = { type: type, message: message };
+        const messageData = { type, message };
+        // if (id) messageData.id = id;
         window.chatSocket.send(JSON.stringify(messageData));
     } else {
         console.error("WebSocket is not connected.");
