@@ -1,4 +1,5 @@
-// Function to check if a modal is already present
+
+
 function isModalPresent(modalId) {
     return document.getElementById(modalId) !== null;
 }
@@ -132,8 +133,9 @@ function showChangeUsernameModal() {
             success: function() {
                 document.getElementById('inputNewUsername').value = '';
                 closeModal('modalChangeUsername');
-                showNotification("Username has been changed !", "rgb(81, 171, 81)");
-                location.reload();
+                showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
+                fetchUserProfile();
+                fetchUserSettings();
             },
             error: function(xhr, status, error) {
                 document.getElementById('inputNewUsername').value = '';
@@ -223,7 +225,8 @@ function showUploadProfilePictureModal() {
                 success: function(response) {
                     closeModal('modalUploadProfilePicture');
                     showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                    location.reload();
+                    fetchUserProfile();
+                    fetchUserSettings();
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -242,12 +245,49 @@ function closeModal(modalId) {
     }
 }
 
-// Closing modal function
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.parentNode.removeChild(modal);
-    }
+
+function fetchUserProfile() {
+    $.ajax({
+        url: '/get_user_details/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            updateProfilePage(data);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+function updateProfilePage(data) {
+
+    document.getElementById('username').textContent = data.user_details.username;
+    document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
+    document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
+    document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
+}
+
+function fetchUserSettings() {
+    $.ajax({
+        url: '/get_user_details/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            updateProfilePicture(data);
+            updateSettingsUsername(data);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function updateProfilePicture(data) {
+    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
+    document.querySelector('.profile-pic').src = data.user_details.userPfp;
+}
+function updateSettingsUsername(data){
+    document.querySelector('.current-username').textContent = data.user_details.username;
 }
 
 // Event Listeners

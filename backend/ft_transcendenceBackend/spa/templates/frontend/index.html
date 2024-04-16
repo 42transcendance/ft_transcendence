@@ -223,7 +223,7 @@
                         <!-- User Profile Section -->
                         <div class="settings-body">
                             <div class="pfp-container">
-                                <img src="{% static 'assets/pfp.png' %}" alt="User Profile" class="user-pfp">
+                                <img src="{% static 'assets/pfp.png' %}" alt="User Profile" class="user-pfp pfp-settings">
                             </div>
 
                             <div class="user-info">
@@ -273,46 +273,17 @@
                                 <div id="username" class="username">Username</div>
                                 <div class="additional-info">
                                     <span id="joinedDate">Joined: xx/xx/xxxx</span>
-                                    <span id="ranking">Ranking: #1</span>
                                     <span id="matchesPlayed">Matches Played: 99</span>
                                 </div>
                             </div>
                         </div>
                         <div class="profile-body">
-                            <!-- Game History Section -->
                             <div class="game-history">
-                                <div class="section-heading">Game History</div>
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 3-1</div>
-                                    </div>
-                                </div>  
                                 
                             </div>
-                        
-                            <!-- Achievements Section
-                            <div class="user-achievements">
-                                <div class="section-heading">Achievementszzz</div>
-                                <div class="achievement-item">
-                                    <img src="path_to_achievement_icon.png" alt="Achievement" class="achievement-logo">
-                                    <div class="achievement-info">
-                                        <div class="achievement-name">Achievement Name 1</div>
-                                        <div class="achievement-description">Description of the achievement 1.</div>
-                                    </div>
-                                </div>
-                                <div class="achievement-item">
-                                    <img src="path_to_another_achievement_icon.png" alt="Achievement" class="achievement-logo">
-                                    <div class="achievement-info">
-                                        <div class="achievement-name">Achievement Name 2</div>
-                                        <div class="achievement-description">Description of the achievement 2.</div>
-                                    </div>
-                                </div>
-                            </div> -->
+                            <div class="user-stats">
+                              
+                            </div>
                         </div>
                     </div>
                     <div class="game-container">
@@ -389,7 +360,6 @@
     <script src="{% static 'js/writing.js' %}"></script>
     <script src="{% static 'js/navigation.js' %}"></script>
     <script src="{% static 'js/socialButtons.js' %}"></script>
-    <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/tabManagement.js' %}"></script>
     <script src="{% static 'js/smallButtons.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameForm.js' %}"></script>
@@ -400,8 +370,10 @@
     <script src="{% static 'js/login.js'%}"></script>
     <script src="{% static 'js/channelChat.js' %}"></script>
     <script src="{% static 'js/ajaxCalls.js' %}"></script>
+    <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script>
     <script src="{% static 'js/globalChat.js' %}"></script>
+    
     <script src="{% static 'js/webSocket.js' %}"></script>
 </body>
 </html>

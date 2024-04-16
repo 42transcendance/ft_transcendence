@@ -2,6 +2,8 @@ import json
 import time
 
 from ..views import extract_user_info_from_token
+from ..models import CustomUser
+from asgiref.sync import sync_to_async
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -16,6 +18,8 @@ class pongConsumer(AsyncWebsocketConsumer):
 
         if self.user_id == None or self.username == None:
             self.close()
+        user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+        self.username = user.username
 
         self.group_name = pongGroupsManager.join_group(self.channel_name)
         await self.channel_layer.group_add( self.group_name, self.channel_name )

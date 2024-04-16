@@ -15,41 +15,122 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    function fetchGameHistory() {
-        // to be replaced with actual API endpoint
-        fetch('/api/user/game-history') 
-            .then(response => response.json())
-            .then(data => {
-                addGameHistoryItems(data.gameHistory);
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
     function updateProfilePage(data) {
-        // Replacing keys with actual ones from our API response
+
         document.getElementById('username').textContent = data.user_details.username;
         document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
         document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-        // document.getElementById('ranking').textContent = `Ranking: ${data.rank}`;
-        // document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.gamesPlayed}`;
+        document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
     }
 
-    function addGameHistoryItems(gameHistory) {
-        const gameHistoryContainer = document.querySelector('.game-history'); // Ensure you have this container in your HTML
+    function fetchGameHistory() {
+        $.ajax({
+            url: '/get_game_history/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                if (data.gameHistory.length > 0) {
+                    addGameHistoryItems(data.gameHistory, data.currentUser);
+                } else {
+                    displayEmpty('.game-history', '.user-stats');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
+    function displayEmpty(historycontainer, statcontainer) {
+        const container = document.querySelector(historycontainer);
+        container.innerHTML = '<div class="section-heading">Game History</div>';
+        container.innerHTML += `<div class="empty-message">No game played online.</div>`;
+        container.classList.add('centered');
+
+        const stat = document.querySelector(statcontainer);
+        stat.innerHTML += `  <div class="section-heading">Statistics</div><div class="empty-message">Need 1 game to see stats.</div>`;
+        stat.classList.add('centered');
+    }
+
+    
+    
+    function addGameHistoryItems(gameHistory, currentUser) {
+        const gameHistoryContainer = document.querySelector('.game-history'); 
+        gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
 
         gameHistory.forEach(game => {
             addGameHistoryItem(game, gameHistoryContainer);
         });
-    }
 
+        let totalGames = gameHistory.length;
+        let wins = gameHistory.filter(game => game.outcome === 'Win').length;
+        let losses = totalGames - wins;
+        let winRate = (totalGames > 0) ? ((wins / totalGames) * 100).toFixed(2) : 0;
+        let lossRate = 100 - winRate;
+    
+        let greenLength = (winRate / 100) * (2 * Math.PI * 70);
+        let redLength = (lossRate / 100) * (2 * Math.PI * 70);
+    
+        let totalScore = 0;
+        for (let i = 0; i < gameHistory.length; i++) {
+            const game = gameHistory[i];
+            if (game.player1_username === currentUser) {
+                totalScore += parseInt(game.score.split('-')[0]);
+            } else if (game.player2_username === currentUser) {
+                totalScore += parseInt(game.score.split('-')[1]);
+            }
+        }  
+    
+        let avgScore = (totalGames > 0) ? (totalScore / totalGames).toFixed(2) : 0;
+    
+        let winStreak = 0;
+        for (let i = 0; i < gameHistory.length; i++) {
+            if (gameHistory[i].outcome === 'Win') {
+                winStreak++;
+            } else {
+                break;
+            }
+        }
+    
+        const statsContainer = document.querySelector('.user-stats');
+        statsContainer.innerHTML = `
+        <div class="section-heading">Statistics</div>
+            <div class="donut-chart-container">
+                <svg width="200" height="200">
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#ddd" stroke-width="15"></circle>
+                    <circle cx="100" cy="100" r="70" fill="none" stroke="#4CAF50" stroke-width="15" stroke-dasharray="${greenLength} ${redLength}" transform="rotate(-90 100 100)"></circle>
+                    <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="26">${winRate}%</text>
+                </svg>
+            </div>
+            <div class="avg-score">Average Score: <span style="color: ${avgScoreColor(avgScore)};">${avgScore}</span></div>
+            <div class="win-streak">Win Streak: <span style="color: ${winStreakColor(winStreak)};">${winStreak}</span></div>
+        `;
+    }
+    
+
+    function avgScoreColor(avgScore) {
+        let red = 255 * (1 - avgScore / 5);
+        let green = 255 * (avgScore / 5);
+    
+        let redHex = Math.round(red).toString(16).padStart(2, '0');
+        let greenHex = Math.round(green).toString(16).padStart(2, '0');
+
+        return `#${redHex}${greenHex}00`;
+    }
+    
+    function winStreakColor(winStreak) {
+        if (winStreak === 0) {
+            return 'black';
+        } else {
+            let green = Math.round((winStreak / 15) * 255);
+            return `rgb(0, ${green}, 0)`;
+        }
+    }
     function addGameHistoryItem(game, container) {
-        // Creating a game history item element
         const gameItem = document.createElement('div');
         gameItem.classList.add('game-item');
-        gameItem.classList.add(game.outcome); // 'win' or 'lose'
+        gameItem.classList.add(game.outcome);
 
-        // Adding game details to the game history item
         gameItem.innerHTML = `
             <div class="game-details">
                 <div class="game-opponent">Versus: ${game.opponent}</div>
@@ -63,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
         container.appendChild(gameItem);
     }
 });
-
 
 // friends list 3rd container, profile page
 
@@ -166,5 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
 
 
