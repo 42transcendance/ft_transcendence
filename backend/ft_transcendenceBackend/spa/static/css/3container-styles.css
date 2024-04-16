@@ -1,5 +1,5 @@
 .inner-container3 {
-    border: 2px solid rgba(250, 30, 232, 0.7);
+    border: 2px solid rgba(124, 48, 155, 0.7);
     border-radius: 10px;
     padding: 0px;
     margin-top: 18vh;
@@ -15,7 +15,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(250, 30, 232, 0.7);
+    background-color: rgba(124, 48, 155, 0.7);
     border-radius: 8px 8px 0 0;
     padding: 5px;
     margin: 0px;
@@ -63,7 +63,7 @@
 }
 
 .icon-chat:hover, .icon-controller:hover, .icon-settings:hover {
-    color: #c300ff;
+    color: rgba(164, 94, 202);
 }
 
 .friends-list-content {
@@ -78,7 +78,7 @@
 }
 
 .friends-list-content .friend-item3:hover {
-    color: #c300ff; 
+    color: rgba(164, 94, 202); 
     border: 3px solid rgba(173, 102, 255, 0.7);
 }
 
