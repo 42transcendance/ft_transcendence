@@ -16,7 +16,7 @@ class Paddle :
         self.height = 27
         self.x = 7 if side == 'left' else STD_WIDTH - (7 + self.width)
         self.y = STD_HEIGHT / 2 - self.height / 2
-        self.speed = 2
+        self.speed = 4
         self.direction = 'idle'
 
 class Ball :
@@ -177,7 +177,7 @@ class PongGame :
 
     async def countdown (self, time):
         start = time
-        while start > 0:
+        while start > -1:
             await channel_layer.group_send(
             self.groupChannel,
             {
