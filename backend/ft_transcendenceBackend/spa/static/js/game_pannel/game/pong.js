@@ -4,8 +4,8 @@ class Game {
 		this.canvas = document.getElementById('gameCanvas');
 		this.context = this.canvas.getContext('2d');
 		
-		this.canvas.width = 600;
-		this.canvas.height = 400;
+		this.canvas.width = this.principalContainer.clientWidth;
+		this.canvas.height = this.principalContainer.clientHeight;
 
 		this.canvas.style.width = this.canvas.width + 'px';
 		this.canvas.style.height = this.canvas.height + 'px';
