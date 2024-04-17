@@ -203,12 +203,7 @@ class PongGame :
                 'gamestate': self,
             })
             await asyncio.sleep(1 / 60)
-        await channel_layer.group_send(
-            self.groupChannel,
-            {
-                'type': 'ending.game',
-                'gamestate': self,
-            })
+
         response = self.to_dict()
         player1username = response['leftPlayerName']
         player2username = response['rightPlayerName']
@@ -218,8 +213,13 @@ class PongGame :
 
         user1 = await sync_to_async(CustomUser.objects.get)(username=player1username)
         user2 = await sync_to_async(CustomUser.objects.get)(username=player2username)
-
         game =  await sync_to_async(Game.objects.create)(player1=user1, player2=user2, player1_score=player1score,player2_score=player2score)
-
+        
         game_history_entry1 =  await sync_to_async(GameHistory.objects.create)(user=user1, game=game)
         game_history_entry2 =  await sync_to_async(GameHistory.objects.create)(user=user2, game=game)
+        await channel_layer.group_send(
+            self.groupChannel,
+            {
+                'type': 'ending.game',
+                'gamestate': self,
+            })
