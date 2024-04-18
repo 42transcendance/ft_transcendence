@@ -1,0 +1,149 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-18 13:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+#: ft_transcendenceBackend/settings.py:137
+msgid "English"
+msgstr "Anglais"
+
+#: ft_transcendenceBackend/settings.py:138
+msgid "French"
+msgstr "Français"
+
+#: ft_transcendenceBackend/settings.py:139
+msgid "Italian"
+msgstr "Italien"
+
+msgid "Social"
+msgstr "Sociale"
+
+msgid "FRIENDS"
+msgstr "AMIS"
+
+msgid "CHANNELS"
+msgstr "CANNAUX"
+
+msgid "ADD FRIEND"
+msgstr "AJOUTER UN AMI"
+
+msgid "Friends"
+msgstr "Amis"
+
+msgid "Outgoing Requests"
+msgstr "Demandes Envoyés"
+
+msgid "Incoming Requests"
+msgstr "Demandes en Attente"
+
+msgid "Blocked"
+msgstr "Bloqué"
+
+msgid "CREATE CHANNEL"
+msgstr "CRÉER UN CANAL"
+
+
+msgid "JOIN CHANNEL"
+msgstr "REJOINDRE UN CANNAL"
+
+
+msgid "Global Chat"
+msgstr "Chat Général"
+
+
+msgid "Messages"
+msgstr "Messages"
+
+
+msgid "Send"
+msgstr "Envoyer"
+
+
+msgid "Settings"
+msgstr "Options"
+
+
+msgid "Username:"
+msgstr "Nom d'utilisateur:"
+
+
+msgid "Two Factor Authentication:"
+msgstr "Authentification à deux facteurs :"
+
+
+msgid "Disabled"
+msgstr "Désactivé"
+
+
+msgid "Change"
+msgstr "Changer"
+
+
+msgid "Joined"
+msgstr "A Rejoint"
+
+
+msgid "Matches Played:"
+msgstr "Matchs joués :"
+
+
+msgid "Duel"
+msgstr "Duel"
+
+
+msgid "Tournament"
+msgstr "Tournois"
+
+
+msgid "Player 1:"
+msgstr "Joueur 1:"
+
+msgid "Player 2:"
+msgstr "Joueur 2:"
+
+msgid "Player 3:"
+msgstr "Joueur 3:"
+
+msgid "Player 4:"
+msgstr "Joueur 4:"
+
+msgid "Player 5:"
+msgstr "Joueur 5:"
+
+msgid "Player 5:"
+msgstr "Joueur 5:"
+
+msgid "Player 6:"
+msgstr "Joueur 6:"
+
+msgid "Player 7:"
+msgstr "Joueur 7:"
+
+msgid "Player 8:"
+msgstr "Joueur 8:"
+
+msgid "Start game"
+msgstr "Lancer le Duel"
+
+
+msgid "Career's"
+msgstr "Carrière"
+
+
+msgid ""
+msgstr ""
+
