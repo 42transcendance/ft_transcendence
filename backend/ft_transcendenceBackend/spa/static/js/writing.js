@@ -14,11 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // addMessageToChatUI(messageText, 'You');
         if (currentChatContext === 'global') {
-            sendMessage('global.message', messageText, userId);
+            sendMessage('global.message', messageText);
         } else if (currentChatContext === 'private' && currentRecipientId) {
-            sendMessage('private.message', messageText, userId, currentRecipientId);
+            sendMessage('private.message', messageText, currentRecipientId);
 		}
-
         messageInput.value = '';
     });
 
@@ -36,11 +35,12 @@ function scrollToBottom(element) {
 }
 
 
-function sendMessage(type, message, sender, id=null) {
+function sendMessage(type, message, id=null) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const messageData = { type, message };
-        // if (id) messageData.id = id;
+        if (id) messageData.id = id;
         window.chatSocket.send(JSON.stringify(messageData));
+        console.log("sent successfully");
     } else {
         console.error("WebSocket is not connected.");
     }

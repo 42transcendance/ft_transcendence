@@ -133,3 +133,64 @@
     visibility: hidden;
     pointer-events: none;
 }
+
+
+/* non related */
+
+.nicknameAndIcon {
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; */
+
+}
+
+.messageIcon {
+    margin-left: 0.3em;
+}
+
+.messageIcons {
+    margin-left: 0.2em;
+    display: none; /* Layout the icons in a row */
+    /* border: 1px solid rgba(49, 48, 48, 0.5); */
+    /* border-radius: 10px;
+    padding-left: 0.35em;
+    padding-right: 0.35em; */
+
+}
+
+.messageAddIcon {
+    font-size: 0.85em;
+    margin-left: 0.5em;
+}
+
+.messageIcon:hover {
+    color: rgba(173, 102, 255, 0.7); 
+}
+
+.nicknameAndIcon:hover .messageIcons {
+    display: flex;  /* Show icons on hover */
+    align-items: center;
+}
+
+.nicknameAndIcon:hover .bi-caret-right-fill {
+    display: none;
+}
+
+
+/* .messageIcons.active {
+    display: flex;
+    align-items: center;
+
+} */
+
+.bi-caret-right-fill {
+    color: rgba(41, 41, 95, 0.7);
+    font-size: 0.75em;
+    padding-top: 3px;
+    margin-left: 0.4em;
+}
+
+/* .bi-caret-right-fill:hover {
+    color: rgba(103, 55, 158, 0.7);
+} */
+
