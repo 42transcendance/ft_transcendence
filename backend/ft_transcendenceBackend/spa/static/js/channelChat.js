@@ -1,5 +1,6 @@
 function openChannelChat(channelId) {
     const chatMessagesContainer = document.querySelector('.chat-messages');
+    chatMessagesContainer.id = `chat-with-${channelId}`;
     chatMessagesContainer.innerHTML = '';
     console.log(`Opening chat with channel ID: ${channelId}`);
     loadChannelChatHistory(channelId);
@@ -25,7 +26,7 @@ function displayChannelMessage(message) {
             <img src="${message.userIcon}" alt="User" class="user-icon">
         </div>
         <div class="message-details">
-            <span class="nickname">${message.sender}</span>
+            <span class="nickname"  data-user-id="${message.senderId}">${message.sender}</span>
             <div class="text-and-time">
                 <div class="message-text">${message.text}</div>
                 <span class="message-time">${message.time}</span>

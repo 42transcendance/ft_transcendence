@@ -152,56 +152,26 @@
                             <i class="bi bi-chat-dots chat-icon"></i>
                             <span class="social-text">{{ translations.messages }}</span>
                         </div>
-                        <div class="chat-messages">
+                        <div class="chat-messages" id="">
                             <!-- MESSAGE EXANMPLE -->
-                            <div class="chat-message">
-                                <div class="user-icon-container">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                </div>
-                                <div class="message-details">
-                                    <span class="nickname">User's Nickname</span>
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="chat-message">
                                 <div class="user-icon-container">
                                     <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
                                 </div>
                                 <div class="message-details">
-                                    <span class="nickname">User's Nickname</span>
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
+                                    <div class="nicknameAndIcon">
+                                        <span class="nickname NotMainUser" id="SomeUser1">test it</span>
+                                        <i class="bi bi-caret-right-fill"></i>
+                                        <div class="messageIcons">
+                                            <i class="bi bi-controller messageIcon"></i>
+                                            <i class="bi bi-plus-circle messageIcon messageAddIcon"></i>
+                                            <i class="bi bi-person messageIcon"></i>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="chat-message">
-                                <div class="user-icon-container">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                </div>
-                                <div class="message-details">
-                                    <span class="nickname">User's Nickname</span>
                                     <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="chat-message">
-                                <div class="user-icon-container">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="User" class="user-icon">
-                                </div>
-                                <div class="message-details">
-                                    <span class="nickname">User's Nickname</span>
-                                    <div class="text-and-time">
-                                        <div class="message-text">This is an example chat message. This is an example chat message. This is an example chat message.</div>
-                                        <span class="message-time">10:30 AM</span>
+                                        <div class="message-text">test it test it test it test it</div>
+                                        <span class="message-time">test it</span>
                                     </div>
                                 </div>
                             </div>
@@ -314,9 +284,7 @@
                         <div id="bottom-container"></div>
                     </div>
                 </div>
-            </div>                  
-                </div>
-            </div>
+            </div> 
             <!-- THIRD TAB -->
             <div class="col-3 col-lg-3 third-tab">
                 <div class="inner-container3 mx-1">
@@ -330,21 +298,21 @@
                         <div class="friend-item3">
                             <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
-                                <div class="friend-nickname">Friend's Name</div>
+                                <div class="friend-nickname" data-user-id="someFriend1">Friend's Name</div>
                             </div>
                             <i class="bi bi-person icon-friend-profile"></i>
                         </div>
                         <div class="friend-item3">
                             <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
-                                <div class="friend-nickname">Friend's Name</div>
+                                <div class="friend-nickname" data-user-id="someFriend2">Friend's Name</div>
                             </div>
                             <i class="bi bi-person icon-friend-profile"></i>
                         </div>
                         <div class="friend-item3">
                             <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                             <div class="friend-info">
-                                <div class="friend-nickname">Friend's Name</div>
+                                <div class="friend-nickname" data-user-id="someFriend3">Friend's Name</div>
                             </div>
                             <i class="bi bi-person icon-friend-profile"></i>
                         </div>
@@ -375,5 +343,6 @@
     <script src="{% static 'js/globalChat.js' %}"></script>
     
     <script src="{% static 'js/webSocket.js' %}"></script>
+    <script src="{% static 'js/thirdTab.js' %}"></script>
 </body>
 </html>
