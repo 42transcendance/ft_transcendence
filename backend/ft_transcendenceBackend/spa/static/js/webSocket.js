@@ -33,7 +33,8 @@ function connectWebSocket() {
                 // displayPrivateMessage(data);
                 break;
             case 'global.message':
-                console.log("glon mess recieved");
+                
+                console.log("global mess recieved : ", data);
                 addMessageToGlobalChatUI(data.message, data.source_user);
                 // displayGlobalMessage(data);
                 break;
