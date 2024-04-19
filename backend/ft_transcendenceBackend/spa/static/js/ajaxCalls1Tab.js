@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             dataType: 'json',
             success: function(waiting_requests) {
-                console.log(waiting_requests);
                 if (waiting_requests.length > 0) {
                     displayRequests('outgoingRequestsTabContent', waiting_requests, 'outgoing');
                 } else {
@@ -160,7 +159,6 @@ function fetchIncomingRequests() {
         method: 'GET',
         dataType: 'json',
         success: function(waiting_requests) {
-            console.log(waiting_requests);
             if (waiting_requests.length > 0) {
                 displayRequests('incomingRequestsTabContent', waiting_requests, 'incoming');
             } else {

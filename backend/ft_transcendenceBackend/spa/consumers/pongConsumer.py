@@ -2,6 +2,8 @@ import json
 import time
 
 from ..views import extract_user_info_from_token
+from ..models import CustomUser
+from asgiref.sync import sync_to_async
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -16,6 +18,8 @@ class pongConsumer(AsyncWebsocketConsumer):
 
         if self.user_id == None or self.username == None:
             self.close()
+        user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+        self.username = user.username
 
         self.group_name = pongGroupsManager.join_group(self.channel_name)
         await self.channel_layer.group_add( self.group_name, self.channel_name )
@@ -24,7 +28,19 @@ class pongConsumer(AsyncWebsocketConsumer):
         await self.accept()
     
     async def disconnect(self, close_code):
-        # WTD : Delete game Task on disconnection
+        print("This is a test ")
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                'type': 'ending.game',
+                'gamestate': 'None',
+            }
+        )
+        await self.send(text_data=json.dumps({
+            "type": "websocket.close",
+            "code": 1000,
+        }))
+        await self.groupObject.stopGameTask()
         pongGroupsManager.group_remove_user(self.group_name, self.channel_name)
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
@@ -84,8 +100,13 @@ class pongConsumer(AsyncWebsocketConsumer):
     
     async def ending_game(self, event):
         game_state = event['gamestate']
-        await self.send(text_data=json.dumps({
-            'type': 'ending.game',
-            **game_state.to_dict(),
-        }))
-        
+        if event['gamestate'] != 'None':
+            await self.send(text_data=json.dumps({
+                'type': 'ending.game',
+                **game_state.to_dict(),
+            }))
+        else:
+            await self.send(text_data=json.dumps({
+                'type': 'ending.game'
+            }))
+        await self.close()

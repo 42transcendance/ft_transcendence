@@ -70,38 +70,38 @@
                 <div class="inner-container1 mx-1">
                     <div class="social-section">
                         <i class="bi bi-people social-icon"></i>
-                        <span class="social-text">Social</span>
+                        <span class="social-text">{{ translations.social }}</span>
                     </div>
                     <div class="button-container">
                         <div class="FriendsChannels">
-                            <button class="social-button" id="button1">FRIENDS</button>
-                            <button class="social-button active" id="button2">CHANNELS</button>
+                            <button class="social-button" id="button1">{{ translations.friends }}</button>
+                            <button class="social-button active" id="button2">{{ translations.channels }}</button>
                         </div>
                         <!-- Content for Friends -->
                         <div id="friendsContainer" class="content-container"  style="display: none;">
-                            <button class="add-friend-button">ADD FRIEND</button>
+                            <button class="add-friend-button">{{ translations.add_friend }}</button>
                             <button class="friend-tab-button" id="friendsTab">
-                                <i class="bi bi-people"></i> Friends <i class="bi bi-chevron-down arrow-icon"></i>
+                                <i class="bi bi-people"></i> {{ translations.frds }} <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Friends -->
                             <div id="friendsTabContent" class="friends-tab-content">
                             </div>
                         
                             <button class="friend-tab-button" id="outgoingRequestsTab">
-                                <i class="bi bi-arrow-bar-right"></i> Outgoing Requests <i class="bi bi-chevron-down arrow-icon"></i>
+                                <i class="bi bi-arrow-bar-right"></i> {{ translations.out_req }} <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Outgoing Requests -->
                             <div id="outgoingRequestsTabContent" class="friends-tab-content">
                             </div>
                         
                             <button class="friend-tab-button" id="incomingRequestsTab">
-                                <i class="bi bi-arrow-bar-left"></i> Incoming Requests <i class="bi bi-chevron-down arrow-icon"></i>
+                                <i class="bi bi-arrow-bar-left"></i> {{ translations.inc_req }} <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Incoming Requests -->
                             <div id="incomingRequestsTabContent" class="friends-tab-content">
                             </div>
                             <button class="friend-tab-button" id="blockedTab">
-                                <i class="bi bi-slash-circle"></i> Blocked <i class="bi bi-chevron-down arrow-icon"></i>
+                                <i class="bi bi-slash-circle"></i> {{ translations.blocked }} <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
                             <!-- Content container for Blocked -->
                             <div id="blockedTabContent" class="friends-tab-content">
@@ -110,14 +110,14 @@
                         <!-- Channels Container -->
                         <div id="channelsContainer" class="content-container">
                             <!-- Content for Channels -->
-                            <button class="create-channel-button">CREATE CHANNEL</button>
-                            <button class="join-channel-button">JOIN CHANNEL</button>
+                            <button class="create-channel-button">{{ translations.cre_cha }}</button>
+                            <button class="join-channel-button">{{ translations.joi_cha }}</button>
                             <div id="channelsTabContent" class="channels-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
                                 <div class="channel-item global-chat-item">
                                     <i class="bi bi-globe2 global-chat-icon"></i>
                                     <div class="friend-info">
-                                        <div>Global Chat</div>
+                                        <div>{{ translations.glo_cha }}</div>
                                     </div>
                                     <i class="bi bi-chat channels-icon "></i>
                                 </div>
@@ -150,7 +150,7 @@
                     <div class="chat-tab">
                         <div class="chat-heading">
                             <i class="bi bi-chat-dots chat-icon"></i>
-                            <span class="social-text">Messages</span>
+                            <span class="social-text">{{ translations.messages }}</span>
                         </div>
                         <div class="chat-messages" id="">
                             <!-- MESSAGE EXANMPLE -->
@@ -180,36 +180,36 @@
                         </div>
                         <div class="message-input-area">
                             <input type="text" class="message-input" placeholder="Type your message here...">
-                            <button class="send-button">Send</button>
+                            <button class="send-button">{{ translations.send }}</button>
                         </div>
                     </div>
                     <div class="settings-tab">
                         <!-- Settings Heading -->
                         <div class="settings-heading">
                             <i class="bi bi-gear settings-icon"></i>
-                            <span class="social-text">Settings</span>
+                            <span class="social-text">{{ translations.settings }}</span>
                         </div>
                     
                         <!-- User Profile Section -->
                         <div class="settings-body">
                             <div class="pfp-container">
-                                <img src="{% static 'assets/pfp.png' %}" alt="User Profile" class="user-pfp">
+                                <img src="{% static 'assets/pfp.png' %}" alt="User Profile" class="user-pfp pfp-settings">
                             </div>
 
                             <div class="user-info">
-                                <div class="username-label">Username:</div>
+                                <div class="username-label">{{ translations.user_name }}</div>
                                 <div class="username-and-button">
                                     <div id="current-username" class="current-username">CurrentUsername</div>
-                                    <button class="change-username-button">Change</button>
+                                    <button class="change-username-button">{{ translations.change }}</button>
                                 </div>
                             </div>
                         
                             <!-- 2FA Section -->
                             <div class="tfa-info">
-                                <div class="tfa-label">Two Factor Authentication:</div>
+                                <div class="tfa-label">{{ translations.two_fa }}</div>
                                 <div class="tfa-and-button">
-                                    <div class="current-tfa">Disabled</div>
-                                    <button class="tfa-button">Change</button>
+                                    <div class="current-tfa">{{ translations.disable }}</div>
+                                    <button class="tfa-button">{{ translations.change }}</button>
                                 </div>
                             </div>
                         
@@ -230,7 +230,7 @@
                             </div>
                             <div class="settings-actions">
                                 <button class="settings-button logout-button">Logout</button>
-                                <button class="settings-button delete-account-button">Delete Account</button>
+                            
                             </div>
                         </div>
                     </div>
@@ -242,64 +242,35 @@
                             <div class="user-details">
                                 <div id="username" class="username">Username</div>
                                 <div class="additional-info">
-                                    <span id="joinedDate">Joined: xx/xx/xxxx</span>
-                                    <span id="ranking">Ranking: #1</span>
-                                    <span id="matchesPlayed">Matches Played: 99</span>
+                                    <span id="joinedDate">{{ translations.joined }}: xx/xx/xxxx</span>
+                                    <span id="matchesPlayed">{{ translations.mtch_plyd }} 99</span>
                                 </div>
                             </div>
                         </div>
                         <div class="profile-body">
-                            <!-- Game History Section -->
                             <div class="game-history">
-                                <div class="section-heading">Game History</div>
-                                <div class="game-item win">
-                                    <div class="game-details">
-                                        <div class="game-opponent">Versus: name</div>
-                                        <div class="game-result">2023-12-25</div>
-                                    </div>
-                                    <div class="game-info">
-                                        <div class="game-date">Win</div>
-                                        <div class="game-score">Score: 3-1</div>
-                                    </div>
-                                </div>  
                                 
                             </div>
-                        
-                            <!-- Achievements Section
-                            <div class="user-achievements">
-                                <div class="section-heading">Achievementszzz</div>
-                                <div class="achievement-item">
-                                    <img src="path_to_achievement_icon.png" alt="Achievement" class="achievement-logo">
-                                    <div class="achievement-info">
-                                        <div class="achievement-name">Achievement Name 1</div>
-                                        <div class="achievement-description">Description of the achievement 1.</div>
-                                    </div>
-                                </div>
-                                <div class="achievement-item">
-                                    <img src="path_to_another_achievement_icon.png" alt="Achievement" class="achievement-logo">
-                                    <div class="achievement-info">
-                                        <div class="achievement-name">Achievement Name 2</div>
-                                        <div class="achievement-description">Description of the achievement 2.</div>
-                                    </div>
-                                </div>
-                            </div> -->
+                            <div class="user-stats">
+                              
+                            </div>
                         </div>
                     </div>
                     <div class="game-container">
                         <div id="button-container">
-                            <button class="send-button">Duel</button>
-                            <button class="send-button">Tournament</button>
+                            <button class="send-button">{{ translations.duel }}</button>
+                            <button class="send-button">{{ translations.tourn }}</button>
                         </div>
                         <div id="principal-container">
                             <div id="duel-form" class="form-container">
                                 <form id="duel-game-form">
                                     <div id="duel-input-container">
-                                        <label for="player1">Player 1:</label>
+                                        <label for="player1">{{ translations.ply_1 }}</label>
                                         <input type="text" id="player1" name="player1" required>
                             
-                                        <label for="player2">Player 2:</label>
+                                        <label for="player2">{{ translations.ply_2 }}</label>
                                         <input type="text" id="player2" name="player2" required>
-                                        <button type="button" class="send-button">Start Game</button>
+                                        <button type="button" class="send-button">{{ translations.start_g }}</button>
                                     </div>
                                 </form>
                             </div>
@@ -319,7 +290,7 @@
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
-                        <span class="career-text">Career's</span>
+                        <span class="career-text">{{ translations.carrers }}</span>
                     </div>
                     <!-- Friends List Content -->
                     <div id="friendsListContent" class="friends-list-content">
@@ -357,7 +328,6 @@
     <script src="{% static 'js/writing.js' %}"></script>
     <script src="{% static 'js/navigation.js' %}"></script>
     <script src="{% static 'js/socialButtons.js' %}"></script>
-    <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/tabManagement.js' %}"></script>
     <script src="{% static 'js/smallButtons.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameForm.js' %}"></script>
@@ -368,11 +338,11 @@
     <script src="{% static 'js/login.js'%}"></script>
     <script src="{% static 'js/channelChat.js' %}"></script>
     <script src="{% static 'js/ajaxCalls.js' %}"></script>
+    <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script>
     <script src="{% static 'js/globalChat.js' %}"></script>
+    
     <script src="{% static 'js/webSocket.js' %}"></script>
     <script src="{% static 'js/thirdTab.js' %}"></script>
-
-
 </body>
 </html>

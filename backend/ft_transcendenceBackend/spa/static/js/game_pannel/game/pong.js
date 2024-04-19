@@ -4,8 +4,8 @@ class Game {
 		this.canvas = document.getElementById('gameCanvas');
 		this.context = this.canvas.getContext('2d');
 		
-		this.canvas.width = 600;
-		this.canvas.height = 400;
+		this.canvas.width = this.principalContainer.clientWidth;
+		this.canvas.height = this.principalContainer.clientHeight;
 
 		this.canvas.style.width = this.canvas.width + 'px';
 		this.canvas.style.height = this.canvas.height + 'px';
@@ -16,21 +16,28 @@ class Game {
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
-			if (wsData.type === 'game.starting') {
-				this.game_running = true
-				this.inputsListen();
+			switch (wsData.type) {
+				case ('game.starting'):
+					this.game_running = true
+					this.inputsListen();
+					break ;
+				case ('game.state'):
+					this.lastGameState = wsData;
+					break ;
+				case ('countdown'):
+					this.countdown = wsData.countdown;
+					break ;
+				case ('ending.game'):
+					this.game_running = false;
+
+					this.stopAnimation(this.animationId);
+					this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
+					
+					break;
+				default:
+					console.log("Unrecognised type message : " + wsData.type)
 			}
-            else if (wsData.type === 'game.state') {
-                this.lastGameState = wsData;
-				this.drawBoard(wsData);
-            }
-			else if (wsData.type === 'countdown') {
-				this.drawBoard(this.lastGameState);
-				this.drawCountdown(this.lastGameState, wsData.countdown)
-			}
-			else {
-				console.log("Unrecognised type message : " + wsData.type)
-			}
+			
         };
 
         this.pongSocket.onerror = (error) => {
@@ -52,7 +59,7 @@ class Game {
 		this.context.fillStyle = this.color;
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-		//	Draw the dotted line in the middle of the board
+		//Draw the dotted line in the middle of the board
 		this.context.beginPath();
 		this.context.setLineDash([7, 17]);
 		this.context.moveTo((this.canvas.width / 2), 0);
@@ -90,20 +97,8 @@ class Game {
 				'type':'user.ready',
 				'message':'This user is ready to start an online game.',
 			}));
-			this.waitForReadySignal();
 		};
 		this.wsListen();
-	}
-	
-	waitForReadySignal() {
-		const checkReady = () => {
-			if (!this.game_running) {
-				console.log("Searching for opponent...");
-				//Insert loading screen here
-				setTimeout(checkReady, 1000); // Check every second
-			}
-		};
-		checkReady();
 	}
 
 	inputsListen() {
@@ -150,5 +145,27 @@ class Game {
 				skeypressed = false
 			}
 		});
+	}
+
+	animate() {
+		console.log("Animating");
+		this.draw();
+    	this.animationId = requestAnimationFrame(() => this.animate());
+	}
+
+	stopAnimation() {
+		cancelAnimationFrame(this.animationId);
+	}
+
+	draw() {
+		if (!this.lastGameState) return;
+
+		this.drawBoard(this.lastGameState);
+		if (this.countdown > 0) this.drawCountdown(this.lastGameState, this.countdown);
+	}
+
+	start() {
+		this.connect();
+		this.animate();
 	}
 }

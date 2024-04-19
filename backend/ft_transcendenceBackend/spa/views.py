@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse
-from spa.models import CustomUser
+from spa.models import CustomUser, GameHistory, Game
 from django.conf import settings
 from .usersManagement.pfp_utils import download_image, get_base64_image
 from .friend_requests import * 
+from .translate.static_translate import *
+
+from django.utils.translation import gettext_lazy as _
 
 import requests
 import jwt
@@ -12,27 +15,22 @@ import os
 
 def home(request):
     token = request.session.get('token')
-    user_id, username = extract_user_info_from_token(token)
-    if user_id is not None:
-        print(user_id, username)
-        custom_users = CustomUser.objects.all()
-        for user in custom_users:
-            print(f'User: {user.username}')
-            print(f'  User ID: {user.userid}')
-            print(f'  Join Date: {user.join_date}')
-            print(f'  Pfp : {user.profile_picture}')
+    language = request.session.get('language')
 
-            print("  Incoming Friend Requests:")
-            for friend_request in user.incoming_friends_requests.all():
-                print(f'    {friend_request.username}')
-    return render(request, 'frontend/index.html',{'token': token})
+    if not language:
+        request.session['language'] = 'en'
+    print(request.session.get('language'))
+
+    translations = translate_static(request.session.get('language'))
+
+    return render(request, 'frontend/index.html', {'token': token, 'translations': translations})
     
 def custom_logout(request):
     if 'token' in request.session:
         del request.session['token']
     return redirect ('home')
 
-# To be move on a util pyfile
+
 def extract_user_info_from_token(token):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_PHRASE, algorithms=['HS256'])

@@ -1,6 +1,6 @@
 
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse
-from spa.models import CustomUser
+from spa.models import CustomUser, Game, GameHistory
 from django.views.decorators.csrf import csrf_exempt
 from .usersManagement.pfp_utils import get_base64_image
 import requests
@@ -30,6 +30,7 @@ def get_user_details(request):
                 'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
                 'joinedDate' : formatted_joined_date,
                 'userid'    : user.userid,
+                'gamesPlayed' : user.game_history.count(),
             }
             return JsonResponse({'user_details': user_details})
         except CustomUser.DoesNotExist:
@@ -45,7 +46,7 @@ def send_friend_request(request):
             friend = CustomUser.objects.get(username=search_term)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
 
             if current_user.friends.filter(username=friend.username).exists():
                 return JsonResponse({'error': 'AlreadyFriends', 'message': 'You are already friends with this user.'}, status=400)
@@ -75,7 +76,7 @@ def accept_friend_request(request):
             friend = CustomUser.objects.get(username=friend_username)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
 
             current_user.friends.add(friend) 
             friend.friends.add(current_user)
@@ -101,7 +102,7 @@ def decline_friend_request(request):
             friend = CustomUser.objects.get(username=friend_username)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
 
             current_user.incoming_friends_requests.remove(friend)
             friend.outgoing_friends_requests.remove(current_user)
@@ -119,7 +120,7 @@ def block_friend(request):
             friend = CustomUser.objects.get(username=friend_username)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
 
             current_user.friends.remove(friend)
             friend.friends.remove(current_user)
@@ -140,7 +141,7 @@ def unblock_friend(request):
             friend = CustomUser.objects.get(username=friend_username)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(username=username)
+            current_user = CustomUser.objects.get(userid=user_id)
 
             current_user.blocklist.remove(friend)
 
@@ -156,7 +157,7 @@ def get_incoming_requests(request):
     if token:
         user_id, username = extract_user_info_from_token(token)
         try:
-            user = CustomUser.objects.get(username=username)
+            user = CustomUser.objects.get(userid=user_id)
             incoming_friend_list = user.incoming_friends_requests.all()
             waiting_requests = []
 
@@ -175,7 +176,7 @@ def get_outgoing_requests(request):
     if token:
         user_id, username = extract_user_info_from_token(token)
         try:
-            user = CustomUser.objects.get(username=username)
+            user = CustomUser.objects.get(userid=user_id)
             outgoing_friend_list = user.outgoing_friends_requests.all()
             waiting_requests = []
 
@@ -194,7 +195,7 @@ def get_friends(request):
     if token:
         user_id, username = extract_user_info_from_token(token)
         try:
-            user = CustomUser.objects.get(username=username)
+            user = CustomUser.objects.get(userid=user_id)
             friend_list = user.friends.all()
             friends = []
 
@@ -213,7 +214,7 @@ def get_block_list(request):
     if token:
         user_id, username = extract_user_info_from_token(token)
         try:
-            user = CustomUser.objects.get(username=username)
+            user = CustomUser.objects.get(userid=user_id)
             block_list = user.blocklist.all()
             blocked = []
 

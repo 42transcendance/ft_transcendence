@@ -21,7 +21,7 @@ function winningMsg(Pong) {
     var message = document.createElement('div');
     message.className = 'winning-message';
     message.id = 'winning-message';
-    message.style = "position : absolute; top : 50%; margin-left : 35%;";
+    message.style = "position : absolute; top : 50%;left: 50%;transform: translateX(-50%);";
 
     if (Pong.player.score > Pong.opponent.score){
         var winnerName = Pong.player.name;
@@ -61,7 +61,7 @@ function winTheTournament(winner){
     let message = document.createElement('div');
     message.className = 'winning-tournament';
     message.id = 'winning-tournament';
-    message.style = "position : absolute; top : 40%; margin-left : 35%;";
+    message.style = "position : absolute; top : 40%; left: 50%;transform: translateX(-50%);";
 
     message.textContent = winner + " has won the tournament !";
     document.getElementById('principal-container').appendChild(message);
@@ -71,7 +71,7 @@ function winningMsgTournament(Pong) {
     var message = document.createElement('div');
     message.className = 'winning-message';
     message.id = 'winning-message';
-    message.style = "position : absolute; top : 40%; margin-left : 35%;";
+    message.style = "position : absolute; top : 40%;left: 50%; transform: translateX(-50%);";
 
     if (Pong.player.score > Pong.opponent.score){
         var winnerName = Pong.player.name;
