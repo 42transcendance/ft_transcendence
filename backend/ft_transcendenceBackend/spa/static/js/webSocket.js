@@ -28,8 +28,8 @@ function connectWebSocket() {
             case 'private.message':
                 console.log("chan mess recieved");
                 console.log(data.message);
-                console.log(data.id);
-                addMessageToChatUI(data.message, data.source_user, data.id);
+                console.log(data.target_user_id);
+                addMessageToChatUI(data.message, data.source_user, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
             case 'global.message':
@@ -94,10 +94,11 @@ function addMessageToGlobalChatUI(message, sender) {
 
 function addMessageToChatUI(message, sender, id) {
     console.log("in add ui");
-    if (!id || document.querySelector('.chat-messages').id !== `chat-with-${id}`) {
-        console.log("NO ID");
-        return;
-    }
+    console.log(id);
+    // if (!id || document.querySelector('.chat-messages').id !== `chat-with-${id}`) {
+    //     console.log("NO ID");
+    //     return;
+    // }
 
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';

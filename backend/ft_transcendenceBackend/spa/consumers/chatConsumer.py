@@ -38,7 +38,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                     'message':message,
                     'source_user': self.username,
                     'source_user_id': self.user_id,
-                    'target_username': 'global',
+                    'target_user_name': 'global',
                     'target_user_id': 'global',
                 }
             )
@@ -51,7 +51,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                     'message':message,
                     'source_user': self.username,
                     'source_user_id': self.user_id,
-                    'target_user_name': text_data_json["target_user_name"],
+                    # 'target_user_name': text_data_json["target_user_name"],
                     'target_user_id': text_data_json["target_user_id"],
                 }
             )
@@ -67,3 +67,17 @@ class chatConsumer(AsyncWebsocketConsumer):
             'target_username': 'global',
             'target_user_id': 'global',
         }))
+
+    async def  private_message(self, event):
+        message = event['message']
+        targetid = event['target_user_id']
+
+        if targetid == self.user_id:
+            await self.send(text_data=json.dumps({
+                'type':'private.message',
+                'message':message,
+                'source_user': self.username,
+                'source_user_id': self.user_id,
+                # 'target_user_name': text_data_json["target_user_name"],
+                'target_user_id': event['target_user_id'],
+            }))
