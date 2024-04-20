@@ -7,7 +7,7 @@ function isModalPresent(modalId) {
 // ADD FRIEND
 function showAddFriendModal() {
     if (isModalPresent('modalAddFriend')) return;
-
+    console.log("hehe");
     const modalHtml = `
         <div id="modalAddFriend" class="modal-overlay">
             <div class="modal-content">
@@ -134,8 +134,9 @@ function showChangeUsernameModal() {
                 document.getElementById('inputNewUsername').value = '';
                 closeModal('modalChangeUsername');
                 showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                fetchUserProfile();
-                fetchUserSettings();
+                // fetchUserProfile();
+                // fetchUserSettings();
+                fetchUserData(userId);
             },
             error: function(xhr, status, error) {
                 document.getElementById('inputNewUsername').value = '';
@@ -194,18 +195,19 @@ function showDeleteAccountModal() {
 //CHANGE THE PROFILE PICTURE
 function showUploadProfilePictureModal() {
     const modalHtml = `
-        <div id="modalUploadProfilePicture" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Upload Profile Picture</h3>
-                <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
-                <div class="modal-buttons">
-                    <button id="btnUploadPicture" class="modal-button modal-button-add">Upload</button>
-                    <button id="btnCancelUpload" class="modal-button modal-button-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
+    <div id="modalUploadProfilePicture" class="modal-overlay">
+    <div class="modal-content">
+    <h3>Upload Profile Picture</h3>
+    <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
+    <div class="modal-buttons">
+    <button id="btnUploadPicture" class="modal-button modal-button-add">Upload</button>
+    <button id="btnCancelUpload" class="modal-button modal-button-cancel">Cancel</button>
+    </div>
+    </div>
+    </div>
     `;
-
+    
+    console.log("riii here");
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
 
@@ -225,8 +227,9 @@ function showUploadProfilePictureModal() {
                 success: function(response) {
                     closeModal('modalUploadProfilePicture');
                     showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                    fetchUserProfile();
-                    fetchUserSettings();
+                    // fetchUserProfile();
+                    // fetchUserSettings();
+                    fetchUserData(userId);
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -245,56 +248,11 @@ function closeModal(modalId) {
     }
 }
 
-
-function fetchUserProfile() {
-    $.ajax({
-        url: '/get_user_details/',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            updateProfilePage(data);
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-function updateProfilePage(data) {
-
-    document.getElementById('username').textContent = data.user_details.username;
-    document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
-    document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-    document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
-}
-
-function fetchUserSettings() {
-    $.ajax({
-        url: '/get_user_details/',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            updateProfilePicture(data);
-            updateSettingsUsername(data);
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-
-function updateProfilePicture(data) {
-    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
-    document.querySelector('.profile-pic').src = data.user_details.userPfp;
-}
-function updateSettingsUsername(data){
-    document.querySelector('.current-username').textContent = data.user_details.username;
-}
-
 // Event Listeners
+document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
 document.querySelector('.add-friend-button').addEventListener('click', showAddFriendModal);
-document.querySelector('.create-channel-button').addEventListener('click', showCreateChannelModal);
-document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
+// document.querySelector('.create-channel-button').addEventListener('click', showCreateChannelModal);
+// document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.delete-account-button').addEventListener('click', showDeleteAccountModal);
-document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);

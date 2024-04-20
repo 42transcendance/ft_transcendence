@@ -75,7 +75,7 @@
                     <div class="button-container">
                         <div class="FriendsChannels">
                             <button class="social-button" id="button1">{{ translations.friends }}</button>
-                            <button class="social-button active" id="button2">{{ translations.channels }}</button>
+                            <button class="social-button active" id="button2">{{ translations.chats }}</button>
                         </div>
                         <!-- Content for Friends -->
                         <div id="friendsContainer" class="content-container"  style="display: none;">
@@ -107,38 +107,40 @@
                             <div id="blockedTabContent" class="friends-tab-content">
                             </div>
                         </div>
-                        <!-- Channels Container -->
-                        <div id="channelsContainer" class="content-container">
-                            <!-- Content for Channels -->
-                            <button class="create-channel-button">{{ translations.cre_cha }}</button>
-                            <button class="join-channel-button">{{ translations.joi_cha }}</button>
-                            <div id="channelsTabContent" class="channels-tab-content">
+                        <!-- Chats Container -->
+                        <div id="chatsContainer" class="content-container">
+                            <!-- Content for Chats -->
+                            <!-- <button class="create-channel-button">{{ translations.cre_cha }}</button>
+                            <button class="join-channel-button">{{ translations.joi_cha }}</button> -->
+                            <div id="chatsTabContent" class="chats-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
-                                <div class="channel-item global-chat-item">
+                                <div class="chats-item global-chat-item">
                                     <i class="bi bi-globe2 global-chat-icon"></i>
                                     <div class="friend-info">
                                         <div>{{ translations.glo_cha }}</div>
                                     </div>
-                                    <i class="bi bi-chat channels-icon "></i>
+                                    <i class="bi bi-chat chats-icon "></i>
                                 </div>
 
-                                <div class="channel-item" data-id="channelId1">
+                                <div class="chatsTabContent2"></div>
+
+                                <!-- <div class="chats-item" data-id="channelId1">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channels Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
-                                </div>
+                                    <i class="bi bi-chat channels-chat icon-chat"></i> 
+                                    <i class="bi bi-gear channels-settings icon-settings"></i>
+                                </div> -->
 
-                                <div class="channel-item"  data-id="channelId2">
+                                <!-- <div class="chats-item"  data-id="channelId2">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
                                     <div class="friend-info">
                                         <div>Channelss Name</div>
                                     </div>
-                                    <i class="bi bi-chat channels-chat icon-chat"></i> <!-- Chat icon -->
-                                    <i class="bi bi-gear channels-settings icon-settings"></i> <!-- Controller icon -->
-                                </div>
+                                    <i class="bi bi-chat channels-chat icon-chat"></i>
+                                    <i class="bi bi-gear channels-settings icon-settings"></i> 
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -327,7 +329,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{% static 'js/writing.js' %}"></script>
     <script src="{% static 'js/navigation.js' %}"></script>
-    <script src="{% static 'js/socialButtons.js' %}"></script>
     <script src="{% static 'js/tabManagement.js' %}"></script>
     <script src="{% static 'js/smallButtons.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameForm.js' %}"></script>
@@ -336,13 +337,14 @@
     <script src="{% static 'js/game_pannel/gameMessages.js' %}"></script>
     <script src="{% static 'js/game_pannel/tournament.js' %}"></script>
     <script src="{% static 'js/login.js'%}"></script>
-    <script src="{% static 'js/channelChat.js' %}"></script>
-    <script src="{% static 'js/ajaxCalls.js' %}"></script>
     <script src="{% static 'js/modalManagement.js' %}"></script>
     <script src="{% static 'js/ajaxCalls1Tab.js' %}"></script>
     <script src="{% static 'js/globalChat.js' %}"></script>
     
     <script src="{% static 'js/webSocket.js' %}"></script>
     <script src="{% static 'js/thirdTab.js' %}"></script>
+    <script src="{% static 'js/firstTab.js' %}"></script>
+    <script src="{% static 'js/secondTab.js' %}"></script>
+
 </body>
 </html>

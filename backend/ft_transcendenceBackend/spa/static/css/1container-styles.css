@@ -262,7 +262,7 @@
     border: 2px solid rgba(173, 102, 255, 0.7);
 }
 
-.channel-item {   
+.chats-item {   
     width: 100%;
     background-color: transparent;
     display: flex;
@@ -277,7 +277,7 @@
     background-color: #f0f0f0;
 }
 
-.channels-tab-content {
+.chats-tab-content {
     width: 100%;
     padding: 10px;
     text-align: left;
@@ -285,7 +285,7 @@
     margin: auto;
 }
 
-.channels-icon {
+.chats-icon {
     padding: 3px;
     padding-right: 7px;
 }
