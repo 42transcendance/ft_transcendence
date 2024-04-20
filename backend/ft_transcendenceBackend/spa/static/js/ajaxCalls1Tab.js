@@ -337,7 +337,7 @@ function fetchIncomingRequests() {
             }
         }
         if (event.target.classList.contains('icon-chat')) {
-            const isChannel = event.target.closest('.channel-item');
+            const isChannel = event.target.closest('.chats-item');
             const isFriend = event.target.closest('.friend-item');
     
             if (isFriend) {

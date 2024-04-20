@@ -225,17 +225,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayChannels(channels) {
-        const container = document.getElementById('channelsTabContent');
+        const container = document.getElementById('chatsTabContent');
         container.innerHTML = '';
         channels.forEach(channel => {
             const channelElement = `
-                <div class="channel-item">
+                <div class="chats-item">
                     <img src="${channel.image || 'assets/pfp.png'}" alt="${channel.name}" class="friend-image">
                     <div class="friend-info">
                         <div>${channel.name}</div>
                     </div>
-                    <i class="bi bi-chat channels-icon"></i>
-                    <i class="bi bi-gear channels-icon"></i>
+                    <i class="bi bi-chat chats-icon"></i>
+                    <i class="bi bi-gear chats-icon"></i>
                 </div>
             `;
             container.innerHTML += channelElement;
