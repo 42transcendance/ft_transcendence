@@ -29,6 +29,7 @@ class chatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
 
+        print(text_data_json)
         if text_data_json["type"] == 'global.message':
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -63,5 +64,6 @@ class chatConsumer(AsyncWebsocketConsumer):
             'message':message,
             'source_user': self.username,
             'source_user_id': self.user_id,
-            'target': 'global',
+            'target_username': 'global',
+            'target_user_id': 'global',
         }))

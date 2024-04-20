@@ -35,4 +35,4 @@ prune: stop
 
 	@echo "Pruned docker system, deleted content of database, deleted env file"
 
-re: prune start
+re: prune all

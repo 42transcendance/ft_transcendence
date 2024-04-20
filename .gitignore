@@ -3,4 +3,3 @@
 /Docker/Backend/conf/.pg_service.conf
 **/__pycache__/
 *.pyc
-./media/profile_pictures/*
