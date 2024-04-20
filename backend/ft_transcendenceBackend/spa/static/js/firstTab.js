@@ -88,3 +88,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Implement your logic to open settings
     }
 });
+
+
+// FRIENDS AND CHATS :: EFFECT
+
+const socialButtons = document.querySelectorAll('.social-button');
+
+function makeButtonActive(event) {
+    socialButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+}
+
+socialButtons.forEach(button => {
+    button.addEventListener('click', makeButtonActive);
+});

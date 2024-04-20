@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchFriends() {
         $.ajax({
-            url: '/api/user/friends-list', 
+            url: '/friends-list', 
             method: 'GET',
             dataType: 'json',
             success: function(friends) {
@@ -194,14 +194,14 @@ function fetchIncomingRequests() {
         container.innerHTML = '';
         friends.forEach(friend => {
             container.innerHTML += `
-                <div class="friend-item" data-id="${friend.userid}">
+                <div class="friend-item" data-id="${friend.id}">
                     <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
                     <div class="friend-info">
                         <div>${friend.username}</div>
                     </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.userid}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.userid}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.userid}"></i>
+                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
                 </div>
             `;  
         });
