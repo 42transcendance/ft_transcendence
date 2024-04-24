@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerEr
 from spa.models import CustomUser, Game, GameHistory
 from django.views.decorators.csrf import csrf_exempt
 from .usersManagement.pfp_utils import get_base64_image
+from django.utils.translation import activate
+from django.utils.translation import gettext_lazy as _
 import requests
 import jwt
 from django.conf import settings
@@ -25,6 +27,7 @@ def get_user_details(request):
         try:
             user = CustomUser.objects.get(userid=user_id)
             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
+            activate(request.session.get('language'))
             user_details = {
                 'username': user.username,
                 'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
@@ -32,7 +35,11 @@ def get_user_details(request):
                 'userid'    : user.userid,
                 'gamesPlayed' : user.game_history.count(),
             }
-            return JsonResponse({'user_details': user_details})
+            translatations  = {
+                'join': _("Joined:"),
+                'nb_match' : _("Matches Played:"),
+            }
+            return JsonResponse({'user_details': user_details, 'translations' : translatations})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:

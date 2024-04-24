@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('username').textContent = data.user_details.username;
         document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
-        document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-        document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
+        document.getElementById('joinedDate').textContent = `${data.translations.join} ${data.user_details.joinedDate}`;
+        document.getElementById('matchesPlayed').textContent = `${data.translations.nb_match} ${data.user_details.gamesPlayed}`;
     }
 
     function fetchGameHistory() {
@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
             dataType: 'json',
             success: function(data) {
                 if (data.gameHistory.length > 0) {
-                    addGameHistoryItems(data.gameHistory, data.currentUser);
+                    addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
                 } else {
-                    displayEmpty('.game-history', '.user-stats');
+                    displayEmpty('.game-history', '.user-stats', data.translations);
                 }
             },
             error: function(xhr, status, error) {
@@ -41,25 +41,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function displayEmpty(historycontainer, statcontainer) {
+    function displayEmpty(historycontainer, statcontainer, translations) {
         const container = document.querySelector(historycontainer);
-        container.innerHTML = '<div class="section-heading">Game History</div>';
-        container.innerHTML += `<div class="empty-message">No game played online.</div>`;
+        container.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';
+        container.innerHTML += `<div class="empty-message">${translations.history_empty}</div>`;
         container.classList.add('centered');
 
         const stat = document.querySelector(statcontainer);
-        stat.innerHTML += `  <div class="section-heading">Statistics</div><div class="empty-message">Need 1 game to see stats.</div>`;
+        stat.innerHTML += `  <div class="section-heading">${translations.stats}</div><div class="empty-message">${translations.stats_empty}</div>`;
         stat.classList.add('centered');
     }
 
     
     
-    function addGameHistoryItems(gameHistory, currentUser) {
+    function addGameHistoryItems(gameHistory, currentUser, translations) {
         const gameHistoryContainer = document.querySelector('.game-history'); 
-        gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
+        gameHistoryContainer.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';
 
         gameHistory.forEach(game => {
-            addGameHistoryItem(game, gameHistoryContainer);
+            addGameHistoryItem(game, gameHistoryContainer, translations);
         });
 
         let totalGames = gameHistory.length;
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         const statsContainer = document.querySelector('.user-stats');
         statsContainer.innerHTML = `
-        <div class="section-heading">Statistics</div>
+        <div class="section-heading">${translations.stats}</div>
             <div class="donut-chart-container">
                 <svg width="200" height="200">
                     <circle cx="100" cy="100" r="70" fill="none" stroke="#ddd" stroke-width="15"></circle>
@@ -102,8 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="26">${winRate}%</text>
                 </svg>
             </div>
-            <div class="avg-score">Average Score: <span style="color: ${avgScoreColor(avgScore)};">${avgScore}</span></div>
-            <div class="win-streak">Win Streak: <span style="color: ${winStreakColor(winStreak)};">${winStreak}</span></div>
+            <div class="avg-score">${translations.avg} <span style="color: ${avgScoreColor(avgScore)};">${avgScore}</span></div>
+            <div class="win-streak">${translations.win_str}  <span style="color: ${winStreakColor(winStreak)};">${winStreak}</span></div>
         `;
     }
     
@@ -126,19 +126,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return `rgb(0, ${green}, 0)`;
         }
     }
-    function addGameHistoryItem(game, container) {
+    function addGameHistoryItem(game, container, translations) {
         const gameItem = document.createElement('div');
         gameItem.classList.add('game-item');
         gameItem.classList.add(game.outcome);
 
         gameItem.innerHTML = `
             <div class="game-details">
-                <div class="game-opponent">Versus: ${game.opponent}</div>
-                <div class="game-result">${game.date}</div>
+                <div class="game-opponent">${translations.vs} ${game.opponent}</div>
+                <div class="game-date">${game.date}</div>
             </div>
             <div class="game-info">
-                <div class="game-date">${game.outcome}</div>
-                <div class="game-score">Score: ${game.score}</div>
+                <div class="game-result">${translations.outcome}</div>
+                <div class="game-score">${translations.score} ${game.score}</div>
             </div>
         `;
         container.appendChild(gameItem);

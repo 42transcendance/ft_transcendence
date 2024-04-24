@@ -8,23 +8,27 @@ function isModalPresent(modalId) {
 function showAddFriendModal() {
     if (isModalPresent('modalAddFriend')) return;
 
-    const modalHtml = `
-        <div id="modalAddFriend" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Add Friend</h3>
-                <p>Add a friend to your friend list</p>
-                <input type="text" placeholder="Enter username" id="inputFriendUsername" class="modal-input">
-                <div class="modal-buttons">
-                    <button id="btnAddFriend" class="modal-button modal-button-add">Add</button>
-                    <button id="btnCancelAddFriend" class="modal-button modal-button-cancel">Cancel</button>
+    $.ajax({
+        url: '/get_translate_add_friend/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const modalHtml = `
+            <div id="modalAddFriend" class="modal-overlay">
+                <div class="modal-content">
+                    <h3>${data.translations.add_friends}</h3>
+                    <p>${data.translations.add_text}</p>
+                    <input type="text" placeholder="${data.translations.username}" id="inputFriendUsername" class="modal-input">
+                    <div class="modal-buttons">
+                        <button id="btnAddFriend" class="modal-button modal-button-add">${data.translations.add_btn}</button>
+                        <button id="btnCancelAddFriend" class="modal-button modal-button-cancel">${data.translations.cnl_btn}</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelAddFriend').addEventListener('click', () => closeModal('modalAddFriend'));
-    document.getElementById('btnAddFriend').addEventListener('click', function() {
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('btnCancelAddFriend').addEventListener('click', () => closeModal('modalAddFriend'));
+        document.getElementById('btnAddFriend').addEventListener('click', function() {
         let inputText = document.getElementById('inputFriendUsername').value;;
         $.ajax({
             url: '/send_friend_request/',
@@ -38,10 +42,17 @@ function showAddFriendModal() {
             },
             error: function(xhr, status, error) {
                 console.error(error);
-                showNotification("Friend not found", "rgb(168, 64, 64)"); 
+                showNotification(xhr.responseJSON.message, "rgb(168, 64, 64)");
             }
         });
+         });
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
     });
+
+    
 }
 
 // CREATE CHANNEL
@@ -106,135 +117,146 @@ function showJoinChannelModal() {
 function showChangeUsernameModal() {
     if (isModalPresent('modalChangeUsername')) return;
 
-    const modalHtml = `
-        <div id="modalChangeUsername" class="modal-overlay">
-            <div class="modal-content">
-                <h2>Change Username</h2>
-                <p>Enter your new username</p>
-                <input type="text" placeholder="New Username" id="inputNewUsername" class="modal-input">
-                <div class="modal-buttons">
-                    <button id="btnChangeUsername" class="modal-button modal-button-add">Change</button>
-                    <button id="btnCancelChangeUsername" class="modal-button modal-button-cancel">Cancel</button>
+    $.ajax({
+        url: '/get_change_username_translate/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const modalHtml = `
+            <div id="modalChangeUsername" class="modal-overlay">
+                <div class="modal-content">
+                    <h2>${ data.translations.change_usr}</h2>
+                    <p>${data.translations.usr_text}</p>
+                    <input type="text" placeholder="${data.translations.username}" id="inputNewUsername" class="modal-input">
+                    <div class="modal-buttons">
+                        <button id="btnChangeUsername" class="modal-button modal-button-add">${data.translations.change_btn}</button>
+                        <button id="btnCancelChangeUsername" class="modal-button modal-button-cancel">${data.translations.cnl_btn}</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
-    document.getElementById('btnChangeUsername').addEventListener('click', function() {
-        let inputText = document.getElementById('inputNewUsername').value;;
-        userUsername = document.getElementById('inputNewUsername').value;
-        console.log("click");
-        $.ajax({
-            url: '/update_username/',
-            method: 'GET',
-            data: { 'search_term': inputText },
-            success: function() {
-                document.getElementById('inputNewUsername').value = '';
-                closeModal('modalChangeUsername');
-                showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                fetchUserProfile();
-                fetchUserSettings();
-            },
-            error: function(xhr, status, error) {
-                document.getElementById('inputNewUsername').value = '';
-                closeModal('modalChangeUsername');
-                showNotification("New username unvailble", "rgb(168, 64, 64)"); 
-            }
+        `;
+    
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
+        document.getElementById('btnChangeUsername').addEventListener('click', function() {
+            let inputText = document.getElementById('inputNewUsername').value;;
+            userUsername = document.getElementById('inputNewUsername').value;
+            $.ajax({
+                url: '/update_username/',
+                method: 'GET',
+                data: { 'search_term': inputText },
+                success: function() {
+                    document.getElementById('inputNewUsername').value = '';
+                    closeModal('modalChangeUsername');
+                    showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
+                    fetchUserProfile();
+                    fetchUserSettings();
+                },
+                error: function(xhr, status, error) {
+                    document.getElementById('inputNewUsername').value = '';
+                    closeModal('modalChangeUsername');
+                    showNotification("New username unvailble", "rgb(168, 64, 64)"); 
+                }
+            });
         });
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
     });
     
 }
 
 function showLogoutModal() {
     if (isModalPresent('modalLogout')) return;
-
-    const modalHtml = `
-        <div id="modalLogout" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Logout</h3>
-                <p>Are you sure you want to logout?</p>
-                <div class="modal-buttons">
-                    <button id="btnConfirmLogout" class="modal-button modal-button-add">Yes</button>
-                    <button id="btnCancelLogout" class="modal-button modal-button-cancel">No</button>
+    $.ajax({
+        url: '/get_logout_translate/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+        const modalHtml = `
+            <div id="modalLogout" class="modal-overlay">
+                <div class="modal-content">
+                    <h3>${data.translations.logout}</h3>
+                    <p>${ data.translations.logout_text}</p>
+                    <div class="modal-buttons">
+                        <button id="btnConfirmLogout" class="modal-button modal-button-add">${data.translations.yes_btn}</button>
+                        <button id="btnCancelLogout" class="modal-button modal-button-cancel">${data.translations.no_btn}</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    `;
+        `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnConfirmLogout').addEventListener('click', function() {
-        window.location.href = "/logout";
-    });
-    document.getElementById('btnCancelLogout').addEventListener('click', () => closeModal('modalLogout'));
-}
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('btnConfirmLogout').addEventListener('click', function() {
+            window.location.href = "/logout";
+        });
+        document.getElementById('btnCancelLogout').addEventListener('click', () => closeModal('modalLogout'));
 
-
-// DELETE ACCOUNT
-function showDeleteAccountModal() {
-    if (isModalPresent('modalDeleteAccount')) return;
-
-    const modalHtml = `
-        <div id="modalDeleteAccount" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Delete Account</h3>
-                <p>Are you sure you want to delete your account? This action cannot be undone.</p>
-                <div class="modal-buttons">
-                    <button id="btnConfirmDeleteAccount" class="modal-button modal-button-add">Yes</button>
-                    <button id="btnCancelDeleteAccount" class="modal-button modal-button-cancel">No</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelDeleteAccount').addEventListener('click', () => closeModal('modalDeleteAccount'));
-}
-//CHANGE THE PROFILE PICTURE
-function showUploadProfilePictureModal() {
-    const modalHtml = `
-        <div id="modalUploadProfilePicture" class="modal-overlay">
-            <div class="modal-content">
-                <h3>Upload Profile Picture</h3>
-                <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
-                <div class="modal-buttons">
-                    <button id="btnUploadPicture" class="modal-button modal-button-add">Upload</button>
-                    <button id="btnCancelUpload" class="modal-button modal-button-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
-
-    document.getElementById('btnUploadPicture').addEventListener('click', function() {
-        const fileInput = document.getElementById('inputProfilePicture');
-        const file = fileInput.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('profile_picture', file);
-            
-            $.ajax({
-                url: '/upload_profile_picture/',
-                method: 'POST',
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function(response) {
-                    closeModal('modalUploadProfilePicture');
-                    showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                    fetchUserProfile();
-                    fetchUserSettings();
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                    showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)"); 
-                }
-            });
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
         }
     });
+}
+
+
+//CHANGE THE PROFILE PICTURE
+function showUploadProfilePictureModal() {
+
+    $.ajax({
+        url: '/get_pfp_translate/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const modalHtml = `
+            <div id="modalUploadProfilePicture" class="modal-overlay">
+                <div class="modal-content">
+                    <h3>${data.translations.upload}</h3>
+                    <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
+                    <div class="modal-buttons">
+                        <button id="btnUploadPicture" class="modal-button modal-button-add">${data.translations.upload_btn}</button>
+                        <button id="btnCancelUpload" class="modal-button modal-button-cancel">${data.translations.cnl_btn}</button>
+                    </div>
+                </div>
+            </div>
+            `;
+    
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
+    
+        document.getElementById('btnUploadPicture').addEventListener('click', function() {
+            const fileInput = document.getElementById('inputProfilePicture');
+            const file = fileInput.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('profile_picture', file);
+                
+                $.ajax({
+                    url: '/upload_profile_picture/',
+                    method: 'POST',
+                    processData: false,
+                    contentType: false,
+                    data: formData,
+                    success: function(response) {
+                        closeModal('modalUploadProfilePicture');
+                        showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
+                        fetchUserProfile();
+                        fetchUserSettings();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)"); 
+                    }
+                });
+            }
+        });
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+   
 }
 
 // Function to close the modal
@@ -296,5 +318,4 @@ document.querySelector('.create-channel-button').addEventListener('click', showC
 document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
-document.querySelector('.delete-account-button').addEventListener('click', showDeleteAccountModal);
 document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);

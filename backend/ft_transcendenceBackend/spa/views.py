@@ -18,9 +18,8 @@ def home(request):
     language = request.session.get('language')
 
     if not language:
-        request.session['language'] = 'en'
-    print(request.session.get('language'))
-
+        request.session['language'] = 'fr'
+        
     translations = translate_static(request.session.get('language'))
 
     return render(request, 'frontend/index.html', {'token': token, 'translations': translations})

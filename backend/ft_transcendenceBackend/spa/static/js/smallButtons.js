@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     controllerIcons.forEach(function(controller) {
         controller.addEventListener('click', function() {
-            showNotification("Invitation Sent", "rgb(81, 171, 81)"); // Green color
+            showNotification("Invitation Sent", "rgb(81, 171, 81)");
         });
     });
 
@@ -39,8 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'GET',
                 data: { 'friend_username': username },
                 success: function(data) {
-                    console.log("not friends anymore");
-                    showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+                    showNotification("User Blocked", "rgb(168, 64, 64");
                     removeModal('confirmBlockModal');
                 }
             });
@@ -58,20 +57,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showNotification(message, color) {
-        var notification = document.createElement('div');
-        notification.className = 'notification';
-        notification.textContent = message;
-        notification.style.backgroundColor = color;
-        document.body.appendChild(notification);
-
-        // Show the notification
-        notification.style.display = 'block';
-
-        // Hide the notification after 2 seconds
-        setTimeout(function() {
-            notification.style.display = 'none';
-            document.body.removeChild(notification);
-        }, 2000);
+        $.ajax({
+            url: '/get_notif_translate/',
+            method: 'GET',
+            data: { 'message': message },
+            success: function(data) {
+                var notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = data.translations.message;
+                notification.style.backgroundColor = color;
+                document.body.appendChild(notification);
+        
+                notification.style.display = 'block';
+        
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                    document.body.removeChild(notification);
+                }, 2000);
+            }
+        });
+        
     }
 });
 

@@ -93,8 +93,8 @@ msgid "Change"
 msgstr "Changer"
 
 
-msgid "Joined"
-msgstr "A Rejoint"
+msgid "Joined:"
+msgstr "A Rejoint le:"
 
 
 msgid "Matches Played:"
@@ -124,9 +124,6 @@ msgstr "Joueur 4:"
 msgid "Player 5:"
 msgstr "Joueur 5:"
 
-msgid "Player 5:"
-msgstr "Joueur 5:"
-
 msgid "Player 6:"
 msgstr "Joueur 6:"
 
@@ -144,6 +141,141 @@ msgid "Career's"
 msgstr "Carrière"
 
 
-msgid ""
-msgstr ""
+msgid "Logout"
+msgstr "Se Déconnecter"
 
+msgid "Add Friend"
+msgstr "Ajouter un ami"
+
+msgid "Add a friend to your friend list"
+msgstr "Ajouter un ami a votre liste d'amis"
+
+msgid "Enter username"
+msgstr "Saisissez un nom d'utilisateur"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Game History"
+msgstr "Historique des parties"
+
+msgid "No game played online"
+msgstr "Aucune partie joué en ligne"
+
+msgid "Statistics"
+msgstr "Statistiques"
+
+msgid "Need 1 game to see stats"
+msgstr "Besoin d'1 partie pour voir les statistiques"
+
+msgid "Upload Profile Picture"
+msgstr "Téléverser une photo de profil"
+
+msgid "Choose File"
+msgstr "Choisissez Fichier"
+
+msgid "No file chosen"
+msgstr "Aucun fichier sélectionné"
+
+msgid "Upload"
+msgstr "Télécharger"
+
+msgid "Change Username"
+msgstr "Changer le nom d'utilisateur"
+
+msgid "Enter your new username"
+msgstr "Entrez votre nouveau nom d'utilisateur"
+
+msgid "New Username"
+msgstr "Nouveau nom d'utilisateur"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Empty"
+msgstr "Vide"
+
+msgid "Are you sure you want to logout?"
+msgstr "Vous êtes sûr de vouloir vous déconnecter ?"
+
+msgid "Average Score: "
+msgstr "Score moyen:"
+
+msgid "Win Streak: "
+msgstr "Série de victoires :"
+
+msgid "Win"
+msgstr "Victoire"
+
+msgid "Defeat"
+msgstr "Défaite"
+
+msgid "Versus: "
+msgstr "Contre: "
+
+msgid "Score: "
+msgstr "Score: "
+
+msgid "Block User"
+msgstr "Bloquer l'utilisateur"
+
+
+msgid "Are you sure you want to block this user?"
+msgstr "Êtes-vous sûr de vouloir bloquer cet utilisateur ?"
+
+msgid "Type your message here..."
+msgstr "Tapez votre message ici..."
+
+msgid "Friend request accepted"
+msgstr "Demande d’ami acceptée "
+
+msgid "Friend request declined"
+msgstr "Demande d’ami refusée"
+
+msgid "User unblocked"
+msgstr "Utilisateur débloqué"
+
+msgid "Invitation Sent"
+msgstr "Invitation envoyée"
+
+msgid "User Blocked"
+msgstr "Utilisateur bloqué"
+
+msgid "Friend request sent !"
+msgstr "Demande d’ami envoyée!"
+
+msgid "You are already friends with this user."
+msgstr "Vous êtes déjà ami avec cet utilisateur. "
+
+msgid "You have already sent a friend request to this user."
+msgstr "Vous avez déjà envoyé une demande d’ami à cet utilisateur."
+
+msgid "You have already received a friend request from this user."
+msgstr "Vous avez déjà reçu une demande d’ami de cet utilisateur."
+
+msgid "You or the user is blocked, unable to send friend request."
+msgstr "Vous ou l’utilisateur est bloqué, incapable d’envoyer une demande d’ami."
+
+msgid "Friend not found."
+msgstr "Ami introuvable."
+
+msgid "Invalid request parameters."
+msgstr "Paramètres de demande non valides."
+
+msgid "Username has been changed !"
+msgstr "Le nom d’utilisateur a été modifié !"
+
+msgid "New username unvailble"
+msgstr "Nouveau nom d’utilisateur non disponible"
+
+msgid "Profile picture has been changed !"
+msgstr "L’image de profil a été modifiée !"
+
+msgid "Error encountered while uploading a user profile picture."
+msgstr "Erreur rencontrée lors du téléchargement d’une image de profil utilisateur."

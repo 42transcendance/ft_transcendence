@@ -28,22 +28,28 @@ function updateUI(action, containerId, contentOrId, isId = false) { //used to re
             console.warn(`Invalid action '${action}'. Use 'add' or 'delete'.`);
     }
 }
-
 function showNotification(message, color) {
-	var notification = document.createElement('div');
-	notification.className = 'notification';
-	notification.textContent = message;
-	notification.style.backgroundColor = color;
-	document.body.appendChild(notification);
-
-	notification.style.display = 'block';
-
-	setTimeout(function() {
-		notification.style.display = 'none';
-		document.body.removeChild(notification);
-	}, 2000);
+    $.ajax({
+        url: '/get_notif_translate/',
+        method: 'GET',
+        data: { 'message': message },
+        success: function(data) {
+            var notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = data.translations.message;
+            notification.style.backgroundColor = color;
+            document.body.appendChild(notification);
+    
+            notification.style.display = 'block';
+    
+            setTimeout(function() {
+                notification.style.display = 'none';
+                document.body.removeChild(notification);
+            }, 2000);
+        }
+    });
+    
 }
-
 function removeRequestFromUI(requestId) {
     const requestElement = document.querySelector(`.friend-item[data-id="${requestId}"]`);
     if (requestElement) requestElement.remove();
@@ -246,8 +252,15 @@ function fetchIncomingRequests() {
     }    
 
     function displayEmpty(containerId) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = `<div style='color: red;'>Empty</div>`;
+        $.ajax({
+            url: '/get_empty_translate/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const container = document.getElementById(containerId);
+                container.innerHTML = `<div style='color: red;'>${data.translations.empty}</div>`;
+            }
+        });
     }
 
     function acceptFriendRequest(requestId, username) {
@@ -389,21 +402,31 @@ function fetchIncomingRequests() {
     // }
 
     function showConfirmBlockModal(userId,username) {
-        const modalHtml = `
-            <div id="confirmBlockModal" class="modal-overlay">
-                <div class="modal-content">
-                    <h3>Block User</h3>
-                    <p>Are you sure you want to block this user?</p>
-                    <div class="modal-buttons">
-                        <button id="btnConfirmBlock" class="modal-button modal-button-add">Yes</button>
-                        <button id="btnCancelBlock" class="modal-button modal-button-cancel">No</button>
+        $.ajax({
+            url: '/get_block_translate/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                const modalHtml = `
+                <div id="confirmBlockModal" class="modal-overlay">
+                    <div class="modal-content">
+                        <h3>${data.translations.block}</h3>
+                        <p>${data.translations.block_txt}</p>
+                        <div class="modal-buttons">
+                            <button id="btnConfirmBlock" class="modal-button modal-button-add">${data.translations.yes_btn}</button>
+                            <button id="btnCancelBlock" class="modal-button modal-button-cancel">${data.translations.no_btn}</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-        
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        addModalEventListeners(userId, username);
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            addModalEventListeners(userId, username);
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
     }
 
     function addModalEventListeners(userId, username) {
