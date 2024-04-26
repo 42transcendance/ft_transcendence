@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchFriends() {
         $.ajax({
-            url: '/friends-list', 
+            url: '/get_friends/', 
             method: 'GET',
             dataType: 'json',
             success: function(friends) {

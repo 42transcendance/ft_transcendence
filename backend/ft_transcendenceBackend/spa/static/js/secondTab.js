@@ -20,10 +20,11 @@ function fetchUserData(theUsersId) {
         // data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
-            if (data.gameHistory && data.gameHistory.length > 0) {
-                addGameHistoryItems(data.gameHistory, theUsersId);
+            console.log(data.gameHistory);
+            if (data.gameHistory.length > 0) {
+                addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
             } else {
-                displayEmpty('.game-history', '.user-stats');
+                displayEmpty('.game-history', '.user-stats', data.translations);
             }
         },
         error: function(xhr, status, error) {
@@ -39,77 +40,111 @@ function updateProfilePage(data) {
     document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
 }
 
-function addGameHistoryItems(gameHistory, theUsersId) {
-    const gameHistoryContainer = document.querySelector('.game-history');
-    gameHistoryContainer.innerHTML = '<div class="section-heading">Game History</div>';
-
-    gameHistory.forEach(game => {
-        addGameHistoryItem(game, gameHistoryContainer, theUsersId);
-    });
-
-    updateStatistics(gameHistory, theUsersId);
-}
-
-function addGameHistoryItem(game, container, theUsersId) {
+function addGameHistoryItem(game, container, translations) {
     const gameItem = document.createElement('div');
-    gameItem.classList.add('game-item', game.outcome);
+    gameItem.classList.add('game-item');
+    gameItem.classList.add(game.outcome);
+    let printoutcome;
+    if (game.outcome === 'Win'){
+        printoutcome = translations.win;
+    }
+    else{
+        printoutcome = translations.defeat;
+    }
 
     gameItem.innerHTML = `
         <div class="game-details">
-            <div class="game-opponent">Versus: ${game.opponent}</div>
-            <div class="game-result">${game.date}</div>
+            <div class="game-opponent">${translations.vs} ${game.opponent}</div>
+            <div class="game-date">${game.date}</div>
         </div>
         <div class="game-info">
-            <div class="game-date">${game.outcome}</div>
-            <div class="game-score">Score: ${game.score}</div>
+            <div class="game-result">${printoutcome}</div>
+            <div class="game-score">${translations.score} ${game.score}</div>
         </div>
     `;
     container.appendChild(gameItem);
 }
 
-function displayEmpty(historyContainerSelector, statsContainerSelector) {
-    const historyContainer = document.querySelector(historyContainerSelector);
-    historyContainer.innerHTML = `
-        <div class="section-heading">Game History</div>
-        <div class="empty-message">No games played online.</div>
-    `;
-    historyContainer.classList.add('centered');
+function addGameHistoryItems(gameHistory, currentUser, translations) {
+    const gameHistoryContainer = document.querySelector('.game-history'); 
+    gameHistoryContainer.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';
 
-    const statsContainer = document.querySelector(statsContainerSelector);
-    statsContainer.innerHTML = `
-        <div class="section-heading">Statistics</div>
-        <div class="empty-message">Need 1 game to see stats.</div>
-    `;
-    statsContainer.classList.add('centered');
-}
+    gameHistory.forEach(game => {
+        addGameHistoryItem(game, gameHistoryContainer, translations);
+    });
 
-function updateStatistics(gameHistory, theUsersId) {
     let totalGames = gameHistory.length;
     let wins = gameHistory.filter(game => game.outcome === 'Win').length;
-    let winRate = (totalGames > 0) ? ((wins / totalGames) * 100).toFixed(2) : '0';
-    let avgScore = calculateAverageScore(gameHistory, theUsersId);
+    let losses = totalGames - wins;
+    let winRate = (totalGames > 0) ? ((wins / totalGames) * 100).toFixed(2) : 0;
+    let lossRate = 100 - winRate;
+
+    let greenLength = (winRate / 100) * (2 * Math.PI * 70);
+    let redLength = (lossRate / 100) * (2 * Math.PI * 70);
+
+    let totalScore = 0;
+    for (let i = 0; i < gameHistory.length; i++) {
+        const game = gameHistory[i];
+        if (game.player1_username === currentUser) {
+            totalScore += parseInt(game.score.split('-')[0]);
+        } else if (game.player2_username === currentUser) {
+            totalScore += parseInt(game.score.split('-')[1]);
+        }
+    }  
+
+    let avgScore = (totalGames > 0) ? (totalScore / totalGames).toFixed(2) : 0;
+
+    let winStreak = 0;
+    for (let i = 0; i < gameHistory.length; i++) {
+        if (gameHistory[i].outcome === 'Win') {
+            winStreak++;
+        } else {
+            break;
+        }
+    }
 
     const statsContainer = document.querySelector('.user-stats');
     statsContainer.innerHTML = `
-        <div class="section-heading">Statistics</div>
-        <div class="statistic">Win Rate: ${winRate}%</div>
-        <div class="statistic">Average Score: ${avgScore}</div>
+    <div class="section-heading">${translations.stats}</div>
+        <div class="donut-chart-container">
+            <svg width="200" height="200">
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#ddd" stroke-width="15"></circle>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="#4CAF50" stroke-width="15" stroke-dasharray="${greenLength} ${redLength}" transform="rotate(-90 100 100)"></circle>
+                <text x="50%" y="50%" alignment-baseline="middle" text-anchor="middle" font-size="26">${winRate}%</text>
+            </svg>
+        </div>
+        <div class="avg-score">${translations.avg} <span style="color: ${avgScoreColor(avgScore)};">${avgScore}</span></div>
+        <div class="win-streak">${translations.win_str}  <span style="color: ${winStreakColor(winStreak)};">${winStreak}</span></div>
     `;
 }
+function avgScoreColor(avgScore) {
+    let red = 255 * (1 - avgScore / 5);
+    let green = 255 * (avgScore / 5);
 
-function calculateAverageScore(gameHistory, theUsersId) {
-    let totalScore = 0;
-    gameHistory.forEach(game => {
-        if (game.player1_username === theUsersId) {
-            totalScore += parseInt(game.score.split('-')[0], 10);
-        } else if (game.player2_username === theUsersId) {
-            totalScore += parseInt(game.score.split('-')[1], 10);
-        }
-    });
-    let avgScore = (gameHistory.length > 0) ? (totalScore / gameHistory.length).toFixed(2) : '0';
-    return avgScore;
+    let redHex = Math.round(red).toString(16).padStart(2, '0');
+    let greenHex = Math.round(green).toString(16).padStart(2, '0');
+
+    return `#${redHex}${greenHex}00`;
+}
+function winStreakColor(winStreak) {
+    if (winStreak === 0) {
+        return 'black';
+    } else {
+        let green = Math.round((winStreak / 15) * 255);
+        return `rgb(0, ${green}, 0)`;
+    }
 }
 
+function displayEmpty(historycontainer, statcontainer, translations) {
+    const container = document.querySelector(historycontainer);
+    container.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';
+    container.innerHTML += `<div class="empty-message">${translations.history_empty}</div>`;
+    container.classList.add('centered');
+
+    const stat = document.querySelector(statcontainer);
+    stat.innerHTML += `  <div class="section-heading">${translations.stats}</div><div class="empty-message">${translations.stats_empty}</div>`;
+    stat.classList.add('centered');
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserData(theUsersId);

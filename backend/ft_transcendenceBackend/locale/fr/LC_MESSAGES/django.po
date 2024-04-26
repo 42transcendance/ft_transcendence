@@ -35,8 +35,8 @@ msgstr "Sociale"
 msgid "FRIENDS"
 msgstr "AMIS"
 
-msgid "CHANNELS"
-msgstr "CANNAUX"
+msgid "CHATS"
+msgstr "MESSAGERIES"
 
 msgid "ADD FRIEND"
 msgstr "AJOUTER UN AMI"
