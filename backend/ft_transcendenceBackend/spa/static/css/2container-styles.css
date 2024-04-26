@@ -299,14 +299,8 @@
 .logout-button {
     background-color: #4CAF50;
     color: white;
-    margin-right: 50px;
 }
 
-.delete-account-button {
-    background-color: #f44336; 
-    color: white;
-
-}
 
 /* ACHIEVEMENTS TAB */
 
@@ -481,7 +475,7 @@
     background-color: rgba(71, 213, 71, 0.7);
 }
 
-.game-item.Loose {
+.game-item.Defeat {
     background-color: rgba(255, 0, 0, 0.7);
 }
 

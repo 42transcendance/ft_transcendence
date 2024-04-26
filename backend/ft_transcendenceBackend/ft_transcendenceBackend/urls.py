@@ -23,6 +23,8 @@ from spa import friend_requests
 from spa.usersManagement import update_username
 from spa.usersManagement import pfp_utils
 from spa.usersManagement import game_history
+from spa.translate import modal_translate
+from spa.translate import profile_friends_translate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,5 +44,12 @@ urlpatterns = [
     path('update_username/', update_username.update_username, name='update_username'),
     path('upload_profile_picture/', pfp_utils.upload_profile_picture, name='upload_profile_picture'),
     path('get_game_history/', game_history.get_game_history, name='get_game_history'),
+    path('get_translate_add_friend/', modal_translate.get_translate_add_friend, name='get_translate_add_friend'),
+    path('get_change_username_translate/', modal_translate.get_change_username_translate, name='get_change_username_translate'),
+    path('get_logout_translate/', modal_translate.get_logout_translate, name='get_logout_translate'),
+    path('get_pfp_translate/', modal_translate.get_pfp_translate, name='get_pfp_translate'),
+    path('get_empty_translate/', profile_friends_translate.get_empty_translate, name='get_empty_translate'),
+    path('get_block_translate/', modal_translate.get_block_translate, name='get_block_translate'),
+    path('get_notif_translate/', modal_translate.get_notif_translate, name='get_notif_translate'),
 ]
 

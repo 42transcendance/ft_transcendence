@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from ..models import Game , CustomUser
+from django.utils.translation import activate
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db.models import Q
 import jwt
@@ -17,15 +19,18 @@ def extract_user_info_from_token(token):
         return None, None
 
 def get_game_history(request):
+    #When you will pass the userID to get the historic replace the userid on the  getof CustomUser
     token = request.session.get('token')
     if token:
         user_id, username = extract_user_info_from_token(token)
         try:
+            #The get() right below >>>
             user = CustomUser.objects.get(userid=user_id)
             game_history = Game.objects.filter(Q(player1=user) | Q(player2=user)).order_by('-date_played')
             
             game_history_json = []
             for game in game_history:
+                print(game)
                 player1_username = game.player1.username
                 player2_username = game.player2.username
                 if (game.player1.username == user.username):
@@ -33,13 +38,13 @@ def get_game_history(request):
                     if (game.player1_score > game.player2_score):
                         outcome = 'Win'
                     else:
-                        outcome = 'Loose'
+                        outcome = 'Defeat'
                 else:
                     opponent = player1_username
                     if (game.player1_score < game.player2_score):
                         outcome = 'Win'
                     else:
-                        outcome = 'Loose'
+                        outcome = 'Defeat'
                 score = f"{game.player1_score}-{game.player2_score}"
                 game_history_json.append({
                     'player1_username': player1_username,
@@ -49,8 +54,20 @@ def get_game_history(request):
                     'outcome': outcome,
                     'score': score
                 })
-            
-            return JsonResponse({'gameHistory': game_history_json, 'currentUser': user.username})
+            activate(request.session.get('language'))
+            translations  = {
+                'history': _("Game History"),
+                'history_empty' : _("No game played online"),
+                'stats' : _("Statistics"),
+                'stats_empty': _("Need 1 game to see stats"),
+                'avg' : _("Average Score: "),
+                'win_str' : _("Win Streak: "),
+                'win' : _("Win"),
+                'defeat' : _("Defeat"),
+                'score' : _("Score: "),
+                'vs' : _("Versus: "),
+            }
+            return JsonResponse({'gameHistory': game_history_json, 'currentUser': user.username, 'translations': translations})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:

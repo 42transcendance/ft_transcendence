@@ -1,9 +1,9 @@
-from django.shortcuts import render
-from django.utils.translation import activate, gettext as _
+
+from django.utils.translation import activate
+from django.utils.translation import gettext_lazy as _
 
 def translate_static(language):
     activate(language)
-    print(language)
     translations = {
         'social': _("Social"),
         'friends': _("FRIENDS"),
@@ -32,6 +32,8 @@ def translate_static(language):
         'ply_2': _("Player 2:"),
         'ply_3': _("Player 3:"),
         'carrers': _("Carrer's"),
+        'logout': _("Logout"),
+        'message_ph': _("Type your message here..."),
     }
 
     return translations
