@@ -74,7 +74,7 @@ function navbarPressed(buttonPressed ) {
             profileTab.style.display = 'none';
             gameTab.style.display = 'none';
             break;
-            case 'settings':
+        case 'settings':
             gameContainer.style.height = `${"75"}vh`;
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
@@ -87,14 +87,20 @@ function navbarPressed(buttonPressed ) {
             break;
         case 'profile':
             gameContainer.style.height = `${"75"}vh`;
-            setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
-            setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
-            setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
-    
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'block';
             gameTab.style.display = 'none';
+
+            setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
+            setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
+            setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
+
+            // fetchUserProfile();
+            // fetchGameHistory();
+            fetchUserData(userId);
+
+    
             break;
     }  
 }

@@ -1,24 +1,4 @@
-const friendsBtn = document.getElementById('button1');
-const channelsBtn = document.getElementById('button2');
-const friendsContainer = document.getElementById('friendsContainer');
-const channelsContainer = document.getElementById('channelsContainer');
 
-function showFriends() {
-    friendsContainer.style.display = 'block';
-    channelsContainer.style.display = 'none';
-    friendsBtn.classList.add('active');
-    channelsBtn.classList.remove('active');
-}
-
-function showChannels() {
-    friendsContainer.style.display = 'none';
-    channelsContainer.style.display = 'block';
-    channelsBtn.classList.add('active');
-    friendsBtn.classList.remove('active');
-}
-
-friendsBtn.addEventListener('click', showFriends);
-channelsBtn.addEventListener('click', showChannels);
 
  
 // showFriends();

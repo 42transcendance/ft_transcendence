@@ -267,55 +267,11 @@ function closeModal(modalId) {
     }
 }
 
-
-function fetchUserProfile() {
-    $.ajax({
-        url: '/get_user_details/',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            updateProfilePage(data);
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-function updateProfilePage(data) {
-
-    document.getElementById('username').textContent = data.user_details.username;
-    document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
-    document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-    document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
-}
-
-function fetchUserSettings() {
-    $.ajax({
-        url: '/get_user_details/',
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            updateProfilePicture(data);
-            updateSettingsUsername(data);
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-
-function updateProfilePicture(data) {
-    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
-    document.querySelector('.profile-pic').src = data.user_details.userPfp;
-}
-function updateSettingsUsername(data){
-    document.querySelector('.current-username').textContent = data.user_details.username;
-}
-
 // Event Listeners
+document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
 document.querySelector('.add-friend-button').addEventListener('click', showAddFriendModal);
-document.querySelector('.create-channel-button').addEventListener('click', showCreateChannelModal);
-document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
+// document.querySelector('.create-channel-button').addEventListener('click', showCreateChannelModal);
+// document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);

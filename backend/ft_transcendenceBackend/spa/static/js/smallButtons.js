@@ -80,3 +80,68 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// general chat nickname icons
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const toggleButton = document.querySelector('.toggle-icons'); // Get the arrow icon
+//     const iconsContainer = document.querySelector('.messageIcons'); // Get the icons container
+
+//     toggleButton.addEventListener('click', () => {
+//         iconsContainer.classList.toggle('active');
+
+//         if (toggleButton.classList.contains('bi-caret-right-fill')) {
+//             toggleButton.classList.remove('bi-caret-right-fill');
+//             toggleButton.classList.add('bi-caret-left-fill');
+//         } else {
+//             toggleButton.classList.remove('bi-caret-left-fill');
+//             toggleButton.classList.add('bi-caret-right-fill');
+//         }
+//     });
+// });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const nicknameElement = document.querySelector('.nicknameAndIcon');
+    const iconsContainer = nicknameElement.querySelector('.messageIcons');
+
+    nicknameElement.addEventListener('mouseenter', () => {
+        iconsContainer.style.display = 'flex';  // Show the icons
+    });
+
+    nicknameElement.addEventListener('mouseleave', () => {
+        iconsContainer.style.display = 'none';  // Hide the icons
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const chatMessagesContainer = document.querySelector('.chat-messages');
+
+    chatMessagesContainer.addEventListener('click', function(event) {
+        const target = event.target;
+
+        if (target.classList.contains('messageIcon')) {
+            const parentContainer = target.closest('.nicknameAndIcon');
+            const senderId = parentContainer.querySelector('.nickname').id;
+            console.log("Icon clicked belongs to sender ID:", senderId);
+            handleIconClick(senderId, target);
+        }
+    });
+});
+
+function handleIconClick(senderId, iconElement) {
+    console.log(`Action triggered for ${senderId} by clicking on`, iconElement);
+    switch (iconElement.className.split(' ')[1]) {
+        case 'bi-controller':
+            console.log("Controller icon clicked for user:", senderId);
+            break;
+        case 'bi-plus-circle':
+            console.log("Plus circle icon clicked for user:", senderId);
+            break;
+        case 'bi-person':
+            console.log("Person icon clicked for user:", senderId);
+            break;
+        default:
+            console.log("Unknown icon clicked for user:", senderId);
+    }
+}
+

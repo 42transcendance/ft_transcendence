@@ -17,6 +17,7 @@ class chatConsumer(AsyncWebsocketConsumer):
             'type': 'notification',
             'message': 'Connection established.',
             'source_user': self.username,
+            'source_user_id': self.user_id,
         }))
         await self.channel_layer.group_add( self.room_group_name, self.channel_name )
         await self.accept()
@@ -25,10 +26,10 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
-        print(text_data)
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
 
+        print(text_data_json)
         if text_data_json["type"] == 'global.message':
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -36,6 +37,22 @@ class chatConsumer(AsyncWebsocketConsumer):
                     'type':'global.message',
                     'message':message,
                     'source_user': self.username,
+                    'source_user_id': self.user_id,
+                    'target_user_name': 'global',
+                    'target_user_id': 'global',
+                }
+            )
+
+        elif text_data_json["type"] == 'private.message':
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type':'private.message',
+                    'message':message,
+                    'source_user': self.username,
+                    'source_user_id': self.user_id,
+                    # 'target_user_name': text_data_json["target_user_name"],
+                    'target_user_id': text_data_json["target_user_id"],
                 }
             )
     
@@ -46,4 +63,21 @@ class chatConsumer(AsyncWebsocketConsumer):
             'type':'global.message',
             'message':message,
             'source_user': self.username,
+            'source_user_id': self.user_id,
+            'target_username': 'global',
+            'target_user_id': 'global',
         }))
+
+    async def  private_message(self, event):
+        message = event['message']
+        targetid = event['target_user_id']
+
+        if targetid == self.user_id:
+            await self.send(text_data=json.dumps({
+                'type':'private.message',
+                'message':message,
+                'source_user': self.username,
+                'source_user_id': self.user_id,
+                # 'target_user_name': text_data_json["target_user_name"],
+                'target_user_id': event['target_user_id'],
+            }))

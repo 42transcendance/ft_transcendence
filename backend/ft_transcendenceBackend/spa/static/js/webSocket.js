@@ -26,14 +26,16 @@ function connectWebSocket() {
     function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
-                addMessageToChatUI(data.message, data.source_user);
+                console.log("chan mess recieved");
+                console.log(data.message);
+                console.log(data.target_user_id);
+                addMessageToChatUI(data.message, data.source_user, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
             case 'global.message':
-                console.log("genmess recieved");
-                console.log(data.message);
-                console.log(data.source_user);
-                addMessageToChatUI(data.message, data.source_user);
+                
+                console.log("global mess recieved : ", data);
+                addMessageToGlobalChatUI(data.message, data.source_user);
                 // displayGlobalMessage(data);
                 break;
             case 'notification':
@@ -47,7 +49,57 @@ function connectWebSocket() {
     window.chatSocket = chatSocket;
 }
 
-function addMessageToChatUI(message, sender) {
+function addMessageToGlobalChatUI(message, sender) {
+    const messageElement = document.createElement('div');
+    messageElement.className = 'chat-message';
+
+    const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
+    let messageDetailsHTML1;
+    if(sender !== userId)
+        messageDetailsHTML1 = `
+        <div class="message-details">
+            <div class="nicknameAndIcon">
+                <span class="nickname" data-user-id="${sender}">${sender}</span>
+            </div>
+            <div class="text-and-time">
+            <div class="message-text">${message}</div>
+                <span class="message-time">${getCurrentTime()}</span>
+            </div>
+        </div>
+        `;
+    else
+    messageDetailsHTML1 = `
+    <div class="message-details">
+        <div class="nicknameAndIcon">
+            <span class="nickname" data-user-id="${sender}">${sender}</span>
+            <i class="bi bi-caret-right-fill toggle-icons"></i>
+            <div class="messageIcons">
+                <i class="bi bi-controller messageIcon"></i>
+                <i class="bi bi-plus-circle messageIcon"></i>
+                <i class="bi bi-person messageIcon"></i>
+            </div>
+        </div>
+        <div class="text-and-time">
+            <div class="message-text">${message}</div>
+            <span class="message-time">${getCurrentTime()}</span>
+        </div>
+    </div>
+    `;
+    const messageDetailsHTML = messageDetailsHTML1;
+
+    messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+    document.querySelector('.chat-messages').appendChild(messageElement);
+    scrollToBottom(document.querySelector('.chat-messages'));
+}
+
+function addMessageToChatUI(message, sender, id) {
+    console.log("in add ui");
+    console.log(id);
+    // if (!id || document.querySelector('.chat-messages').id !== `chat-with-${id}`) {
+    //     console.log("NO ID");
+    //     return;
+    // }
+
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
     const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;

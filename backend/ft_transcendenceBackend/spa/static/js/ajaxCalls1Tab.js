@@ -86,6 +86,7 @@ function handleWebSocketMessage(data) {
 function loadChatWithFriend(friendId) {
     console.log("start here");    
     const chatMessagesContainer = document.querySelector('.chat-messages');
+    chatMessagesContainer.id = `chat-with-${friendId}`;
     chatMessagesContainer.innerHTML = '';
 
     // Fetch chat history
@@ -97,7 +98,7 @@ function loadChatWithFriend(friendId) {
                 const messageElement = document.createElement('div');
                 messageElement.classList.add('chat-message');
                 messageElement.innerHTML = `
-                    <span class="nickname">${message.sender}</span>
+                    <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
                     <div class="message-content">
                         <div class="message-text">${message.text}</div>
                         <span class="message-time">${message.time}</span>
@@ -124,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function fetchFriends() {
         $.ajax({
-            url: '/get_friends/', 
+            url: '/friends-list', 
             method: 'GET',
             dataType: 'json',
             success: function(friends) {
@@ -199,14 +200,14 @@ function fetchIncomingRequests() {
         container.innerHTML = '';
         friends.forEach(friend => {
             container.innerHTML += `
-                <div class="friend-item" data-id="${friend.userid}">
+                <div class="friend-item" data-id="${friend.id}">
                     <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
                     <div class="friend-info">
                         <div>${friend.username}</div>
                     </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.userid}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.userid}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.userid}"></i>
+                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
                 </div>
             `;  
         });
@@ -334,7 +335,7 @@ function fetchIncomingRequests() {
             unblockBlockedUser(username);
         }
 		else if (event.target.classList.contains('icon-controller')) {
-            showNotification("Invitation Sent", "rgb(81, 171, 81)"); // Green color
+            showNotification("Invitation Sent", "rgb(81, 171, 81)");
         }
 		else if (event.target.classList.contains('icon-block')) {
             const friendItem = event.target.closest('.friend-item');
@@ -349,7 +350,7 @@ function fetchIncomingRequests() {
             }
         }
         if (event.target.classList.contains('icon-chat')) {
-            const isChannel = event.target.closest('.channel-item');
+            const isChannel = event.target.closest('.chats-item');
             const isFriend = event.target.closest('.friend-item');
     
             if (isFriend) {
@@ -364,7 +365,7 @@ function fetchIncomingRequests() {
             if (isChannel) {
                 const channelId = isChannel.getAttribute('data-id');
                 if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {
-                    currentChatContext = 'channel';
+                    currentChatContext = 'private';
                     currentRecipientId = channelId;
                     console.log(`Opening chat with channel ID: ${channelId}`);
                     openChannelChat(channelId);

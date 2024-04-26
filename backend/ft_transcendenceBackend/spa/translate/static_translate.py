@@ -7,7 +7,7 @@ def translate_static(language):
     translations = {
         'social': _("Social"),
         'friends': _("FRIENDS"),
-        'channels': _("CHANNELS"),
+        'chats': _("CHATS"),
         'add_friend': _("ADD FRIEND"),
         'frds': _("Friends"),
         'out_req': _("Outgoing Requests"),
