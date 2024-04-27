@@ -94,9 +94,7 @@ class Game {
 			this.connected = true;
 
 			this.pongSocket.send(JSON.stringify({ 
-				'type':'user.ready',
-				'game.type': 'test',
-				'message':'This user is ready to start an online game.',
+				'type':'join.matchmaking',
 			}));
 		};
 		this.wsListen();

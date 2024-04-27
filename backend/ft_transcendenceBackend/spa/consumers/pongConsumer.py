@@ -12,7 +12,6 @@ from ..classes.DuelsManager import DuelsManager
 DuelsManager = DuelsManager()
 
 class pongConsumer(AsyncWebsocketConsumer):
-    # On Connection, The new user is added  to a game group
     async def connect(self):
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
 
@@ -22,39 +21,36 @@ class pongConsumer(AsyncWebsocketConsumer):
             user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
             self.username = user.username
             print("WS Connection : ", self.username, " ", self.user_id)
+            # Each user belongs to a group bearing the same name as user_id
             await self.accept()
     
     async def disconnect(self, close_code):
         print("Disconnect")
-
-        # await self.channel_layer.group_send(
-        #     self.group_name,
-        #     {
-        #         'type': 'ending.game',
-        #         'gamestate': 'None',
-        #     }
-        # )
+        DuelsManager.remove_user_from_room(self.user_id, self.room_id)
+        await self.channel_layer.group_discard(self.room_id, self.channel_name)
+        DuelsManager.debug()
         await self.send(text_data=json.dumps({
             "type": "websocket.close",
             "code": 1000,
         }))
-        # await self.groupObject.stopGameTask()
-        # pongGroupsManager.group_remove_user(self.group_name, self.channel_name)
-        # await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
         print("Data received : ", data)
         message_type = data.get('type')
-        message = data.get('message')
 
-        if message_type == 'join_matchmaking':
-            # Joins matchmaking
-            pass
-        if message_type == 'create.private.game':
+        if message_type == 'join.matchmaking':
+            self.room_id = DuelsManager.find_room(self.user_id)
+            await self.channel_layer.group_add( self.room_id, self.channel_name )
+        elif message_type == 'create.private.game':
             # Create a private game and waits for whitelisted player to join
+            # !!!
+            # Private Games will have an id starting with private-pong-
+            # So you dont have to clone the add/remove function
+            # Basically just create a create private room, and join private room
+            # !!!
             pass
-        if message_type == 'join.private.game':
+        elif message_type == 'join.private.game':
             # Joins private game using game-id
             pass
 
