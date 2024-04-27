@@ -2,7 +2,7 @@ from uuid import uuid4
 from .pong import PongGame
 import asyncio
 
-class DuelGroup :
+class DuelRoom :
     def __init__(self, groupName) -> None:
         self.groupChannel = groupName
         self.max_capacity = 2
@@ -33,9 +33,9 @@ class DuelGroup :
     def userReady (self):
         self.ready += 1
 
-class DuelGroupsManager :
+class DuelsManager :
     def __init__(self) -> None:
-        self.groups = set()
+        self.DuelRooms = set()
 
     # Return a group object by taking the groupname, returns none if group wasnt found
     def get_group_by_name(self, group_name):
