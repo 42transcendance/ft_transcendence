@@ -1,6 +1,6 @@
-from .DuelRoom import DuelRoom
+from .PublicDuelRoom import PublicDuelRoom
 
-class PrivateDuelRoom(DuelRoom):
-    def __init__(self, groupName, whitelist=set()) -> None:
+class PrivateDuelRoom(PublicDuelRoom):
+    def __init__(self, groupName, whitelisted_player_id) -> None:
         super().__init__(groupName)
-        self.whitelist = set ()
+        self.whitelisted_player_id = whitelisted_player_id

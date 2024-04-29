@@ -1,7 +1,7 @@
 import asyncio
 from .pong import PongGame
 
-class DuelRoom :
+class PublicDuelRoom :
     def __init__(self, room_id) -> None:
         self.room_id = room_id
         self.max_capacity = 2

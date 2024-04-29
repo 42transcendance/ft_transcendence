@@ -18,16 +18,17 @@ class pongConsumer(AsyncWebsocketConsumer):
         if self.user_id == None or self.username == None:
             await self.close(code=1000)
         else:
-            user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
-            self.username = user.username
+            self.userObject = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+            self.username = self.userObject.username
             print("WS Connection : ", self.username, " ", self.user_id)
-            # Each user belongs to a group bearing the same name as user_id
+            self.room_id = None
             await self.accept()
     
     async def disconnect(self, close_code):
-        print("Disconnect")
+        # Gotta check which type of game user is in and act accordingly
         DuelsManager.remove_user_from_room(self.user_id, self.room_id)
-        await self.channel_layer.group_discard(self.room_id, self.channel_name)
+        if self.room_id != None:
+            await self.channel_layer.group_discard(self.room_id, self.channel_name)
         DuelsManager.debug()
         await self.send(text_data=json.dumps({
             "type": "websocket.close",
@@ -36,24 +37,70 @@ class pongConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print("Data received : ", data)
         message_type = data.get('type')
+        print(data)
 
-        if message_type == 'join.matchmaking':
-            self.room_id = DuelsManager.find_room(self.user_id)
-            await self.channel_layer.group_add( self.room_id, self.channel_name )
+        if self.room_id != None:
+            self.send_notification("Error", "You are already involved in a game.")
+            await self.close()
+            return
+
+        elif message_type == 'join.matchmaking':
+            self.room_id = DuelsManager.find_public_room(self.user_id)
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            # CHECK ROOM STATE
+
         elif message_type == 'create.private.game':
             # Create a private game and waits for whitelisted player to join
-            # !!!
-            # Private Games will have an id starting with private-pong-
-            # So you dont have to clone the add/remove function
-            # Basically just create a create private room, and join private room
-            # !!!
-            pass
-        elif message_type == 'join.private.game':
-            # Joins private game using game-id
+            """
+                Request when inviting someone to play :
+                {
+                    "type" : "create.private.game",
+                    "userid_of_oponent": userid,
+                }
+            """
+            invited_user_id = data.get('userid_of_oponent')
+            if invited_user_id == None:
+                self.send_notification("Error", "You need to specify the invited user.")
+                await self.close()
+                return
+            elif self.userObject.friends.get(invited_user_id) == None: # Might be a problem if get doesnt return None
+                self.send_notification("Error", "User is not your friend")
+                await self.close()
+                return
+            self.room_id = DuelsManager.create_private_room(self.user_id, invited_user_id)
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            
+            #Sends the room id back to the user to initiate invitation
+            self.send_notification("private.game", self.room_id)
+            # WAIT FOR OPPONENT
             pass
 
+        elif message_type == 'join.private.game':
+            # Joins private game using game-id
+            """
+                Request when accepting an invitation (joining a private game) :
+                {
+                    "type" : "join.private.game",
+                    "room_id": room_id,
+                }
+            """
+            room_id_to_join = data.get('room_id')
+            self.room_id = DuelsManager.join_private_room(self.user_id, room_id_to_join)
+            if self.room_id == None:
+                self.send_notification("Error", "Cannot join private room")
+                await self.close()
+                return
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            # GAME SHOULD START
+        DuelsManager.debug()
+
+
+    async def send_notification(self, type, message):
+        await self.send(text_data=json.dumps({
+            'type': type,
+            'message': message
+        }))
 
     async def send_game_state(self, event):
         game_state = event['gamestate']
