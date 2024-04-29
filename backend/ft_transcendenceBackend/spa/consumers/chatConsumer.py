@@ -44,6 +44,7 @@ class chatConsumer(AsyncWebsocketConsumer):
             )
 
         elif text_data_json["type"] == 'private.message':
+            print("Private Message")
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -71,13 +72,11 @@ class chatConsumer(AsyncWebsocketConsumer):
     async def  private_message(self, event):
         message = event['message']
         targetid = event['target_user_id']
-
-        if targetid == self.user_id:
+        if targetid == str(self.user_id):
             await self.send(text_data=json.dumps({
                 'type':'private.message',
                 'message':message,
-                'source_user': self.username,
-                'source_user_id': self.user_id,
-                # 'target_user_name': text_data_json["target_user_name"],
+                'source_user' : event['source_user'],
+                'source_user_id': event['source_user_id'],
                 'target_user_id': event['target_user_id'],
             }))
