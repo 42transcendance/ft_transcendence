@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentChatContext === 'global') {
             sendMessage('global.message', messageText);
         } else if (currentChatContext === 'private' && currentRecipientId) {
+            console.log("recep ID: ", currentRecipientId);
             sendMessage('private.message', messageText, currentRecipientId);
 		}
         messageInput.value = '';
@@ -38,7 +39,11 @@ function scrollToBottom(element) {
 function sendMessage(type, message, id=null) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const messageData = { type, message };
-        if (id) messageData.target_user_id = id;
+        console.log("type: ", type);
+        if (id) {
+            console.log("id present: ", id);
+            messageData.target_user_id = id;
+        }
         window.chatSocket.send(JSON.stringify(messageData));
         console.log("sent successfully");
     } else {

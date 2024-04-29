@@ -51,67 +51,65 @@ function showAddFriendModal() {
             console.error(error);
         }
     });
-
-    
 }
 
-// CREATE CHANNEL
-function showCreateChannelModal() {
-    if (isModalPresent('modalCreateChannel')) return;
+// // CREATE CHANNEL
+// function showCreateChannelModal() {
+//     if (isModalPresent('modalCreateChannel')) return;
 
-    const modalHtml = `
-        <div id="modalCreateChannel" class="modal-overlay">
-            <div class="modal-content">
-                <h2>Create Channel</h2>
-                <p>Set up your new channel</p>
-                <input type="text" placeholder="Channel Name" id="inputChannelName" class="modal-input">
-                <div class="threeChanOptions">
-                    <div class="radio-option">
-                        <input type="radio" id="private" name="channelType" value="private">
-                        <label for="private">Private</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="public" name="channelType" value="public" checked>
-                        <label for="public">Public</label>
-                    </div>
-                    <div class="radio-option">
-                        <input type="radio" id="protected" name="channelType" value="protected">
-                        <label for="protected">Protected</label>
-                    </div>
-                </div>
-                <div class="modal-buttons">
-                    <button id="btnCreateChannel" class="modal-button modal-button-add">Create</button>
-                    <button id="btnCancelCreateChannel" class="modal-button modal-button-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
-    `;
+//     const modalHtml = `
+//         <div id="modalCreateChannel" class="modal-overlay">
+//             <div class="modal-content">
+//                 <h2>Create Channel</h2>
+//                 <p>Set up your new channel</p>
+//                 <input type="text" placeholder="Channel Name" id="inputChannelName" class="modal-input">
+//                 <div class="threeChanOptions">
+//                     <div class="radio-option">
+//                         <input type="radio" id="private" name="channelType" value="private">
+//                         <label for="private">Private</label>
+//                     </div>
+//                     <div class="radio-option">
+//                         <input type="radio" id="public" name="channelType" value="public" checked>
+//                         <label for="public">Public</label>
+//                     </div>
+//                     <div class="radio-option">
+//                         <input type="radio" id="protected" name="channelType" value="protected">
+//                         <label for="protected">Protected</label>
+//                     </div>
+//                 </div>
+//                 <div class="modal-buttons">
+//                     <button id="btnCreateChannel" class="modal-button modal-button-add">Create</button>
+//                     <button id="btnCancelCreateChannel" class="modal-button modal-button-cancel">Cancel</button>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelCreateChannel').addEventListener('click', () => closeModal('modalCreateChannel'));
-}
+//     document.body.insertAdjacentHTML('beforeend', modalHtml);
+//     document.getElementById('btnCancelCreateChannel').addEventListener('click', () => closeModal('modalCreateChannel'));
+// }
 
-// JOIN CHANNEL
-function showJoinChannelModal() {
-    if (isModalPresent('modalJoinChannel')) return;
+// // JOIN CHANNEL
+// function showJoinChannelModal() {
+//     if (isModalPresent('modalJoinChannel')) return;
 
-    const modalHtml = `
-        <div id="modalJoinChannel" class="modal-overlay">
-            <div class="modal-content">
-                <h2>Join Channel</h2>
-                <p>Enter the channel name or ID to join</p>
-                <input type="text" placeholder="Channel Name or ID" id="inputChannelId" class="modal-input">
-                <div class="modal-buttons">
-                    <button id="btnJoinChannel" class="modal-button modal-button-add">Join</button>
-                    <button id="btnCancelJoinChannel" class="modal-button modal-button-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
-    `;
+//     const modalHtml = `
+//         <div id="modalJoinChannel" class="modal-overlay">
+//             <div class="modal-content">
+//                 <h2>Join Channel</h2>
+//                 <p>Enter the channel name or ID to join</p>
+//                 <input type="text" placeholder="Channel Name or ID" id="inputChannelId" class="modal-input">
+//                 <div class="modal-buttons">
+//                     <button id="btnJoinChannel" class="modal-button modal-button-add">Join</button>
+//                     <button id="btnCancelJoinChannel" class="modal-button modal-button-cancel">Cancel</button>
+//                 </div>
+//             </div>
+//         </div>
+//     `;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-    document.getElementById('btnCancelJoinChannel').addEventListener('click', () => closeModal('modalJoinChannel'));
-}
+//     document.body.insertAdjacentHTML('beforeend', modalHtml);
+//     document.getElementById('btnCancelJoinChannel').addEventListener('click', () => closeModal('modalJoinChannel'));
+// }
 
 // CHANGE NICKNAME
 function showChangeUsernameModal() {

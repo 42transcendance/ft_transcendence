@@ -1,12 +1,13 @@
 function openGlobalChat() {
     const chatMessagesContainer = document.querySelector('.chat-messages');
-    chatMessagesContainer.id = NULL;
+    chatMessagesContainer.id = '';
     chatMessagesContainer.innerHTML = '';
 
     loadGlobalChatHistory();
 }
 
 function loadGlobalChatHistory() {
+    console.log(`loading global chat`);
     fetch(`/api/global-chat/history`)
     .then(response => response.json())
     .then(messages => {
@@ -22,7 +23,9 @@ function displayChatMessage(message) {
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
 
-    const iconsHTML = message.senderId !== UserId ? `
+    console.log("messages senders id: ", message.senderId)
+
+    const iconsHTML = message.senderId != userId ? `
         <i class="bi bi-caret-right-fill toggle-icons"></i>
         <div class="messageIcons" style="display: none;">
             <i class="bi bi-controller messageIcon"></i>
@@ -49,3 +52,27 @@ function displayChatMessage(message) {
     chatMessagesContainer.appendChild(messageElement);
     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
+
+
+//overall messages in the chhat events
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     const chatMessagesContainer = document.querySelector('.chat-messages');
+
+//     chatMessagesContainer.addEventListener('click', function(event) {
+//         console.log("clicked");
+//         if (event.target.classList.contains('bi-person')) {
+//             const nicknameElement = event.target.closest('.nicknameAndIcon').querySelector('.nickname');
+//             const TheId = nicknameElement.getAttribute('data-user-id');
+
+//             console.log('User ID:', TheId);
+
+//             const profileTab = document.querySelector('.profile-tab');
+//             profileTab.click();
+//         }
+//     });
+// });
+
+// function handleUserIconClick(TheId) {
+//     console.log('Handling click for user:', TheId);
+// }

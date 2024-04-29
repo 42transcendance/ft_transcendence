@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching chats:', error);
-                displayErrorInChatContainer('Failed to load chats.');
+                // displayErrorInChatContainer('Failed to load chats.');
             }
         });
     }
@@ -70,21 +70,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handling clicks on chat icons and settings within chatsTabContent2
     chatsTabContent2.addEventListener('click', function(event) {
         if (event.target.classList.contains('icon-chat')) {
-            const userId = event.target.closest('.chats-item').getAttribute('data-user-id');
-            openChat(userId);
+            const TheuserId = event.target.closest('.chats-item').getAttribute('data-user-id');
+            openChat(TheuserId);
         } else if (event.target.classList.contains('icon-settings')) {
-            const userId = event.target.closest('.chats-item').getAttribute('data-user-id');
-            openSettings(userId);
+            const TheuserId = event.target.closest('.chats-item').getAttribute('data-user-id');
+            openSettings(TheuserId);
         }
     });
 
-    function openChat(userId) {
-        console.log('Open chat with user:', userId);
+    function openChat(TheuserId) {
+        console.log('Open chat with user:', TheuserId);
         // Implement your logic to open chat
     }
 
-    function openSettings(userId) {
-        console.log('Open settings for user:', userId);
+    function openSettings(TheuserId) {
+        console.log('Open settings for user:', TheuserId);
         // Implement your logic to open settings
     }
 });

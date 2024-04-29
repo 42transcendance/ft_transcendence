@@ -18,6 +18,7 @@ def extract_user_info_from_token(token):
     except jwt.InvalidTokenError:
         return None, None
 
+
 def get_game_history(request):
     #When you will pass the userID to get the historic replace the userid on the  getof CustomUser
     token = request.session.get('token')

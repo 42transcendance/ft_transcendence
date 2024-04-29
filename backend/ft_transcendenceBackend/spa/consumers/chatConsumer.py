@@ -62,8 +62,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type':'global.message',
             'message':message,
-            'source_user': self.username,
-            'source_user_id': self.user_id,
+            'source_user' : event['source_user'],
+            'source_user_id': event['source_user_id'],
             'target_username': 'global',
             'target_user_id': 'global',
         }))

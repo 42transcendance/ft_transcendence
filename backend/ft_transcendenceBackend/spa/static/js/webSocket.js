@@ -26,16 +26,14 @@ function connectWebSocket() {
     function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
-                console.log("chan mess recieved");
-                console.log(data.message);
-                console.log(data.target_user_id);
+                console.log("websocket: private message");
                 addMessageToChatUI(data.message, data.source_user, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
             case 'global.message':
-                
-                console.log("global mess recieved : ", data);
-                addMessageToGlobalChatUI(data.message, data.source_user);
+                console.log("websocket: global message");
+                console.log(data.source_user);
+                addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
                 // displayGlobalMessage(data);
                 break;
             case 'notification':
@@ -49,17 +47,19 @@ function connectWebSocket() {
     window.chatSocket = chatSocket;
 }
 
-function addMessageToGlobalChatUI(message, sender) {
+function addMessageToGlobalChatUI(message, sender, sender_id) {
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
+    console.log("Mine: ", userId);
+    console.log("Senders: ", sender_id);
 
     const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
     let messageDetailsHTML1;
-    if(sender !== userId)
+    if(sender_id == userId)
         messageDetailsHTML1 = `
         <div class="message-details">
             <div class="nicknameAndIcon">
-                <span class="nickname" data-user-id="${sender}">${sender}</span>
+                <span class="nickname" data-user-id="${sender_id}">${sender}</span>
             </div>
             <div class="text-and-time">
             <div class="message-text">${message}</div>
@@ -71,7 +71,7 @@ function addMessageToGlobalChatUI(message, sender) {
     messageDetailsHTML1 = `
     <div class="message-details">
         <div class="nicknameAndIcon">
-            <span class="nickname" data-user-id="${sender}">${sender}</span>
+            <span class="nickname" data-user-id="${sender_id}">${sender}</span>
             <i class="bi bi-caret-right-fill toggle-icons"></i>
             <div class="messageIcons">
                 <i class="bi bi-controller messageIcon"></i>

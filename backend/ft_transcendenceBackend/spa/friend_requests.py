@@ -22,28 +22,60 @@ def extract_user_info_from_token(token):
 @csrf_exempt
 def get_user_details(request):
     token = request.session.get('token')
+    profile_id = request.GET.get('profile_id', None)
+
     if token:
         user_id, username = extract_user_info_from_token(token)
+        target_user_id = profile_id if profile_id and profile_id != user_id else user_id
+
         try:
-            user = CustomUser.objects.get(userid=user_id)
+            user = CustomUser.objects.get(userid=target_user_id)
             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
             activate(request.session.get('language'))
             user_details = {
                 'username': user.username,
-                'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
-                'joinedDate' : formatted_joined_date,
-                'userid'    : user.userid,
-                'gamesPlayed' : user.game_history.count(),
+                'userPfp': get_base64_image(user.profile_picture) if user.profile_picture else None,
+                'joinedDate': formatted_joined_date,
+                'userid': user.userid,
+                'gamesPlayed': user.game_history.count(),
             }
-            translatations  = {
+            translations = {
                 'join': _("Joined:"),
-                'nb_match' : _("Matches Played:"),
+                'nb_match': _("Matches Played:"),
             }
-            return JsonResponse({'user_details': user_details, 'translations' : translatations})
+            return JsonResponse({'user_details': user_details, 'translations': translations})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:
         return JsonResponse({'error': 'Token not found in session'}, status=400)
+
+
+
+# @csrf_exempt
+# def get_user_details(request):
+#     token = request.session.get('token')
+#     if token:
+#         user_id, username = extract_user_info_from_token(token)
+#         try:
+#             user = CustomUser.objects.get(userid=user_id)
+#             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
+#             activate(request.session.get('language'))
+#             user_details = {
+#                 'username': user.username,
+#                 'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
+#                 'joinedDate' : formatted_joined_date,
+#                 'userid'    : user.userid,
+#                 'gamesPlayed' : user.game_history.count(),
+#             }
+#             translatations  = {
+#                 'join': _("Joined:"),
+#                 'nb_match' : _("Matches Played:"),
+#             }
+#             return JsonResponse({'user_details': user_details, 'translations' : translatations})
+#         except CustomUser.DoesNotExist:
+#             return JsonResponse({'error': 'User not found'}, status=404)
+#     else:
+#         return JsonResponse({'error': 'Token not found in session'}, status=400)
 
 @csrf_exempt
 def send_friend_request(request):

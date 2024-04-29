@@ -1,10 +1,10 @@
 // SECOND TAB :: PROFILES
 
-function fetchUserData(theUsersId) {
+function  fetchUserData(theUsersId) {
     $.ajax({
         url: '/get_user_details/',
         method: 'GET',
-        // data: { 'profile_id': theUsersId },
+        data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
             updateProfilePage(data);
@@ -17,20 +17,21 @@ function fetchUserData(theUsersId) {
     $.ajax({
         url: '/get_game_history/',
         method: 'GET',
-        // data: { 'profile_id': theUsersId },
+        data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
             console.log(data.gameHistory);
             if (data.gameHistory.length > 0) {
                 addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
             } else {
-                displayEmpty('.game-history', '.user-stats', data.translations);
+                displayEmpty(data.translations);
             }
         },
         error: function(xhr, status, error) {
             console.error("Failed to fetch game history:", error);
         }
     });
+    console.log("Fetching userdata of id: ", theUsersId);
 }
 
 function updateProfilePage(data) {
@@ -135,21 +136,18 @@ function winStreakColor(winStreak) {
     }
 }
 
-function displayEmpty(historycontainer, statcontainer, translations) {
-    const container = document.querySelector(historycontainer);
+function displayEmpty(translations) {
+    const container = document.querySelector('.game-history');
+    container.innerHTML = '';
     container.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';
     container.innerHTML += `<div class="empty-message">${translations.history_empty}</div>`;
     container.classList.add('centered');
 
-    const stat = document.querySelector(statcontainer);
+    const stat = document.querySelector('.user-stats');
+    stat.innerHTML = '';
     stat.innerHTML += `  <div class="section-heading">${translations.stats}</div><div class="empty-message">${translations.stats_empty}</div>`;
     stat.classList.add('centered');
 }
-
-document.addEventListener('DOMContentLoaded', function() {
-    fetchUserData(theUsersId);
-
-});
 
 
 //Settings tab pfp load

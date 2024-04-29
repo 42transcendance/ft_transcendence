@@ -83,34 +83,100 @@ function handleWebSocketMessage(data) {
     }
 }
 
+function fetchFriends() {
+    $.ajax({
+        url: '/get_friends/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(friends) {
+            if (friends.length > 0) {
+                displayFriends('friendsTabContent', friends);
+            } else {
+                displayEmpty('friendsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
 function loadChatWithFriend(friendId) {
-    console.log("start here");    
     const chatMessagesContainer = document.querySelector('.chat-messages');
     chatMessagesContainer.id = `chat-with-${friendId}`;
     chatMessagesContainer.innerHTML = '';
 
-    // Fetch chat history
-    fetch(`/api/chat/history/${friendId}`)
-    .then(response => response.json())
-        .then(data => {
-            //  'data' is array of message objects
+    $.ajax({
+        url: '/api/chat/history',
+        method: 'GET',
+        data: { 'friend_id': friendId },
+        success: function(data) {
             data.forEach(message => {
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message');
+                messageElement.className = 'chat-message';
                 messageElement.innerHTML = `
-                    <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
-                    <div class="message-content">
-                        <div class="message-text">${message.text}</div>
-                        <span class="message-time">${message.time}</span>
+                    <div class="user-icon-container">
+                        <img src="${message.userIcon || 'default-icon.png'}" alt="User" class="user-icon">
+                    </div>
+                    <div class="message-details">
+                        <div class="nicknameAndIcon">
+                            <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
+                        </div>
+                        <div class="text-and-time">
+                            <div class="message-text">${message.text}</div>
+                            <span class="message-time">${message.time}</span>
+                        </div>
                     </div>
                 `;
                 chatMessagesContainer.appendChild(messageElement);
             });
-        })
-        .catch(error => console.error('Failed to load chat history:', error));
-        console.log("done here");
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to load chat history:', error);
+            // chatMessagesContainer.innerHTML = `<div class="error-message">Failed to load messages. Please try again later.</div>`;
+        }
+    });
 }
 
+
+
+//
+
+function displayFriends(containerId, friends) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    friends.forEach(friend => {
+        container.innerHTML += `
+            <div class="friend-item" data-id="${friend.userid}">
+                <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
+                <div class="friend-info">
+                    <div>${friend.username}</div>
+                </div>
+                <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
+            </div>
+        `;  
+    });
+}    
+
+function fetchFriends() {
+    $.ajax({
+        url: '/get_friends/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(friends) {
+            if (friends.length > 0) {
+                displayFriends('friendsTabContent', friends);
+            } else {
+                displayEmpty('friendsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -123,23 +189,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchBlockedContacts();
     }
 
-    function fetchFriends() {
-        $.ajax({
-            url: '/get_friends/', 
-            method: 'GET',
-            dataType: 'json',
-            success: function(friends) {
-                if (friends.length > 0) {
-                    displayFriends('friendsTabContent', friends);
-                } else {
-                    displayEmpty('friendsTabContent');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
 
     function fetchOutgoingRequests() {
         $.ajax({
@@ -195,23 +244,7 @@ function fetchIncomingRequests() {
         });
     }
 
-    function displayFriends(containerId, friends) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        friends.forEach(friend => {
-            container.innerHTML += `
-                <div class="friend-item" data-id="${friend.id}">
-                    <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
-                    <div class="friend-info">
-                        <div>${friend.username}</div>
-                    </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
-                </div>
-            `;  
-        });
-    }    
+
 
     function displayRequests(containerId, requests, type) {
         const container = document.getElementById(containerId);
@@ -341,9 +374,9 @@ function fetchIncomingRequests() {
             const friendItem = event.target.closest('.friend-item');
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
-            const userId = friendItem ? friendItem.getAttribute('data-id') : null;
+            const FriendUserId = friendItem ? friendItem.getAttribute('data-id') : null;
             if (userId) {
-                showConfirmBlockModal(userId,username);
+                showConfirmBlockModal(FriendUserId, username);
             }
             else {
                 console.error("User ID not found.");
@@ -379,9 +412,9 @@ function fetchIncomingRequests() {
             }
             currentChatContext = 'global';
             currentRecipientId = null;
-            console.log(`Opening chat with global: `);
             openGlobalChat();
         };
+        
     });
 
     // function unblockModal(blockIcon) {
