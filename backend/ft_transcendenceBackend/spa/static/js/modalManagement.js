@@ -38,7 +38,6 @@ function showAddFriendModal() {
                 document.getElementById('inputFriendUsername').value = '';
                 closeModal('modalAddFriend');
                 showNotification("Friend request sent !", "rgb(81, 171, 81)");
-                fetchOutgoingRequests();
             },
             error: function(xhr, status, error) {
                 console.error(error);

@@ -24,7 +24,7 @@ function  fetchUserData(theUsersId) {
             if (data.gameHistory.length > 0) {
                 addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
             } else {
-                displayEmpty(data.translations);
+                displayEmptyT(data.translations);
             }
         },
         error: function(xhr, status, error) {
@@ -136,7 +136,7 @@ function winStreakColor(winStreak) {
     }
 }
 
-function displayEmpty(translations) {
+function displayEmptyT(translations) {
     const container = document.querySelector('.game-history');
     container.innerHTML = '';
     container.innerHTML = '<div class="section-heading">' + translations.history+ '</div>';

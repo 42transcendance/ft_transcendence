@@ -158,7 +158,6 @@ function addFriend(senderNickname) {
         data: { 'search_term': senderNickname }, // This should be the username if the API expects it
         success: function() {
             showNotification("Friend request sent to user: " + senderNickname, "rgb(81, 171, 81)");
-            fetchOutgoingRequests();
         },
         error: function(xhr) {
             showNotification("Failed to send friend request: " + xhr.responseJSON.message, "rgb(168, 64, 64)");
