@@ -11,18 +11,17 @@ class DuelsManager :
         self.PrivateDuelRooms = set()
     
     def debug(self):
+        print("------------------------DEBUG-----------------------------------")
         for room in self.PublicDuelRooms:
             print("Users in public room : ", room.room_id)
-            print("Status : ", room.status)
             for user in room.users:
                 print("User : ",user)
-
         for room in self.PrivateDuelRooms:
             print("Users in private room : ", room.room_id)
-            print("Status : ", room.status)
             for user in room.users:
                 print("User : ",user)
-
+        print("----------------------------------------------------------------")
+        
     def get_room_by_id(self, room_id):
         for room in self.PublicDuelRooms:
             if room.room_id == room_id:

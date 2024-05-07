@@ -48,7 +48,26 @@ class pongConsumer(AsyncWebsocketConsumer):
         elif message_type == 'join.matchmaking':
             self.room_id = DuelsManager.find_public_room(self.user_id)
             await self.channel_layer.group_add( self.room_id, self.channel_name)
-            # CHECK ROOM STATE
+            self.room_object = DuelsManager.get_room_by_id(self.room_id)
+            self.room_object.createGame()
+            self.room_object.userReady()
+            self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+            print(self.username, "is on side : ", self.side)
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'send.game.state',
+                'gamestate': self.room_object.gameObject,
+            })
+            if self.room_object.ready == 2:
+                self.room_object.startGameTask()
+            else:
+                await self.channel_layer.group_send(
+                self.room_id,
+                {
+                    'type': 'matchmaking',
+                })
+
 
         elif message_type == 'create.private.game':
             # Create a private game and waits for whitelisted player to join
@@ -110,6 +129,11 @@ class pongConsumer(AsyncWebsocketConsumer):
         }
         await self.send(text_data=json.dumps(game_state_json))
     
+    async def matchmaking(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'matchmaking',
+        }))
+
     async def game_starting(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({
