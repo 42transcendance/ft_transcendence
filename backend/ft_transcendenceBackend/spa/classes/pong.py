@@ -28,7 +28,7 @@ class Ball :
         self.speed = 2
 
 class PongGame :
-    def __init__(self,  groupChannel) -> None:
+    def __init__(self,  room_id) -> None:
         self.width = STD_WIDTH
         self.height = STD_HEIGHT
 
@@ -40,16 +40,17 @@ class PongGame :
         self.rightPlayerScore = 0
         self.defaultFontSize = 150
         self.defaultFont = "Arial"
-        self.groupChannel = groupChannel
+        self.room_id = room_id
         self.interval = None
 
         self.leftPlayerName = None
         self.rightPlayerName = None
-        self.leftPlayerChannel = None
-        self.rightPlayerChannel = None
+        self.leftPlayerId = None
+        self.rightPlayerId = None
 
         self.leftPlayerDirection = 'idle'
         self.rightPlayerDirection = 'idle'
+        
 
     async def setDirection(self, paddle, message):
         if message == 'wPress':
@@ -71,13 +72,13 @@ class PongGame :
                 self.rightPlayerDirection = 'idle'
     
 
-    def setPlayer (self, userChannel, userName):
-        if self.leftPlayerChannel is None:
-            self.leftPlayerChannel = userChannel
+    def setPlayer (self, user_id, userName):
+        if self.leftPlayerId is None:
+            self.leftPlayerId = user_id
             self.leftPlayerName = userName
             return ('left')
-        elif self.rightPlayerChannel is None:
-            self.rightPlayerChannel = userChannel
+        elif self.rightPlayerId is None:
+            self.rightPlayerId = user_id
             self.rightPlayerName = userName
             return ('right')
     
@@ -88,6 +89,7 @@ class PongGame :
             'defaultFontSize': self.defaultFontSize,
             'defaultFont': self.defaultFont,
             'leftPlayerName': self.leftPlayerName,
+            'leftPlayerId': self.leftPlayerId,
             'leftPlayerScore': self.leftPlayerScore,
             'leftPlayerPaddle': {
                 'x': self.leftPlayerPaddle.x,
@@ -97,6 +99,7 @@ class PongGame :
                 'speed': self.leftPlayerPaddle.speed,
             },
             'rightPlayerName': self.rightPlayerName,
+            'rightPlayerId': self.rightPlayerId,
             'rightPlayerScore': self.rightPlayerScore,
             'rightPlayerPaddle': {
                 'x': self.rightPlayerPaddle.x,
@@ -174,12 +177,11 @@ class PongGame :
         elif ((self.ball.y - self.ball.radius) <= 0):
             self.ball.direction = math.atan2(math.sin(self.ball.direction) * -1, math.cos(self.ball.direction))
 
-
     async def countdown (self, time):
         start = time
         while start > -1:
             await channel_layer.group_send(
-            self.groupChannel,
+            self.room_id,
             {
                 'type': 'countdown',
                 'countdown': start,
@@ -197,7 +199,7 @@ class PongGame :
             else:
                 await self.updateBallPosition()
             await channel_layer.group_send(
-            self.groupChannel,
+            self.room_id,
             {
                 'type': 'send.game.state',
                 'gamestate': self,
@@ -218,7 +220,7 @@ class PongGame :
         game_history_entry1 =  await sync_to_async(GameHistory.objects.create)(user=user1, game=game)
         game_history_entry2 =  await sync_to_async(GameHistory.objects.create)(user=user2, game=game)
         await channel_layer.group_send(
-            self.groupChannel,
+            self.room_id,
             {
                 'type': 'ending.game',
                 'gamestate': self,

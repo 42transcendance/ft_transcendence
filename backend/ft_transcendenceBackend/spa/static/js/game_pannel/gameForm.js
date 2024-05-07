@@ -1,11 +1,3 @@
-function showDuelForm() {
-    var duelForm = document.getElementById('duel-form');
-    duelForm.style.visibility = 'visible';
-    removeTournamentForm();
-    removeWinningMessage();
-    removeWinTournament();
-}
-
 function showTournamentForm() {
     removeTournamentForm();
     removeWinTournament();
@@ -45,14 +37,11 @@ function removeTournamentForm(){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var duelButton = document.querySelector('#button-container button');
-    duelButton.addEventListener('click', showDuelForm);
-
     var tournamentButton = document.querySelectorAll('#button-container button')[1];
     tournamentButton.addEventListener('click', showTournamentForm);
 
-    var startGameButton = document.querySelector('#duel-form button');
-    startGameButton.addEventListener('click', startDuelGame);
+    var duelButton = document.querySelector('#button-container button');
+    duelButton.addEventListener('click', startDuelGame);
 
 });
 
