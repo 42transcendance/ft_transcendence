@@ -8,8 +8,8 @@ services:
       dockerfile: backend.Dockerfile
     environment:
       - PGSERVICEFILE=/pg_service.conf
-      - API_SECRET_KEY=s
-      - API_CLIENT_KEY=u
+      - API_SECRET_KEY=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
+      - API_CLIENT_KEY=u-s4t2ud-a5afc4a5214c57269a802fc3629c48621c8edf6b99e531450eb5975de732483d
       - JWT_SECRET_PHRASE=jwt-string
     volumes:
       - backend:/djangoSource

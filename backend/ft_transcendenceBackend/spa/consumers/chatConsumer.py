@@ -51,7 +51,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                     'type':'private.message',
                     'message':message,
                     'source_user': self.username,
-                    'source_user_id': self.user_id,
+                    'source_user_id': str(self.user_id),
                     # 'target_user_name': text_data_json["target_user_name"],
                     'target_user_id': text_data_json["target_user_id"],
                 }
@@ -72,7 +72,8 @@ class chatConsumer(AsyncWebsocketConsumer):
     async def  private_message(self, event):
         message = event['message']
         targetid = event['target_user_id']
-        if targetid == str(self.user_id):
+        sourceid = event['source_user_id']
+        if targetid == str(self.user_id) or sourceid == str(self.user_id):
             await self.send(text_data=json.dumps({
                 'type':'private.message',
                 'message':message,

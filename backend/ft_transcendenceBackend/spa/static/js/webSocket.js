@@ -27,7 +27,8 @@ function connectWebSocket() {
         switch(data.type) {
             case 'private.message':
                 console.log("websocket: private message");
-                addMessageToChatUI(data.message, data.source_user, data.target_user_id);
+                console.log(data)
+                addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
             case 'global.message':
@@ -92,29 +93,29 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
     scrollToBottom(document.querySelector('.chat-messages'));
 }
 
-function addMessageToChatUI(message, sender, id) {
-    console.log("in add ui");
-    console.log(id);
-    // if (!id || document.querySelector('.chat-messages').id !== `chat-with-${id}`) {
-    //     console.log("NO ID");
-    //     return;
-    // }
-
-    const messageElement = document.createElement('div');
-    messageElement.className = 'chat-message';
-    const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
-    const messageDetailsHTML = `
-        <div class="message-details">
-            <span class="nickname">${sender}</span>
-            <div class="text-and-time">
-                <div class="message-text">${message}</div>
-                <span class="message-time">${getCurrentTime()}</span>
+function addMessageToChatUI(message, sender, senderid, id) {
+    let compareIdStr1 = "chat-with-" + senderid;
+    let compareIdStr2 = "chat-with-" + id;
+    if ((compareIdStr1 == document.querySelector('.chat-messages').id && userId == id) || 
+        (compareIdStr2 == document.querySelector('.chat-messages').id && userId == senderid)) 
+        {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'chat-message';
+        const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
+        const messageDetailsHTML = `
+            <div class="message-details">
+                <span class="nickname">${sender}</span>
+                <div class="text-and-time">
+                    <div class="message-text">${message}</div>
+                    <span class="message-time">${getCurrentTime()}</span>
+                </div>
             </div>
-        </div>
-    `;
-    messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-    document.querySelector('.chat-messages').appendChild(messageElement);
-    scrollToBottom(document.querySelector('.chat-messages'));
+        `;
+        messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+        document.querySelector('.chat-messages').appendChild(messageElement);
+        scrollToBottom(document.querySelector('.chat-messages'));
+
+    }
 }
 
 function getCurrentTime() {
