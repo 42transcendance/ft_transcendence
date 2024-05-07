@@ -47,8 +47,7 @@ function showNotification(message, color) {
                 document.body.removeChild(notification);
             }, 2000);
         }
-    });
-    
+    });  
 }
 function removeRequestFromUI(requestId) {
     const requestElement = document.querySelector(`.friend-item[data-id="${requestId}"]`);
