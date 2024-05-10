@@ -25,7 +25,7 @@ def get_game_history(request):
     users_id = request.GET.get('profile_id')
     # if token:
     #     user_id, username = extract_user_info_from_token(token)
-    if users_id
+    if users_id:
         try:
             #The get() right below >>>
             user = CustomUser.objects.get(userid=users_id)

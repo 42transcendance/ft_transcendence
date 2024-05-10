@@ -375,6 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const friendItem = event.target.closest('.friend-item');
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
+            console.log("Blocking friend: ", username);
             const FriendUserId = friendItem ? friendItem.getAttribute('data-id') : null;
             if (userId) {
                 showConfirmBlockModal(FriendUserId, username);

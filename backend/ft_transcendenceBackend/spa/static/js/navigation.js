@@ -96,6 +96,7 @@ function navbarPressed(buttonPressed ) {
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
 
+            fetchAllData();
             fetchUserData(userId);
 
     
