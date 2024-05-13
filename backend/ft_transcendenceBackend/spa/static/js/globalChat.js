@@ -4,6 +4,8 @@ function openGlobalChat() {
     chatMessagesContainer.innerHTML = '';
 
     loadGlobalChatHistory();
+    messageWith("general");
+
 }
 
 function loadGlobalChatHistory() {

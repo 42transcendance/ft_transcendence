@@ -50,3 +50,14 @@ function sendMessage(type, message, id=null) {
         console.error("WebSocket is not connected.");
     }
 }
+
+function messageWith(mode, username) {
+    console.log("LAWD HAVE MERCY IM BOUT TO BUST");
+    let text = document.getElementById('social-text');
+    if (mode == 'set')
+        text.textContent = "Messages: " + username;
+    else if (mode == 'reset')
+        text.textContent = "Messages";
+    else if (mode == 'general')
+        text.textContent = "Messages" + ": General Chat";
+}

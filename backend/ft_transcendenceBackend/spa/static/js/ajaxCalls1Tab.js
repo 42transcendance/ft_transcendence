@@ -146,7 +146,7 @@ function displayFriends(containerId, friends) {
     container.innerHTML = '';
     friends.forEach(friend => {
         container.innerHTML += `
-            <div class="friend-item" data-id="${friend.userid}">
+            <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
                 <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
                 <div class="friend-info">
                     <div>${friend.username}</div>
@@ -295,8 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchBlockedContacts();
     }
 
-    
-
     function acceptFriendRequest(requestId, username) {
         removeRequestFromUI(requestId);
     
@@ -339,7 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Handling click events for icons using event delegation
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('accept-request')) {
 			const friendItem = event.target.closest('.friend-item');
@@ -390,22 +387,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
             if (isFriend) {
                 const friendId = isFriend.getAttribute('data-id');
+                const friendName = isFriend.getAttribute('data-username');
                 if (friendId && !(currentChatContext === 'private' && currentRecipientId === friendId)) {
                     currentChatContext = 'private';
                     currentRecipientId = friendId;
                     console.log(`Opening chat with friend ID: ${friendId}`);
                     loadChatWithFriend(friendId);
+                    messageWith("set", friendName);
                 }
             }
-            if (isChannel) {
-                const channelId = isChannel.getAttribute('data-id');
-                if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {
-                    currentChatContext = 'private';
-                    currentRecipientId = channelId;
-                    console.log(`Opening chat with channel ID: ${channelId}`);
-                    openChannelChat(channelId);
-                }
-            }
+            // if (isChannel) {
+            //     const channelId = isChannel.getAttribute('data-id');
+            //     if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {
+            //         currentChatContext = 'private';
+            //         currentRecipientId = channelId;
+            //         console.log(`Opening chat with channel ID: ${channelId}`);
+            //         openChannelChat(channelId);
+            //     }
+            // }
         }
         else if (event.target.closest('.global-chat-item')) {
             if (currentChatContext === 'global') {
