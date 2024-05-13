@@ -57,6 +57,7 @@ def callback(request):
         print(response.json())
         if response.status_code == 200:
             access_token = response.json().get('access_token')
+            print("ACCESS TOKEN ------------------------- ",access_token)
             headers = {
                 'Authorization': 'Bearer ' + access_token
             }

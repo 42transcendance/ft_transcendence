@@ -2,7 +2,7 @@ function startDuelGame() {
     Pong = new Game();
     hideButtons();
 
-    Pong.start();
+    Pong.joinMatchmaking();
 
     checkGameState(Pong);
 }
@@ -10,6 +10,7 @@ function startDuelGame() {
 function checkGameState(Pong) {
     const intervalId = setInterval(() => {
         if (Pong.over) {
+            console.log("Test");
             endGameDuel(Pong);
             clearInterval(intervalId);
         }
@@ -19,5 +20,5 @@ function checkGameState(Pong) {
 function endGameDuel(Pong){
     showButtons();
     hideCanvas();
-    winningMsg(Pong);
+    // winningMsg(Pong);
 }

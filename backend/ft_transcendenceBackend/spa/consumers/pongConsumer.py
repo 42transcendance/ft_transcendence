@@ -38,13 +38,22 @@ class pongConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
-        print(data)
+        message = data.get('message')
+        # print(data)
 
-        if self.room_id != None:
-            self.send_notification("Error", "You are already involved in a game.")
-            await self.close()
-            return
-
+        
+        # Check if user is already in a game
+        # if self.room_id != None:
+        #     self.send_notification("Error", "You are already involved in a game.")
+        #     await self.close()
+        #     return
+        
+        if message_type == 'user.input':
+            if self.room_object.gameObject.leftPlayerId == self.user_id:
+                await self.room_object.gameObject.setDirection('left', message)
+            elif self.room_object.gameObject.rightPlayerId == self.user_id:
+                await self.room_object.gameObject.setDirection('right', message)
+        
         elif message_type == 'join.matchmaking':
             self.room_id = DuelsManager.find_public_room(self.user_id)
             await self.channel_layer.group_add( self.room_id, self.channel_name)
@@ -52,14 +61,23 @@ class pongConsumer(AsyncWebsocketConsumer):
             self.room_object.createGame()
             self.room_object.userReady()
             self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
-            print(self.username, "is on side : ", self.side)
             await self.channel_layer.group_send(
             self.room_id,
             {
                 'type': 'send.game.state',
                 'gamestate': self.room_object.gameObject,
             })
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'matchmaking',
+            })
             if self.room_object.ready == 2:
+                await self.channel_layer.group_send(
+                self.room_id,
+                {
+                    'type': 'game.starting',
+                })
                 self.room_object.startGameTask()
             else:
                 await self.channel_layer.group_send(
@@ -112,7 +130,7 @@ class pongConsumer(AsyncWebsocketConsumer):
                 return
             await self.channel_layer.group_add( self.room_id, self.channel_name)
             # GAME SHOULD START
-        DuelsManager.debug()
+        # DuelsManager.debug()
 
 
     async def send_notification(self, type, message):
@@ -135,10 +153,8 @@ class pongConsumer(AsyncWebsocketConsumer):
         }))
 
     async def game_starting(self, event):
-        message = event['message']
         await self.send(text_data=json.dumps({
             'type': 'game.starting',
-            'message':message,
         }))
 
     async def countdown(self, event):

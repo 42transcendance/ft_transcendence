@@ -1,6 +1,13 @@
 class Game {
 	constructor() {		
 		this.principalContainer = document.getElementById('principal-container');
+		this.buttonContainer = document.getElementById('button-container');
+		this.waitingOverlay = document.getElementById('waitingOverlay');
+		this.buttonContainer.style.display = 'none';
+
+		this.over = false;
+		this.game_running = false
+		
 		this.canvas = document.getElementById('gameCanvas');
 		this.context = this.canvas.getContext('2d');
 		
@@ -13,12 +20,34 @@ class Game {
 		this.color = '#1f2938';
 	}
 
+	joinMatchmaking() {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
+
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'join.matchmaking',
+			}));
+		};
+		this.wsListen();
+		this.animate();
+	}
+
+	createPrivateGame() {}
+
+	joinPrivateGame(room_id) {}
+
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
 			console.log(wsData);
 			switch (wsData.type) {
+				case ('matchmaking'):
+					this.waitingOverlay.style.visibility = 'visible';
+					break;
 				case ('game.starting'):
+					this.waitingOverlay.style.visibility = 'hidden';
 					this.game_running = true
 					this.inputsListen();
 					break ;
@@ -31,21 +60,39 @@ class Game {
 				case ('ending.game'):
 					this.game_running = false;
 
-					this.stopAnimation(this.animationId);
-					this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
-					
+					this.endGame(this.animationId);
+					this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 					break;
+
 				default:
 					break;
 			}
-			
         };
 
         this.pongSocket.onerror = (error) => {
             console.error('WebSocket error:', error);
         };
     }
-	
+
+	animate() {
+		this.draw();
+    	this.animationId = requestAnimationFrame(() => this.animate());
+	}
+
+	draw() {
+		if (!this.lastGameState) return;
+
+		this.drawBoard(this.lastGameState);
+		if (this.countdown > 0) this.drawCountdown(this.lastGameState, this.countdown);
+	}
+
+	endGame() {
+		cancelAnimationFrame(this.animationId);
+		this.over = true;
+		this.buttonContainer.style.display = 'flex';
+		this.waitingOverlay.style.visibility = 'hidden';
+	}
+
 	drawCountdown(wsData, count) {
 		const diff = this.canvas.width / wsData.width;
 		this.context.strokeStyle = 'white';
@@ -88,18 +135,7 @@ class Game {
 		this.context.fill();
 	}
 
-	connect() {
-		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
 	
-		this.pongSocket.onopen = () => {
-			this.connected = true;
-
-			this.pongSocket.send(JSON.stringify({ 
-				'type':'join.matchmaking',
-			}));
-		};
-		this.wsListen();
-	}
 
 	inputsListen() {
 		// Creating events for movements on keydown
@@ -147,25 +183,4 @@ class Game {
 		});
 	}
 
-	animate() {
-		console.log("Animating");
-		this.draw();
-    	this.animationId = requestAnimationFrame(() => this.animate());
-	}
-
-	stopAnimation() {
-		cancelAnimationFrame(this.animationId);
-	}
-
-	draw() {
-		if (!this.lastGameState) return;
-
-		this.drawBoard(this.lastGameState);
-		if (this.countdown > 0) this.drawCountdown(this.lastGameState, this.countdown);
-	}
-
-	start() {
-		this.connect();
-		this.animate();
-	}
 }
