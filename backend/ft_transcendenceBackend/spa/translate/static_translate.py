@@ -34,6 +34,10 @@ def translate_static(language):
         'carrers': _("Carrer's"),
         'logout': _("Logout"),
         'message_ph': _("Type your message here..."),
+        'language' : _("Language Selection :"),
+        'en' : _("English"),
+        'fr' :_("French"),
+        'it' :_("Italian"),
     }
 
     return translations

@@ -34,10 +34,13 @@ def get_user_details(request):
                 'joinedDate' : formatted_joined_date,
                 'userid'    : user.userid,
                 'gamesPlayed' : user.game_history.count(),
+                'language' : request.session.get('language')
             }
             translatations  = {
                 'join': _("Joined:"),
                 'nb_match' : _("Matches Played:"),
+                'player' : _("Player "),
+                'start_tournament' : _("Start Tournament")
             }
             return JsonResponse({'user_details': user_details, 'translations' : translatations})
         except CustomUser.DoesNotExist:
