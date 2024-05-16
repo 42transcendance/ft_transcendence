@@ -7,74 +7,119 @@ from asgiref.sync import sync_to_async
 
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-from ..classes.DuelGroupsManager import DuelGroupsManager
+from ..classes.DuelsManager import DuelsManager
 
-pongGroupsManager = DuelGroupsManager()
+DuelsManager = DuelsManager()
 
 class pongConsumer(AsyncWebsocketConsumer):
-    # On Connection, The new user is added  to a game group
     async def connect(self):
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
 
         if self.user_id == None or self.username == None:
-            self.close()
-        user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
-        self.username = user.username
-
-        self.group_name = pongGroupsManager.join_group(self.channel_name)
-        await self.channel_layer.group_add( self.group_name, self.channel_name )
-        self.groupObject = pongGroupsManager.get_group_by_name(self.group_name)
-        pongGroupsManager.list_groups()
-        await self.accept()
+            await self.close(code=1000)
+        else:
+            self.userObject = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+            self.username = self.userObject.username
+            print("WS Connection : ", self.username, " ", self.user_id)
+            self.room_id = None
+            await self.accept()
     
     async def disconnect(self, close_code):
-        print("This is a test ")
-        await self.channel_layer.group_send(
-            self.group_name,
-            {
-                'type': 'ending.game',
-                'gamestate': 'None',
-            }
-        )
+        # Gotta check which type of game user is in and act accordingly
+        DuelsManager.remove_user_from_room(self.user_id, self.room_id)
+        if self.room_id != None:
+            await self.channel_layer.group_discard(self.room_id, self.channel_name)
+        DuelsManager.debug()
         await self.send(text_data=json.dumps({
             "type": "websocket.close",
             "code": 1000,
         }))
-        await self.groupObject.stopGameTask()
-        pongGroupsManager.group_remove_user(self.group_name, self.channel_name)
-        await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type')
-        message = data.get('message')
+        print(data)
 
-        if message_type == 'user.ready':
-            self.groupObject.createGame()
-            self.groupObject.userReady()
+        if self.room_id != None:
+            self.send_notification("Error", "You are already involved in a game.")
+            await self.close()
+            return
 
-            self.side = self.groupObject.gameObject.setPlayer(self.channel_name, self.username)
-
+        elif message_type == 'join.matchmaking':
+            self.room_id = DuelsManager.find_public_room(self.user_id)
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            self.room_object = DuelsManager.get_room_by_id(self.room_id)
+            self.room_object.createGame()
+            self.room_object.userReady()
+            self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+            print(self.username, "is on side : ", self.side)
             await self.channel_layer.group_send(
-            self.group_name,
+            self.room_id,
             {
                 'type': 'send.game.state',
-                'gamestate': self.groupObject.gameObject,
+                'gamestate': self.room_object.gameObject,
             })
-            if self.groupObject.ready == 2:
-                self.groupObject.startGameTask()
+            if self.room_object.ready == 2:
+                self.room_object.startGameTask()
+            else:
                 await self.channel_layer.group_send(
-                self.group_name,
+                self.room_id,
                 {
-                    'type': 'game.starting',
-                    'message': 'Game Starting !',
+                    'type': 'matchmaking',
                 })
-        
-        if message_type == 'user.input':
-            if self.groupObject.gameObject.leftPlayerChannel == self.channel_name:
-                await self.groupObject.gameObject.setDirection('left', message)
-            elif self.groupObject.gameObject.rightPlayerChannel == self.channel_name:
-                await self.groupObject.gameObject.setDirection('right', message)
+
+
+        elif message_type == 'create.private.game':
+            # Create a private game and waits for whitelisted player to join
+            """
+                Request when inviting someone to play :
+                {
+                    "type" : "create.private.game",
+                    "userid_of_oponent": userid,
+                }
+            """
+            invited_user_id = data.get('userid_of_oponent')
+            if invited_user_id == None:
+                self.send_notification("Error", "You need to specify the invited user.")
+                await self.close()
+                return
+            elif self.userObject.friends.get(invited_user_id) == None: # Might be a problem if get doesnt return None
+                self.send_notification("Error", "User is not your friend")
+                await self.close()
+                return
+            self.room_id = DuelsManager.create_private_room(self.user_id, invited_user_id)
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            
+            #Sends the room id back to the user to initiate invitation
+            self.send_notification("private.game", self.room_id)
+            # WAIT FOR OPPONENT
+            pass
+
+        elif message_type == 'join.private.game':
+            # Joins private game using game-id
+            """
+                Request when accepting an invitation (joining a private game) :
+                {
+                    "type" : "join.private.game",
+                    "room_id": room_id,
+                }
+            """
+            room_id_to_join = data.get('room_id')
+            self.room_id = DuelsManager.join_private_room(self.user_id, room_id_to_join)
+            if self.room_id == None:
+                self.send_notification("Error", "Cannot join private room")
+                await self.close()
+                return
+            await self.channel_layer.group_add( self.room_id, self.channel_name)
+            # GAME SHOULD START
+        DuelsManager.debug()
+
+
+    async def send_notification(self, type, message):
+        await self.send(text_data=json.dumps({
+            'type': type,
+            'message': message
+        }))
 
     async def send_game_state(self, event):
         game_state = event['gamestate']
@@ -84,6 +129,11 @@ class pongConsumer(AsyncWebsocketConsumer):
         }
         await self.send(text_data=json.dumps(game_state_json))
     
+    async def matchmaking(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'matchmaking',
+        }))
+
     async def game_starting(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({

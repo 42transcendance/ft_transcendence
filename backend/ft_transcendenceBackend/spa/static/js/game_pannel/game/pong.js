@@ -16,6 +16,7 @@ class Game {
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
+			console.log(wsData);
 			switch (wsData.type) {
 				case ('game.starting'):
 					this.game_running = true
@@ -35,7 +36,7 @@ class Game {
 					
 					break;
 				default:
-					console.log("Unrecognised type message : " + wsData.type)
+					break;
 			}
 			
         };
@@ -94,8 +95,7 @@ class Game {
 			this.connected = true;
 
 			this.pongSocket.send(JSON.stringify({ 
-				'type':'user.ready',
-				'message':'This user is ready to start an online game.',
+				'type':'join.matchmaking',
 			}));
 		};
 		this.wsListen();
