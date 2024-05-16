@@ -48,11 +48,13 @@ class pongConsumer(AsyncWebsocketConsumer):
         #     await self.close()
         #     return
         
-        if message_type == 'user.input':
-            if self.room_object.gameObject.leftPlayerId == self.user_id:
-                await self.room_object.gameObject.setDirection('left', message)
-            elif self.room_object.gameObject.rightPlayerId == self.user_id:
-                await self.room_object.gameObject.setDirection('right', message)
+        if message_type == 'user.update':
+            if self.side == 'right':
+                self.room_object.gameObject.rightPlayerPaddle.x = data.get('paddleX')
+                self.room_object.gameObject.rightPlayerPaddle.y = data.get('paddleY')
+            elif self.side == 'left':
+                self.room_object.gameObject.leftPlayerPaddle.x = data.get('paddleX')
+                self.room_object.gameObject.leftPlayerPaddle.y = data.get('paddleY')
         
         elif message_type == 'join.matchmaking':
             self.room_id = DuelsManager.find_public_room(self.user_id)
@@ -61,6 +63,14 @@ class pongConsumer(AsyncWebsocketConsumer):
             self.room_object.createGame()
             self.room_object.userReady()
             self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+
+            await self.send(text_data=json.dumps({
+                'type': 'game.setup',
+                'side': self.side,
+                'userid': self.user_id,
+                'username': self.username,
+            }))
+
             await self.channel_layer.group_send(
             self.room_id,
             {

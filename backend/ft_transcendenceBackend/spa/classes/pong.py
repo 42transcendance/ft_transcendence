@@ -14,10 +14,9 @@ class Paddle :
     def __init__(self, side) -> None:
         self.width = 4
         self.height = 27
-        self.x = 7 if side == 'left' else STD_WIDTH - (7+ self.width)
+        self.x = 7 if side == 'left' else STD_WIDTH - (7 + self.width)
         self.y = STD_HEIGHT / 2 - self.height / 2
         self.speed = 3
-        self.direction = 'idle'
 
 class Ball :
     def __init__(self) -> None:
@@ -47,30 +46,6 @@ class PongGame :
         self.rightPlayerName = None
         self.leftPlayerId = None
         self.rightPlayerId = None
-
-        self.leftPlayerDirection = 'idle'
-        self.rightPlayerDirection = 'idle'
-        
-
-    async def setDirection(self, paddle, message):
-        if message == 'wPress':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'up'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'up'
-
-        elif message == 'sPress':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'down'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'down'
-
-        elif message == 'wRelease' or message == 'sRelease':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'idle'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'idle'
-    
 
     def setPlayer (self, user_id, userName):
         if self.leftPlayerId is None:
@@ -117,31 +92,6 @@ class PongGame :
             },
         }
 
-    async def updatePaddlePositions(self):
-        if self.leftPlayerDirection == 'up':
-            if self.leftPlayerPaddle.y > 0:
-                self.leftPlayerPaddle.y -= self.leftPlayerPaddle.speed
-            elif self.leftPlayerPaddle.y < 0:
-                self.leftPlayerPaddle.y = 0
-
-        elif self.leftPlayerDirection == 'down':
-            if self.leftPlayerPaddle.y < self.height - self.leftPlayerPaddle.height:
-                self.leftPlayerPaddle.y += self.leftPlayerPaddle.speed
-            elif self.leftPlayerPaddle.y > self.height - self.leftPlayerPaddle.height:
-                self.leftPlayerPaddle.y = self.height - self.leftPlayerPaddle.height
-
-        if self.rightPlayerDirection == 'up':
-            if self.rightPlayerPaddle.y > 0:
-                self.rightPlayerPaddle.y -= self.rightPlayerPaddle.speed
-            elif self.rightPlayerPaddle.y < 0:
-                self.rightPlayerPaddle.y = 0
-
-        elif self.rightPlayerDirection == 'down':
-            if self.rightPlayerPaddle.y < self.height - self.rightPlayerPaddle.height:
-                self.rightPlayerPaddle.y += self.rightPlayerPaddle.speed
-            elif self.rightPlayerPaddle.y > self.height - self.rightPlayerPaddle.height:
-                self.rightPlayerPaddle.y = self.height - self.rightPlayerPaddle.height
-
     async def updateBallPosition(self):
 
         self.ball.x += math.cos(self.ball.direction) * self.ball.speed
@@ -160,7 +110,7 @@ class PongGame :
             self.ball.y = self.height / 2
             self.rightPlayerScore += 1
             self.interval = time.time()
-            self.ball.speed = 3 * 100
+            self.ball.speed = 3
 
         if self.ball.y >= self.rightPlayerPaddle.y and self.ball.y <= self.rightPlayerPaddle.y + self.rightPlayerPaddle.height and self.ball.x + self.ball.radius >= self.rightPlayerPaddle.x:
             relativeIntersectY = (self.rightPlayerPaddle.y + (self.rightPlayerPaddle.height / 2)) - self.ball.y
@@ -175,7 +125,7 @@ class PongGame :
             self.ball.y = self.height / 2
             self.leftPlayerScore += 1
             self.interval = time.time()
-            self.ball.speed = 3 * 100
+            self.ball.speed = 3
 
         if ((self.ball.y + self.ball.radius) >= self.height):
             self.ball.direction = math.atan2(math.sin(self.ball.direction) * -1, math.cos(self.ball.direction))
@@ -197,7 +147,6 @@ class PongGame :
     async def gameLoop(self):
         await self.countdown(5)
         while self.leftPlayerScore < 5 and self.rightPlayerScore < 5:
-            await self.updatePaddlePositions()
             if self.interval != None:
                 if time.time() - self.interval >= 1:
                     self.interval = None

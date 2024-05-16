@@ -214,7 +214,7 @@ class Game {
 		let ArrowDownKeyPressed = false;
 
 		// Creating events for movements on keydown
-		document.addEventListener('keydown', (key) => {		
+		document.addEventListener('keydown', (key) => {
 			//console.log(key.key);	
 			// Handle w key events
 			if (key.key === 'w') {
