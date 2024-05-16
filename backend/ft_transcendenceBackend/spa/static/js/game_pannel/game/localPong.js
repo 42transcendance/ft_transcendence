@@ -42,7 +42,7 @@ var Ball = {
 	},
 };
 
-class Game {
+class LocalGame {
 
 	constructor(playerName, opponentName) {
 

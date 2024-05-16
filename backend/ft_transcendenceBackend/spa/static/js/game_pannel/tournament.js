@@ -13,27 +13,36 @@ function tournamentMatchmaking(players){
 }
 
 function annonceNextMatch(player1, player2,players){
-    hideButtons();
-    var message = document.createElement('div');
-    message.className = 'annonce-message';
-    message.id = 'annonce-message';
-    message.style = "position : absolute; top : 50%; margin-left : 35%;";
-
-    message.textContent = "Next match will be " + player1 + " against " + player2 + " .";
-    
-    var principalContainer = document.getElementById('principal-container');
-    principalContainer.appendChild(message);
-    var nextButton = document.createElement("button");
-    nextButton.type = "button";
-    nextButton.textContent = "Start next match !";
-    nextButton.style.left = "40%";
-    nextButton.style.position = "relative";
-    nextButton.id = "next-match";
-    nextButton.addEventListener('click', function() {
-        startNextMatch(player1, player2,players);
+    $.ajax({
+        url: "tournament_next_translate",
+        method: "GET",
+        success: function(data) {
+            hideButtons();
+            var message = document.createElement('div');
+            message.className = 'annonce-message';
+            message.id = 'annonce-message';
+            message.style = "position : absolute; top : 50%;left: 50%;transform: translateX(-50%);";
+        
+            message.textContent = data.translations.next + player1 + data.translations.against + player2 + " .";
+            
+            var principalContainer = document.getElementById('principal-container');
+            principalContainer.appendChild(message);
+            var nextButton = document.createElement("button");
+            nextButton.type = "button";
+            nextButton.textContent = data.translations.snm;
+            nextButton.style.left = "40%";
+            nextButton.style.position = "relative";
+            nextButton.id = "next-match";
+            nextButton.addEventListener('click', function() {
+                startNextMatch(player1, player2,players);
+            });
+        
+            document.getElementById('bottom-container').append(nextButton);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error", error);
+        }
     });
-
-    document.getElementById('bottom-container').append(nextButton);
 }
 
 function startNextMatch(player1Name, player2Name,players){
@@ -47,7 +56,7 @@ function startNextMatch(player1Name, player2Name,players){
     if (nextButton){
         document.getElementById('bottom-container').removeChild(nextButton);
     }
-    Pong = new Game(player1Name, player2Name);
+    Pong = new LocalGame(player1Name, player2Name);
 
     var placeholderCanvas = document.getElementById('gameCanvas');
     placeholderCanvas.style.visibility = 'visible';
@@ -78,7 +87,6 @@ function endTournamentDuel(Pong,players){
     let remove = Pong.opponent;
     if (Pong.opponent.score === 5)
         remove = Pong.player;
-    console.log(remove.name);
     players = players.filter(e => e !== remove.name);
     var i =0;
     for (; i < players.length; i++){
@@ -113,11 +121,11 @@ function collectPlayerInputs() {
             var playerName = inputField.value;
 
             if (playerName.trim() === "") {
-                alert("Please enter a name for Player " + (i + 1));
+                showNotification("Please enter a name for every players.", "rgb(168, 64, 64)"); 
                 return null;
             }
             if (playerNames.has(playerName)) {
-                alert("Player " + (i + 1) + " cannot have the same username as another player.");
+                showNotification("Two Players cannot have the same username.", "rgb(168, 64, 64)"); 
                 return null;
             }
             playerNames.add(playerName);

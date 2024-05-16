@@ -20,7 +20,6 @@ function fetchUserData(theUsersId) {
         // data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
-            console.log(data.gameHistory);
             if (data.gameHistory.length > 0) {
                 addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
             } else {
@@ -148,7 +147,6 @@ function displayEmpty(historycontainer, statcontainer, translations) {
 
 document.addEventListener('DOMContentLoaded', function() {
     fetchUserData(theUsersId);
-
 });
 
 
@@ -163,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             dataType: 'json',
             success: function(data) {
+                document.getElementById("selectLanguage").value = data.user_details.language;
                 updateProfilePicture(data);
                 updateSettingsUsername(data);
                 if (data.user_details.userid) {

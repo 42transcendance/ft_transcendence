@@ -16,15 +16,270 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 #: ft_transcendenceBackend/settings.py:137
 msgid "English"
-msgstr ""
+msgstr "Inglese"
 
 #: ft_transcendenceBackend/settings.py:138
 msgid "French"
-msgstr ""
+msgstr "Francese"
 
 #: ft_transcendenceBackend/settings.py:139
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
+
+msgid "Social"
+msgstr "Sociale"
+
+msgid "FRIENDS"
+msgstr "AMICI"
+
+msgid "CHATS"
+msgstr "CHAT"
+
+msgid "ADD FRIEND"
+msgstr "AGGIUNGI AMICO"
+
+msgid "Friends"
+msgstr "Amici"
+
+msgid "Outgoing Requests"
+msgstr "Richieste Inviate"
+
+msgid "Incoming Requests"
+msgstr "Richieste in Arrivo"
+
+msgid "Blocked"
+msgstr "Bloccato"
+
+msgid "CREATE CHANNEL"
+msgstr "CREA CANALE"
+
+msgid "JOIN CHANNEL"
+msgstr "UNISCITI AL CANALE"
+
+msgid "Global Chat"
+msgstr "Chat Globale"
+
+msgid "Messages"
+msgstr "Messaggi"
+
+msgid "Send"
+msgstr "Invia"
+
+msgid "Settings"
+msgstr "Impostazioni"
+
+msgid "Username:"
+msgstr "Nome Utente:"
+
+msgid "Two Factor Authentication:"
+msgstr "Autenticazione a Due Fattori:"
+
+msgid "Disabled"
+msgstr "Disabilitato"
+
+msgid "Change"
+msgstr "Cambia"
+
+msgid "Joined:"
+msgstr "Iscritto il:"
+
+msgid "Matches Played:"
+msgstr "Partite Giocate:"
+
+msgid "Duel"
+msgstr "Duello"
+
+msgid "Tournament"
+msgstr "Torneo"
+
+msgid "Player 1:"
+msgstr "Giocatore 1:"
+
+msgid "Player 2:"
+msgstr "Giocatore 2:"
+
+msgid "Player 3:"
+msgstr "Giocatore 3:"
+
+msgid "Player "
+msgstr "Giocatore "
+
+msgid "Start game"
+msgstr "Inizia Partita"
+
+msgid "Start Tournament"
+msgstr "Inizia Torneo"
+
+msgid "Career's"
+msgstr "Carriera"
+
+msgid "Logout"
+msgstr "Esci"
+
+msgid "Add Friend"
+msgstr "Aggiungi Amico"
+
+msgid "Add a friend to your friend list"
+msgstr "Aggiungi un amico alla tua lista amici"
+
+msgid "Enter username"
+msgstr "Inserisci nome utente"
+
+msgid "Add"
+msgstr "Aggiungi"
+
+msgid "Cancel"
+msgstr "Annulla"
+
+msgid "Game History"
+msgstr "Cronologia Partite"
+
+msgid "No game played online"
+msgstr "Nessuna partita giocata online"
+
+msgid "Statistics"
+msgstr "Statistiche"
+
+msgid "Need 1 game to see stats"
+msgstr "Necessaria 1 partita per visualizzare le statistiche"
+
+msgid "Upload Profile Picture"
+msgstr "Carica Foto Profilo"
+
+msgid "Choose File"
+msgstr "Scegli File"
+
+msgid "No file chosen"
+msgstr "Nessun file selezionato"
+
+msgid "Upload"
+msgstr "Carica"
+
+msgid "Change Username"
+msgstr "Cambia Nome Utente"
+
+msgid "Enter your new username"
+msgstr "Inserisci il tuo nuovo nome utente"
+
+msgid "New Username"
+msgstr "Nuovo Nome Utente"
+
+msgid "Yes"
+msgstr "Sì"
+
+msgid "No"
+msgstr "No"
+
+msgid "Empty"
+msgstr "Vuoto"
+
+msgid "Are you sure you want to logout?"
+msgstr "Sei sicuro di voler uscire?"
+
+msgid "Average Score: "
+msgstr "Punteggio Medio:"
+
+msgid "Win Streak: "
+msgstr "Streak di Vittorie:"
+
+msgid "Win"
+msgstr "Vittoria"
+
+msgid "Defeat"
+msgstr "Sconfitta"
+
+msgid "Versus: "
+msgstr "Contro: "
+
+msgid "Score: "
+msgstr "Punteggio: "
+
+msgid "Block User"
+msgstr "Blocca Utente"
+
+msgid "Are you sure you want to block this user?"
+msgstr "Sei sicuro di voler bloccare questo utente?"
+
+msgid "Type your message here..."
+msgstr "Digita il tuo messaggio qui..."
+
+msgid "Friend request accepted"
+msgstr "Richiesta di amicizia accettata"
+
+msgid "Friend request declined"
+msgstr "Richiesta di amicizia rifiutata"
+
+msgid "User unblocked"
+msgstr "Utente sbloccato"
+
+msgid "Invitation Sent"
+msgstr "Invito Inviato"
+
+msgid "User Blocked"
+msgstr "Utente Bloccato"
+
+msgid "Friend request sent !"
+msgstr "Richiesta di amicizia inviata!"
+
+msgid "You are already friends with this user."
+msgstr "Sei già amico di questo utente."
+
+msgid "You have already sent a friend request to this user."
+msgstr "Hai già inviato una richiesta di amicizia a questo utente."
+
+msgid "You have already received a friend request from this user."
+msgstr "Hai già ricevuto una richiesta di amicizia da questo utente."
+
+msgid "You or the user is blocked, unable to send friend request."
+msgstr "Tu o l'utente siete bloccati, impossibile inviare richiesta di amicizia."
+
+msgid "Friend not found."
+msgstr "Amico non trovato."
+
+msgid "Invalid request parameters."
+msgstr "Parametri di richiesta non validi."
+
+msgid "Username has been changed !"
+msgstr "Il nome utente è stato cambiato!"
+
+msgid "New username unavailable"
+msgstr "Nuovo nome utente non disponibile"
+
+msgid "Profile picture has been changed !"
+msgstr "L'immagine del profilo è stata cambiata!"
+
+msgid "Error encountered while uploading a user profile picture."
+msgstr "Errore riscontrato durante il caricamento dell'immagine del profilo utente."
+
+msgid " against "
+msgstr " contro "
+
+msgid "Next match will be "
+msgstr "La prossima partita sarà "
+
+msgid " wins with a score of "
+msgstr " vince con un punteggio di "
+
+msgid "Start next match !"
+msgstr "Inizia la prossima partita!"
+
+msgid " has won the tournament !"
+msgstr " ha vinto il torneo!"
+
+msgid "Language Selection :"
+msgstr "Selezione lingua:"
+
+msgid "Language has been changed !"
+msgstr "La lingua è stata cambiata!"
+
+msgid "Error encountered while changing language."
+msgstr "Errore riscontrato durante il cambio di lingua."
+
+msgid "Please enter a name for every players."
+msgstr "Inserisci un nome per ogni giocatore."
+
+msgid "Two Players cannot have the same username."
+msgstr "Due giocatori non possono avere lo stesso nome utente."
