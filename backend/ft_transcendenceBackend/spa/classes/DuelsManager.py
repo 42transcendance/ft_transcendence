@@ -80,9 +80,12 @@ class DuelsManager :
                 return(room.room_id)
         return None
 
-    def delete_room(self, room_id):
+    async def delete_room(self, room_id):
         targetRoom = self.get_room_by_id(room_id)
-        if targetRoom.room_id.startswith("public-"):
-            self.PublicDuelRooms.remove(targetRoom)
-        elif targetRoom.room_id.startswith("private-"):
-            self.PrivateDuelRooms.remove(targetRoom)
+        if targetRoom:
+            if targetRoom.room_id.startswith("public-"):
+                await targetRoom.stopGameTask()
+                self.PublicDuelRooms.remove(targetRoom)
+            elif targetRoom.room_id.startswith("private-"):
+                await targetRoom.stopGameTask()
+                self.PrivateDuelRooms.remove(targetRoom)

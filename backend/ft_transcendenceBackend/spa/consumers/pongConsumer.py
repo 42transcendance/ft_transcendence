@@ -1,5 +1,6 @@
 import json
 import time
+import asyncio
 
 from ..views import extract_user_info_from_token
 from ..models import CustomUser
@@ -26,10 +27,15 @@ class pongConsumer(AsyncWebsocketConsumer):
     
     async def disconnect(self, close_code):
         # Gotta check which type of game user is in and act accordingly
-        DuelsManager.remove_user_from_room(self.user_id, self.room_id)
+        await DuelsManager.delete_room(self.room_id)
+        await self.channel_layer.group_send(
+        self.room_id,
+        {
+            'type': 'ending.game',
+            'gamestate': self.room_object.gameObject,
+        })
         if self.room_id != None:
             await self.channel_layer.group_discard(self.room_id, self.channel_name)
-        DuelsManager.debug()
         await self.send(text_data=json.dumps({
             "type": "websocket.close",
             "code": 1000,
@@ -39,8 +45,6 @@ class pongConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         message_type = data.get('type')
         message = data.get('message')
-        # print(data)
-
         
         # Check if user is already in a game
         # if self.room_id != None:
@@ -96,6 +100,10 @@ class pongConsumer(AsyncWebsocketConsumer):
                     'type': 'matchmaking',
                 })
 
+            tasks = asyncio.all_tasks()
+            print(f"Currently running tasks: {len(tasks)}")
+            DuelsManager.debug()
+
 
         elif message_type == 'create.private.game':
             # Create a private game and waits for whitelisted player to join
@@ -140,7 +148,7 @@ class pongConsumer(AsyncWebsocketConsumer):
                 return
             await self.channel_layer.group_add( self.room_id, self.channel_name)
             # GAME SHOULD START
-        # DuelsManager.debug()
+
 
 
     async def send_notification(self, type, message):
@@ -185,4 +193,5 @@ class pongConsumer(AsyncWebsocketConsumer):
             await self.send(text_data=json.dumps({
                 'type': 'ending.game'
             }))
+
         await self.close()

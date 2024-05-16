@@ -178,6 +178,7 @@ class Game {
 		if (this.playerPaddle != null) {
 			this.updatePaddlePosition();
 			
+			if (this.game_running === true)
 			this.pongSocket.send(JSON.stringify({ 
 				'type': 'user.update',
 				'paddleX': this.playerPaddle.x / this.diff,
