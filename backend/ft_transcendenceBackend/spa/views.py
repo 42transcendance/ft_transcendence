@@ -18,7 +18,7 @@ def home(request):
     language = request.session.get('language')
 
     if not language:
-        request.session['language'] = 'fr'
+        request.session['language'] = 'en'
         
     translations = translate_static(request.session.get('language'))
 
@@ -41,7 +41,14 @@ def extract_user_info_from_token(token):
     except jwt.InvalidTokenError:
         return None, None
 
-
+def change_language(request):
+    if request.method == 'GET':
+        language = request.GET.get('language', None)
+        print(language)
+        if language in ['en', 'fr', 'it']:
+            request.session['language'] = language
+            return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
 def callback(request):
     code = request.GET.get('code')

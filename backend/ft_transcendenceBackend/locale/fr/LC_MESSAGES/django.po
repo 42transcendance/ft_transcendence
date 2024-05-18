@@ -118,24 +118,14 @@ msgstr "Joueur 2:"
 msgid "Player 3:"
 msgstr "Joueur 3:"
 
-msgid "Player 4:"
-msgstr "Joueur 4:"
-
-msgid "Player 5:"
-msgstr "Joueur 5:"
-
-msgid "Player 6:"
-msgstr "Joueur 6:"
-
-msgid "Player 7:"
-msgstr "Joueur 7:"
-
-msgid "Player 8:"
-msgstr "Joueur 8:"
+msgid "Player "
+msgstr "Joueur "
 
 msgid "Start game"
 msgstr "Lancer le Duel"
 
+msgid "Start Tournament"
+msgstr "Lancer le Tournois"
 
 msgid "Career's"
 msgstr "Carrière"
@@ -279,3 +269,33 @@ msgstr "L’image de profil a été modifiée !"
 
 msgid "Error encountered while uploading a user profile picture."
 msgstr "Erreur rencontrée lors du téléchargement d’une image de profil utilisateur."
+
+msgid " against "
+msgstr " contre "
+
+msgid "Next match will be "
+msgstr "Le prochain match sera "
+
+msgid " wins with a score of "
+msgstr " gagne avec un score de "
+
+msgid "Start next match !"
+msgstr "Lancer le prochain match !"
+
+msgid " has won the tournament !"
+msgstr " a gagné le tournoi !"
+
+msgid "Language Selection :"
+msgstr "Choix de la langue :"
+
+msgid "Language has been changed !"
+msgstr "La langue a été changée !"
+
+msgid "Error encountered while changing language."
+msgstr "Erreur rencontrée lors du changement de langue."
+
+msgid "Please enter a name for every players."
+msgstr "Veuillez entrer un nom pour chaque joueur."
+
+msgid "Two Players cannot have the same username."
+msgstr "Deux joueurs ne peuvent pas avoir le même nom d’utilisateur."

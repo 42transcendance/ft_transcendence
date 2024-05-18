@@ -1,4 +1,5 @@
 function startDuelGame() {
+    removeTournamentForm()
     Pong = new Game();
     hideButtons();
 

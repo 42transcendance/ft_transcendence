@@ -258,6 +258,22 @@ function showUploadProfilePictureModal() {
     });
    
 }
+// CHANGE LANGUAGE
+function changeLanguageModal(){
+    let selectedLanguage = document.getElementById('selectLanguage').value;
+    $.ajax({
+        url: '/change_language/',
+        method: 'GET',
+        data: { 'language': selectedLanguage },
+        success: function() {
+            showNotification("Language has been changed !", "rgb(81, 171, 81)");
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+            showNotification("Error encountered while changing language.", "rgb(168, 64, 64)"); 
+        }
+    });
+}
 
 // Function to close the modal
 function closeModal(modalId) {
@@ -275,3 +291,4 @@ document.querySelector('.add-friend-button').addEventListener('click', showAddFr
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
 document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
+document.querySelector('.change-language-button').addEventListener('click', changeLanguageModal);

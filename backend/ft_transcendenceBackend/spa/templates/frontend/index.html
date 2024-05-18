@@ -215,6 +215,18 @@
                                     <button class="tfa-button">{{ translations.change }}</button>
                                 </div>
                             </div>
+                            <!-- Language Selection Section -->
+                            <div class="language-selection">
+                                <div class="language-label">{{ translations.language }}</div>
+                                <div class="language-dropdown">
+                                    <select id="selectLanguage" class="language-select">
+                                        <option value="en">{{ translations.en }}</option>
+                                        <option value="fr">{{ translations.fr }}</option>
+                                        <option value="it">{{ translations.it }}</option>
+                                    </select>
+                                    <button id="changeLanguageButton" class="change-language-button">{{ translations.change }}</button>
+                                </div>
+                            </div>
                         
                             <!-- Toggles for Music, Animations, and Sound Effects -->
                             <div class="settings-toggles">
@@ -331,6 +343,7 @@
     <script src="{% static 'js/smallButtons.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameForm.js' %}"></script>
     <script src="{% static 'js/game_pannel/game/pong.js' %}"></script>
+    <script src="{% static 'js/game_pannel/game/localPong.js' %}"></script>
     <script src="{% static 'js/game_pannel/duel.js' %}"></script>
     <script src="{% static 'js/game_pannel/gameMessages.js' %}"></script>
     <script src="{% static 'js/game_pannel/tournament.js' %}"></script>

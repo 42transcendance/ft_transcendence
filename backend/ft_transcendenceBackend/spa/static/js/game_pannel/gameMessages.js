@@ -26,27 +26,37 @@ function hideCanvas() {
 }
 
 function winningMsg(Pong) {
-    var message = document.createElement('div');
-    message.className = 'winning-message';
-    message.id = 'winning-message';
-    message.style = "position : absolute; top : 50%;left: 50%;transform: translateX(-50%);";
-
-    if (Pong.player.score > Pong.opponent.score){
-        var winnerName = Pong.player.name;
-        var loserName = Pong.opponent.name;
-        var winnerScore = Pong.player.score;
-        var loserScore = Pong.opponent.score;
-    } else {
-        var winnerName = Pong.opponent.name;
-        var loserName = Pong.player.name;
-        var winnerScore = Pong.opponent.score;
-        var loserScore = Pong.player.score;
-    }
-
-    message.textContent = winnerName + ' wins with a score of ' + winnerScore + '-' + loserScore + ' against ' + loserName + '.';
-    
-    var principalContainer = document.getElementById('principal-container');
-    principalContainer.appendChild(message);
+    $.ajax({
+        url: "tournament_next_translate",
+        method: "GET",
+        success: function(data) {
+            var message = document.createElement('div');
+            message.className = 'winning-message';
+            message.id = 'winning-message';
+            message.style = "position : absolute; top : 50%;left: 50%;transform: translateX(-50%);";
+        
+            if (Pong.player.score > Pong.opponent.score){
+                var winnerName = Pong.player.name;
+                var loserName = Pong.opponent.name;
+                var winnerScore = Pong.player.score;
+                var loserScore = Pong.opponent.score;
+            } else {
+                var winnerName = Pong.opponent.name;
+                var loserName = Pong.player.name;
+                var winnerScore = Pong.opponent.score;
+                var loserScore = Pong.player.score;
+            }
+            console.log("is this caLLED ?");
+            message.textContent = winnerName + data.translations.next + winnerScore + '-' + loserScore + data.translations.against + loserName + '.';
+            
+            var principalContainer = document.getElementById('principal-container');
+            principalContainer.appendChild(message);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error", error);
+        }
+    });
+   
 }
 
 function removeWinningMessage() {
@@ -66,33 +76,54 @@ function removeWinTournament(){
 }
 
 function winTheTournament(winner){
-    let message = document.createElement('div');
-    message.className = 'winning-tournament';
-    message.id = 'winning-tournament';
-    message.style = "position : absolute; top : 40%; left: 50%;transform: translateX(-50%);";
+    $.ajax({
+        url: "tournament_winmsg_translate",
+        method: "GET",
+        success: function(data) {
+            let message = document.createElement('div');
+            message.className = 'winning-tournament';
+            message.id = 'winning-tournament';
+            message.style = "position : absolute; top : 40%; left: 50%;transform: translateX(-50%);";
+        
+            message.textContent = winner + data.translations.winmsg;
+            document.getElementById('principal-container').appendChild(message);
 
-    message.textContent = winner + " has won the tournament !";
-    document.getElementById('principal-container').appendChild(message);
+    },
+        error: function(xhr, status, error) {
+            console.error("Error", error);
+        }
+    });
 }
 
 function winningMsgTournament(Pong) {
-    var message = document.createElement('div');
-    message.className = 'winning-message';
-    message.id = 'winning-message';
-    message.style = "position : absolute; top : 40%;left: 50%; transform: translateX(-50%);";
+    $.ajax({
+        url: "tournament_win_translate",
+        method: "GET",
+        success: function(data) {
+            var message = document.createElement('div');
+            message.className = 'winning-message';
+            message.id = 'winning-message';
+            message.style = "position : absolute; top : 40%;left: 50%; transform: translateX(-50%);";
 
-    if (Pong.player.score > Pong.opponent.score){
-        var winnerName = Pong.player.name;
-        var loserName = Pong.opponent.name;
-        var winnerScore = Pong.player.score;
-        var loserScore = Pong.opponent.score;
-    } else {
-        var winnerName = Pong.opponent.name;
-        var loserName = Pong.player.name;
-        var winnerScore = Pong.opponent.score;
-        var loserScore = Pong.player.score;
-    }
+            if (Pong.player.score > Pong.opponent.score){
+                var winnerName = Pong.player.name;
+                var loserName = Pong.opponent.name;
+                var winnerScore = Pong.player.score;
+                var loserScore = Pong.opponent.score;
+            } else {
+                var winnerName = Pong.opponent.name;
+                var loserName = Pong.player.name;
+                var winnerScore = Pong.opponent.score;
+                var loserScore = Pong.player.score;
+            }
 
-    message.textContent = winnerName + ' wins with a score of ' + winnerScore + '-' + loserScore + ' against ' + loserName + '.\n';
-    document.getElementById('principal-container').appendChild(message);
+            message.textContent = winnerName + data.translations.win + winnerScore + '-' + loserScore + data.translations.against+ loserName + '.\n';
+            document.getElementById('principal-container').appendChild(message);
+
+    },
+        error: function(xhr, status, error) {
+            console.error("Error", error);
+        }
+    });
+    
 }

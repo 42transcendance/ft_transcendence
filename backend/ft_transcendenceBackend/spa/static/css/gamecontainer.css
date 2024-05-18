@@ -130,3 +130,12 @@
         transform: scale(1.1); /* Scale up slightly */
     }
 }
+
+#next-match{
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    background-color: rgb(112, 56, 177);
+    color: white;
+    cursor: pointer;
+}

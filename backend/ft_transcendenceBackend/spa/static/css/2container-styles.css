@@ -213,7 +213,7 @@
     margin-bottom: 40px;
 }
 
-.username-label, .tfa-label {
+.username-label, .tfa-label , .language-label{
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -224,7 +224,7 @@
     align-items: center;
 }
 
-.change-username-button, .tfa-button {
+.change-username-button, .tfa-button, .change-language-button {
     padding: 6px 12px;
     font-size: 14px;
     border-radius: 5px;
@@ -548,8 +548,19 @@
 }
 
 .empty-message {
-    color: red; /* or gray */
+    color: red; 
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+}
+
+.language-selection {
+    margin: 0 10%;
+    margin-bottom: 40px; 
+}
+
+.language-dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
