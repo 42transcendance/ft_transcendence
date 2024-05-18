@@ -10,7 +10,6 @@ function startDuelGame() {
 function checkGameState(Pong) {
     const intervalId = setInterval(() => {
         if (Pong.over) {
-            console.log("Test");
             endGameDuel(Pong);
             clearInterval(intervalId);
         }

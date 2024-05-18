@@ -104,37 +104,45 @@ class pongConsumer(AsyncWebsocketConsumer):
             print(f"Currently running tasks: {len(tasks)}")
             DuelsManager.debug()
 
-
         elif message_type == 'create.private.game':
-            # Create a private game and waits for whitelisted player to join
+            # Create a private game
             """
-                Request when inviting someone to play :
+                Request when creating a private game :
                 {
                     "type" : "create.private.game",
                     "userid_of_oponent": userid,
                 }
             """
-            invited_user_id = data.get('userid_of_oponent')
-            if invited_user_id == None:
-                self.send_notification("Error", "You need to specify the invited user.")
-                await self.close()
-                return
-            elif self.userObject.friends.get(invited_user_id) == None: # Might be a problem if get doesnt return None
-                self.send_notification("Error", "User is not your friend")
-                await self.close()
-                return
-            self.room_id = DuelsManager.create_private_room(self.user_id, invited_user_id)
+            self.room_id = DuelsManager.create_private_room(self.user_id)
             await self.channel_layer.group_add( self.room_id, self.channel_name)
-            
-            #Sends the room id back to the user to initiate invitation
-            self.send_notification("private.game", self.room_id)
-            # WAIT FOR OPPONENT
-            pass
+            self.room_object = DuelsManager.get_room_by_id(self.room_id)
+            self.room_object.createGame()
+            self.room_object.userReady()
+            self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+            await self.send(text_data=json.dumps({
+                'type': 'game.setup',
+                'side': self.side,
+                'userid': self.user_id,
+                'username': self.username,
+            }))
+
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'send.game.state',
+                'gamestate': self.room_object.gameObject,
+            })
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'matchmaking',
+            })
+            DuelsManager.debug()
 
         elif message_type == 'join.private.game':
             # Joins private game using game-id
             """
-                Request when accepting an invitation (joining a private game) :
+                Request when joining a private game :
                 {
                     "type" : "join.private.game",
                     "room_id": room_id,
@@ -143,11 +151,38 @@ class pongConsumer(AsyncWebsocketConsumer):
             room_id_to_join = data.get('room_id')
             self.room_id = DuelsManager.join_private_room(self.user_id, room_id_to_join)
             if self.room_id == None:
-                self.send_notification("Error", "Cannot join private room")
+                await self.send_notification("Error", "Cannot join private room")
                 await self.close()
                 return
             await self.channel_layer.group_add( self.room_id, self.channel_name)
-            # GAME SHOULD START
+            self.room_object = DuelsManager.get_room_by_id(self.room_id)
+            self.room_object.userReady()
+            self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+            await self.send(text_data=json.dumps({
+                'type': 'game.setup',
+                'side': self.side,
+                'userid': self.user_id,
+                'username': self.username,
+            }))
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'send.game.state',
+                'gamestate': self.room_object.gameObject,
+            })
+            await self.channel_layer.group_send(
+            self.room_id,
+            {
+                'type': 'matchmaking',
+            })
+            if self.room_object.ready == 2:
+                await self.channel_layer.group_send(
+                self.room_id,
+                {
+                    'type': 'game.starting',
+                })
+                self.room_object.startGameTask()
+            DuelsManager.debug()
 
 
 

@@ -38,7 +38,7 @@ class Game {
 		this.context = this.canvas.getContext('2d');
 		
 		this.canvas.width = this.principalContainer.clientWidth;
-		this.canvas.height = this.principalContainer.clientHeight;
+		this.canvas.height = this.principalContainer.clientWidth * 0.67;
 
 		this.canvas.style.width = this.canvas.width + 'px';
 		this.canvas.style.height = this.canvas.height + 'px';
@@ -63,9 +63,34 @@ class Game {
 		this.animate();
 	}
 
-	createPrivateGame() {}
+	createPrivateGame() {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
 
-	joinPrivateGame(room_id) {}
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'create.private.game',
+			}));
+		};
+		this.wsListen();
+		this.animate();
+	}
+
+	joinPrivateGame(room_id) {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
+
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'join.private.game',
+				'room_id': room_id,
+			}));
+		};
+		this.wsListen();
+		this.animate();
+	}
 
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
@@ -116,8 +141,13 @@ class Game {
 				case ('countdown'):
 					this.countdown = wsData.countdown;
 					break ;
+				
+				case ('notification'):
+					console.log(wsData);
+					break;
 
 				case ('ending.game'):
+					console.log("Ending game");
 					this.game_running = false;
 
 					this.endGame(this.animationId);

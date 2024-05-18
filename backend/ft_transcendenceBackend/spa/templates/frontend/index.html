@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
     <link rel="stylesheet" href="{% static 'css/small-windows.css' %}">
+    <link rel="stylesheet" href="{% static 'css/private-game-buttons/private-game-buttons.css' %}">
 </head>
 <body>
 
@@ -262,10 +263,17 @@
                         <div id="button-container">
                             <button class="send-button">{{ translations.duel }}</button>
                             <button class="send-button">{{ translations.tourn }}</button>
+                            <button class="send-button create-private-game-button">Create Private Game</button>
+                            <button class="send-button join-private-game-form-button">Join Private Game</button>
                         </div>
                         <div id="principal-container">
                             <div id="tournament-form" class="form-container">
-                              
+                            </div>
+                            <div id="join-private-game-div" class="form-container">
+                                <form id="join-private-game-form">
+                                    <input type="text" class="input-private-game-id" required="" placeholder="Enter private game id.">
+                                    <button type="button" class="send-button join">Join</button>
+                                </form>
                             </div>
                             <div id="pong-container">
                                 <div class="waiting-overlay" id="waitingOverlay">
@@ -335,6 +343,8 @@
     <script src="{% static 'js/thirdTab.js' %}"></script>
     <script src="{% static 'js/firstTab.js' %}"></script>
     <script src="{% static 'js/secondTab.js' %}"></script>
+
+    <script src="{% static 'js/game_pannel/privateGames.js' %}"></script>
 
 </body>
 </html>
