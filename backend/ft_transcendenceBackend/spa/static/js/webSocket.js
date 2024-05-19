@@ -51,70 +51,97 @@ function connectWebSocket() {
 function addMessageToGlobalChatUI(message, sender, sender_id) {
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
-    console.log("Mine: ", userId);
-    console.log("Senders: ", sender_id);
+    let userIconHTML = '';
 
-    const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
-    let messageDetailsHTML1;
-    if(sender_id == userId)
-        messageDetailsHTML1 = `
-        <div class="message-details">
-            <div class="nicknameAndIcon">
-                <span class="nickname" data-user-id="${sender_id}">${sender}</span>
-            </div>
-            <div class="text-and-time">
-            <div class="message-text">${message}</div>
-                <span class="message-time">${getCurrentTime()}</span>
-            </div>
-        </div>
-        `;
-    else
-    messageDetailsHTML1 = `
-    <div class="message-details">
-        <div class="nicknameAndIcon">
-            <span class="nickname" data-user-id="${sender_id}">${sender}</span>
-            <i class="bi bi-caret-right-fill toggle-icons"></i>
-            <div class="messageIcons">
-                <i class="bi bi-controller messageIcon"></i>
-                <i class="bi bi-plus-circle messageIcon"></i>
-                <i class="bi bi-person messageIcon"></i>
-            </div>
-        </div>
-        <div class="text-and-time">
-            <div class="message-text">${message}</div>
-            <span class="message-time">${getCurrentTime()}</span>
-        </div>
-    </div>
-    `;
-    const messageDetailsHTML = messageDetailsHTML1;
+    $.ajax({
+        url: '/get_user_details/',
+        method: 'GET',
+        data: { 'profile_id': sender_id },
+        dataType: 'json',
+        success: function(data) {
+            let pfp = data.user_details.userPfp || 'assets/pfp.png';
+            userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
 
-    messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-    document.querySelector('.chat-messages').appendChild(messageElement);
-    scrollToBottom(document.querySelector('.chat-messages'));
+            let messageDetailsHTML1;
+            if (sender_id == userId) {
+                messageDetailsHTML1 = `
+                <div class="message-details">
+                    <div class="nicknameAndIcon">
+                        <span class="nickname" data-user-id="${sender_id}">${sender}</span>
+                    </div>
+                    <div class="text-and-time">
+                        <div class="message-text">${message}</div>
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                </div>
+                `;
+            } else {
+                messageDetailsHTML1 = `
+                <div class="message-details">
+                    <div class="nicknameAndIcon">
+                        <span class="nickname" data-user-id="${sender_id}">${sender}</span>
+                        <i class="bi bi-caret-right-fill toggle-icons"></i>
+                        <div class="messageIcons">
+                            <i class="bi bi-controller messageIcon"></i>
+                            <i class="bi bi-plus-circle messageIcon"></i>
+                            <i class="bi bi-person messageIcon"></i>
+                        </div>
+                    </div>
+                    <div class="text-and-time">
+                        <div class="message-text">${message}</div>
+                        <span class="message-time">${getCurrentTime()}</span>
+                    </div>
+                </div>
+                `;
+            }
+            const messageDetailsHTML = messageDetailsHTML1;
+
+            messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+            document.querySelector('.chat-messages').appendChild(messageElement);
+            scrollToBottom(document.querySelector('.chat-messages'));
+        },
+        error: function(xhr, status, error) {
+            console.error("Failed to fetch pfp:", error);
+        }
+    });
 }
+
 
 function addMessageToChatUI(message, sender, senderid, id) {
     let compareIdStr1 = "chat-with-" + senderid;
     let compareIdStr2 = "chat-with-" + id;
+
     if ((compareIdStr1 == document.querySelector('.chat-messages').id && userId == id) || 
         (compareIdStr2 == document.querySelector('.chat-messages').id && userId == senderid)) 
-        {
+    {
         const messageElement = document.createElement('div');
         messageElement.className = 'chat-message';
-        const userIconHTML = `<div class="user-icon-container"><img src="static/assets/pfp.png" alt="${sender}" class="user-icon"></div>`;
-        const messageDetailsHTML = `
-            <div class="message-details">
-                <span class="nickname">${sender}</span>
-                <div class="text-and-time">
-                    <div class="message-text">${message}</div>
-                    <span class="message-time">${getCurrentTime()}</span>
-                </div>
-            </div>
-        `;
-        messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-        document.querySelector('.chat-messages').appendChild(messageElement);
-        scrollToBottom(document.querySelector('.chat-messages'));
 
+        $.ajax({
+            url: '/get_user_details/',
+            method: 'GET',
+            data: { 'profile_id': senderid },
+            dataType: 'json',
+            success: function(data) {
+                let pfp = data.user_details.userPfp || 'static/assets/pfp.png';
+                const userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
+                const messageDetailsHTML = `
+                    <div class="message-details">
+                        <span class="nickname">${sender}</span>
+                        <div class="text-and-time">
+                            <div class="message-text">${message}</div>
+                            <span class="message-time">${getCurrentTime()}</span>
+                        </div>
+                    </div>
+                `;
+                messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+                document.querySelector('.chat-messages').appendChild(messageElement);
+                scrollToBottom(document.querySelector('.chat-messages'));
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch pfp:", error);
+            }
+        });
     }
 }
 
