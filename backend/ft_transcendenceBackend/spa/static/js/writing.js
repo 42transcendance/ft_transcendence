@@ -55,9 +55,9 @@ function messageWith(mode, username) {
     console.log("LAWD HAVE MERCY IM BOUT TO BUST");
     let text = document.getElementById('social-text');
     if (mode == 'set')
-        text.textContent = "Messages: " + username;
+        text.textContent = window.translatedMessages + ": " + username;
     else if (mode == 'reset')
-        text.textContent = "Messages";
+        text.textContent = window.translatedMessages;
     else if (mode == 'general')
-        text.textContent = "Messages" + ": General Chat";
+        text.textContent = window.translatedMessages + ": General Chat";
 }
