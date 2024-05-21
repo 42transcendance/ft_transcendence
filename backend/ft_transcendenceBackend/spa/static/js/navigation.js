@@ -96,9 +96,9 @@ function navbarPressed(buttonPressed ) {
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
 
-            // fetchUserProfile();
-            // fetchGameHistory();
+            // fetchAllData();
             fetchUserData(userId);
+            fetchFriendsList();
 
     
             break;
@@ -107,12 +107,12 @@ function navbarPressed(buttonPressed ) {
 
 
 var navButtons = document.querySelectorAll('.nav-button');
-var canPressButton = true; // Variable to control button press
+var canPressButton = true;
 
 navButtons.forEach(function(button) {
     button.addEventListener('click', function() {
-        if (!canPressButton) return; // Prevent action if button press is not allowed
-        canPressButton = false; // Disable further button presses
+        if (!canPressButton) return;
+        canPressButton = false;
 
         navButtons.forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');

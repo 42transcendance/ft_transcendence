@@ -47,8 +47,7 @@ function showNotification(message, color) {
                 document.body.removeChild(notification);
             }, 2000);
         }
-    });
-    
+    });  
 }
 function removeRequestFromUI(requestId) {
     const requestElement = document.querySelector(`.friend-item[data-id="${requestId}"]`);
@@ -83,34 +82,207 @@ function handleWebSocketMessage(data) {
     }
 }
 
+function fetchFriends() {
+    $.ajax({
+        url: '/get_friends/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(friends) {
+            if (friends.length > 0) {
+                displayFriends('friendsTabContent', friends);
+            } else {
+                displayEmpty('friendsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
 function loadChatWithFriend(friendId) {
-    console.log("start here");    
     const chatMessagesContainer = document.querySelector('.chat-messages');
     chatMessagesContainer.id = `chat-with-${friendId}`;
     chatMessagesContainer.innerHTML = '';
 
-    // Fetch chat history
-    fetch(`/api/chat/history/${friendId}`)
-    .then(response => response.json())
-        .then(data => {
-            //  'data' is array of message objects
+    $.ajax({
+        url: '/api/chat/history',
+        method: 'GET',
+        data: { 'friend_id': friendId },
+        success: function(data) {
             data.forEach(message => {
                 const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message');
+                messageElement.className = 'chat-message';
                 messageElement.innerHTML = `
-                    <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
-                    <div class="message-content">
-                        <div class="message-text">${message.text}</div>
-                        <span class="message-time">${message.time}</span>
+                    <div class="user-icon-container">
+                        <img src="${message.userIcon || 'default-icon.png'}" alt="User" class="user-icon">
+                    </div>
+                    <div class="message-details">
+                        <div class="nicknameAndIcon">
+                            <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
+                        </div>
+                        <div class="text-and-time">
+                            <div class="message-text">${message.text}</div>
+                            <span class="message-time">${message.time}</span>
+                        </div>
                     </div>
                 `;
                 chatMessagesContainer.appendChild(messageElement);
             });
-        })
-        .catch(error => console.error('Failed to load chat history:', error));
-        console.log("done here");
+        },
+        error: function(xhr, status, error) {
+            console.error('Failed to load chat history:', error);
+            // chatMessagesContainer.innerHTML = `<div class="error-message">Failed to load messages. Please try again later.</div>`;
+        }
+    });
 }
 
+
+
+//
+
+function displayFriends(containerId, friends) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    friends.forEach(friend => {
+        container.innerHTML += `
+            <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
+                <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
+                <div class="friend-info">
+                    <div>${friend.username}</div>
+                </div>
+                <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
+            </div>
+        `;  
+    });
+}    
+//////////////////////////////////////////////////////////
+function fetchFriends() {
+    $.ajax({
+        url: '/get_friends/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(friends) {
+            if (friends.length > 0) {
+                displayFriends('friendsTabContent', friends);
+            } else {
+                displayEmpty('friendsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function fetchOutgoingRequests() {
+    $.ajax({
+        url: '/get_outgoing_requests/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(waiting_requests) {
+            if (waiting_requests.length > 0) {
+                displayRequests('outgoingRequestsTabContent', waiting_requests, 'outgoing');
+            } else {
+                displayEmpty('outgoingRequestsTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function fetchIncomingRequests() {
+$.ajax({
+    url: '/get_incoming_requests/', 
+    method: 'GET',
+    dataType: 'json',
+    success: function(waiting_requests) {
+        if (waiting_requests.length > 0) {
+            displayRequests('incomingRequestsTabContent', waiting_requests, 'incoming');
+        } else {
+            displayEmpty('incomingRequestsTabContent');
+        }
+    },
+    error: function(xhr, status, error) {
+        console.error(error);
+    }
+});
+}
+
+function fetchBlockedContacts() {
+    $.ajax({
+        url: '/get_block_list/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(block_list) {
+            if (block_list.length > 0) {
+                displayBlocked('blockedTabContent', block_list);
+            } else {
+                displayEmpty('blockedTabContent');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+
+
+function displayRequests(containerId, requests, type) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    requests.forEach(request => {
+        let actionIcons = '';
+        if (type === 'incoming') {
+            actionIcons = `
+                <i class="bi bi-check-circle accept-request small-icons" data-id="${request.userid}"></i>
+                <i class="bi bi-x-circle decline-request small-icons" data-id="${request.userid}"></i>
+            `;
+        }
+        container.innerHTML += `
+            <div class="friend-item" data-id="${request.userid}">
+                <img src="${request.userPfp}" alt="${request.username}" class="friend-image">
+                <div class="friend-info">
+                    <div>${request.username}</div>
+                </div>
+                ${actionIcons}
+            </div>
+        `;
+    });
+}    
+
+function displayBlocked(containerId, blocked) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    blocked.forEach(block => {
+        container.innerHTML += `
+            <div class="friend-item" data-id="${block.userid}">
+                <img src="${block.userPfp}" alt="${block.username}" class="friend-image">
+                <div class="friend-info">
+                    <div>${block.username}</div>
+                </div>
+                <i class="bi bi-x-circle icon-unblock small-icons" data-id="${block.uesrid}"></i>
+            </div>
+        `;
+    });
+}    
+
+function displayEmpty(containerId) {
+    $.ajax({
+        url: '/get_empty_translate/',
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div style='color: red;'>${data.translations.empty}</div>`;
+        }
+    });
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -123,147 +295,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchBlockedContacts();
     }
 
-    function fetchFriends() {
-        $.ajax({
-            url: '/get_friends/', 
-            method: 'GET',
-            dataType: 'json',
-            success: function(friends) {
-                if (friends.length > 0) {
-                    displayFriends('friendsTabContent', friends);
-                } else {
-                    displayEmpty('friendsTabContent');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
-
-    function fetchOutgoingRequests() {
-        $.ajax({
-            url: '/get_outgoing_requests/', 
-            method: 'GET',
-            dataType: 'json',
-            success: function(waiting_requests) {
-                if (waiting_requests.length > 0) {
-                    displayRequests('outgoingRequestsTabContent', waiting_requests, 'outgoing');
-                } else {
-                    displayEmpty('outgoingRequestsTabContent');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
-
-function fetchIncomingRequests() {
-    $.ajax({
-        url: '/get_incoming_requests/', 
-        method: 'GET',
-        dataType: 'json',
-        success: function(waiting_requests) {
-            if (waiting_requests.length > 0) {
-                displayRequests('incomingRequestsTabContent', waiting_requests, 'incoming');
-            } else {
-                displayEmpty('incomingRequestsTabContent');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-
-    function fetchBlockedContacts() {
-        $.ajax({
-            url: '/get_block_list/', 
-            method: 'GET',
-            dataType: 'json',
-            success: function(block_list) {
-                if (block_list.length > 0) {
-                    displayBlocked('blockedTabContent', block_list);
-                } else {
-                    displayEmpty('blockedTabContent');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
-    }
-
-    function displayFriends(containerId, friends) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        friends.forEach(friend => {
-            container.innerHTML += `
-                <div class="friend-item" data-id="${friend.id}">
-                    <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
-                    <div class="friend-info">
-                        <div>${friend.username}</div>
-                    </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
-                </div>
-            `;  
-        });
-    }    
-
-    function displayRequests(containerId, requests, type) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        requests.forEach(request => {
-            let actionIcons = '';
-            if (type === 'incoming') {
-                actionIcons = `
-                    <i class="bi bi-check-circle accept-request small-icons" data-id="${request.userid}"></i>
-                    <i class="bi bi-x-circle decline-request small-icons" data-id="${request.userid}"></i>
-                `;
-            }
-            container.innerHTML += `
-                <div class="friend-item" data-id="${request.userid}">
-                    <img src="${request.userPfp}" alt="${request.username}" class="friend-image">
-                    <div class="friend-info">
-                        <div>${request.username}</div>
-                    </div>
-                    ${actionIcons}
-                </div>
-            `;
-        });
-    }    
-
-    function displayBlocked(containerId, blocked) {
-        const container = document.getElementById(containerId);
-        container.innerHTML = '';
-        blocked.forEach(block => {
-            container.innerHTML += `
-                <div class="friend-item" data-id="${block.userid}">
-                    <img src="${block.userPfp}" alt="${block.username}" class="friend-image">
-                    <div class="friend-info">
-                        <div>${block.username}</div>
-                    </div>
-                    <i class="bi bi-x-circle icon-unblock small-icons" data-id="${block.uesrid}"></i>
-                </div>
-            `;
-        });
-    }    
-
-    function displayEmpty(containerId) {
-        $.ajax({
-            url: '/get_empty_translate/',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                const container = document.getElementById(containerId);
-                container.innerHTML = `<div style='color: red;'>${data.translations.empty}</div>`;
-            }
-        });
-    }
-
     function acceptFriendRequest(requestId, username) {
         removeRequestFromUI(requestId);
     
@@ -274,6 +305,7 @@ function fetchIncomingRequests() {
             success: function(data) {
                 fetchIncomingRequests();
                 fetchFriends();
+                fetchFriendsList();
                 showNotification("Friend request accepted", "rgb(81, 171, 81)");
             }
         });
@@ -305,7 +337,6 @@ function fetchIncomingRequests() {
         });
     }
 
-    // Handling click events for icons using event delegation
     document.addEventListener('click', function(event) {
         if (event.target.classList.contains('accept-request')) {
 			const friendItem = event.target.closest('.friend-item');
@@ -341,9 +372,10 @@ function fetchIncomingRequests() {
             const friendItem = event.target.closest('.friend-item');
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
-            const userId = friendItem ? friendItem.getAttribute('data-id') : null;
+            console.log("Blocking friend: ", username);
+            const FriendUserId = friendItem ? friendItem.getAttribute('data-id') : null;
             if (userId) {
-                showConfirmBlockModal(userId,username);
+                showConfirmBlockModal(FriendUserId, username);
             }
             else {
                 console.error("User ID not found.");
@@ -355,22 +387,24 @@ function fetchIncomingRequests() {
     
             if (isFriend) {
                 const friendId = isFriend.getAttribute('data-id');
+                const friendName = isFriend.getAttribute('data-username');
                 if (friendId && !(currentChatContext === 'private' && currentRecipientId === friendId)) {
                     currentChatContext = 'private';
                     currentRecipientId = friendId;
                     console.log(`Opening chat with friend ID: ${friendId}`);
                     loadChatWithFriend(friendId);
+                    messageWith("set", friendName);
                 }
             }
-            if (isChannel) {
-                const channelId = isChannel.getAttribute('data-id');
-                if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {
-                    currentChatContext = 'private';
-                    currentRecipientId = channelId;
-                    console.log(`Opening chat with channel ID: ${channelId}`);
-                    openChannelChat(channelId);
-                }
-            }
+            // if (isChannel) {
+            //     const channelId = isChannel.getAttribute('data-id');
+            //     if (channelId && !(currentChatContext === 'channel' && currentRecipientId === channelId)) {
+            //         currentChatContext = 'private';
+            //         currentRecipientId = channelId;
+            //         console.log(`Opening chat with channel ID: ${channelId}`);
+            //         openChannelChat(channelId);
+            //     }
+            // }
         }
         else if (event.target.closest('.global-chat-item')) {
             if (currentChatContext === 'global') {
@@ -379,9 +413,174 @@ function fetchIncomingRequests() {
             }
             currentChatContext = 'global';
             currentRecipientId = null;
-            console.log(`Opening chat with global: `);
             openGlobalChat();
         };
+        
+
+        /////////////////////////////////////////////////////////////////
+        // var friendTabs = document.querySelectorAll('.friend-tab-button');
+
+        
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var friendTabs = document.querySelectorAll('.friend-tab-button');
+    
+        function fetchOutgoingRequests() {
+            $.ajax({
+                url: '/get_outgoing_requests/', 
+                method: 'GET',
+                dataType: 'json',
+                success: function(waiting_requests) {
+                    if (waiting_requests.length > 0) {
+                        displayRequests('outgoingRequestsTabContent', waiting_requests, 'outgoing');
+                    } else {
+                        displayEmpty('outgoingRequestsTabContent');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    
+    function fetchIncomingRequests() {
+        $.ajax({
+            url: '/get_incoming_requests/', 
+            method: 'GET',
+            dataType: 'json',
+            success: function(waiting_requests) {
+                if (waiting_requests.length > 0) {
+                    displayRequests('incomingRequestsTabContent', waiting_requests, 'incoming');
+                } else {
+                    displayEmpty('incomingRequestsTabContent');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+    
+        function fetchBlockedContacts() {
+            $.ajax({
+                url: '/get_block_list/', 
+                method: 'GET',
+                dataType: 'json',
+                success: function(block_list) {
+                    if (block_list.length > 0) {
+                        displayBlocked('blockedTabContent', block_list);
+                    } else {
+                        displayEmpty('blockedTabContent');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+    
+    
+    
+        function displayRequests(containerId, requests, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            requests.forEach(request => {
+                let actionIcons = '';
+                if (type === 'incoming') {
+                    actionIcons = `
+                        <i class="bi bi-check-circle accept-request small-icons" data-id="${request.userid}"></i>
+                        <i class="bi bi-x-circle decline-request small-icons" data-id="${request.userid}"></i>
+                    `;
+                }
+                container.innerHTML += `
+                    <div class="friend-item" data-id="${request.userid}">
+                        <img src="${request.userPfp}" alt="${request.username}" class="friend-image">
+                        <div class="friend-info">
+                            <div>${request.username}</div>
+                        </div>
+                        ${actionIcons}
+                    </div>
+                `;
+            });
+        }    
+    
+        function displayBlocked(containerId, blocked) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            blocked.forEach(block => {
+                container.innerHTML += `
+                    <div class="friend-item" data-id="${block.userid}">
+                        <img src="${block.userPfp}" alt="${block.username}" class="friend-image">
+                        <div class="friend-info">
+                            <div>${block.username}</div>
+                        </div>
+                        <i class="bi bi-x-circle icon-unblock small-icons" data-id="${block.uesrid}"></i>
+                    </div>
+                `;
+            });
+        }    
+    
+        function displayEmpty(containerId) {
+            $.ajax({
+                url: '/get_empty_translate/',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    const container = document.getElementById(containerId);
+                    container.innerHTML = `<div style='color: red;'>${data.translations.empty}</div>`;
+                }
+            });
+        }
+    
+        friendTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                var contentId = this.id + 'Content';
+                var contentDiv = document.getElementById(contentId);
+                var isCurrentlyOpen = this.classList.contains('active-tab');
+                
+                function fetchTabData(tabId) {
+                    switch(tabId) {
+                        case 'friendsTab':
+                            fetchFriends();
+                            break;
+                        case 'outgoingRequestsTab':
+                            fetchOutgoingRequests();
+                            break;
+                        case 'incomingRequestsTab':
+                            fetchIncomingRequests();
+                            break;
+                        case 'blockedTab':
+                            fetchBlockedContacts();
+                            break;
+                        default:
+                            console.log('Unknown tab');
+                    }
+                }
+    
+                // Close all tabs and contents
+                friendTabs.forEach(function(t) {
+                    t.classList.remove('active-tab');
+                    var content = document.getElementById(t.id + 'Content');
+                    if (content) {
+                        content.style.display = 'none'; // Ensure all contents are hidden
+                    }
+                    t.querySelector('.arrow-icon').classList.toggle('arrow-up', false);
+                });
+    
+                // Toggle the clicked tab and its content
+                if (!isCurrentlyOpen) {
+                    this.classList.add('active-tab');
+                    this.querySelector('.arrow-icon').classList.add('arrow-up');
+                    if (contentDiv) {
+                        contentDiv.style.display = 'block'; // Show content
+                        fetchTabData(this.id);
+                    }
+                }
+            });
+        });
     });
 
     // function unblockModal(blockIcon) {
@@ -520,4 +719,57 @@ function fetchIncomingRequests() {
         modal.parentNode.removeChild(modal);
     }
 
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    var friendTabs = document.querySelectorAll('.friend-tab-button');
+
+    friendTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            var contentId = this.id + 'Content';
+            var contentDiv = document.getElementById(contentId);
+            var isCurrentlyOpen = this.classList.contains('active-tab');
+            
+            function fetchTabData(tabId) {
+                switch(tabId) {
+                    case 'friendsTab':
+                        fetchFriends();
+                        break;
+                    case 'outgoingRequestsTab':
+                        fetchOutgoingRequests();
+                        break;
+                    case 'incomingRequestsTab':
+                        fetchIncomingRequests();
+                        break;
+                    case 'blockedTab':
+                        fetchBlockedContacts();
+                        break;
+                    default:
+                        console.log('Unknown tab');
+                }
+            }
+
+            // Close all tabs and contents
+            friendTabs.forEach(function(t) {
+                t.classList.remove('active-tab');
+                var content = document.getElementById(t.id + 'Content');
+                if (content) {
+                    content.style.display = 'none'; // Ensure all contents are hidden
+                }
+                t.querySelector('.arrow-icon').classList.toggle('arrow-up', false);
+            });
+
+            // Toggle the clicked tab and its content
+            if (!isCurrentlyOpen) {
+                this.classList.add('active-tab');
+                this.querySelector('.arrow-icon').classList.add('arrow-up');
+                if (contentDiv) {
+                    contentDiv.style.display = 'block'; // Show content
+                    fetchTabData(this.id);
+                }
+            }
+        });
+    });
 });

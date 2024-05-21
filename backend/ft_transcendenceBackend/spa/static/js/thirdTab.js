@@ -1,40 +1,43 @@
 // friends list 3rd container, profile page
+function fetchFriendsList() {
+    $.ajax({
+        url: '/get_friends/', 
+        method: 'GET',
+        dataType: 'json',
+        success: function(friends) {
+            if (friends.length > 0) {
+                addFriendsListItems3('friendsListContent', friends);
+            } else {
+                displayEmpty('friendsTabContent'); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function addFriendsListItems3(containerId, friendsList) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    // const friendsListContainer = document.querySelector('.friends-list-content');
+    // friendsListContainer.innerHTML = '';
+
+    friendsList.forEach(friend => {
+        container.innerHTML += `
+            <div class="friend-item3" data-id="${friend.userid}">
+                <img src="${friend.userPfp || 'assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                <div class="friend-info">
+                    <div class="friend-nickname" data-user-id="${friend.userid}">${friend.username}</div>
+                </div>
+                <i class="bi bi-person icon-friend-profile"></i>
+            </div>
+        `;
+    });
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     fetchFriendsList();
-
-    function fetchFriendsList() {
-        $.ajax({
-            url: '/friends-list/',
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                addFriendsListItems3(data.friendsList);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-            }
-        });
-    }
-
-    function addFriendsListItems3(friendsList) {
-        const friendsListContainer = document.querySelector('.friends-list-content');
-        friendsListContainer.innerHTML = '';
-    
-        friendsList.forEach(friend => {
-            const friendItem = document.createElement('div');
-            friendItem.classList.add('friend-item3');
-            friendItem.innerHTML = `
-                <img src="${friend.userPfp || 'assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
-                <div class="friend-info">
-                    <div class="friend-nickname" data-user-id="${friend.id}">${friend.username}</div>
-                </div>
-                <i class="bi bi-person icon-friend-profile"></i>
-            `;
-    
-            friendsListContainer.appendChild(friendItem);
-        });
-    }
 });
 
 document.addEventListener('DOMContentLoaded', function() {

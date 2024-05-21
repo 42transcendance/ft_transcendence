@@ -109,9 +109,6 @@
                         </div>
                         <!-- Chats Container -->
                         <div id="chatsContainer" class="content-container">
-                            <!-- Content for Chats -->
-                            <!-- <button class="create-channel-button">{{ translations.cre_cha }}</button>
-                            <button class="join-channel-button">{{ translations.joi_cha }}</button> -->
                             <div id="chatsTabContent" class="chats-tab-content">
                                 <!--EXAMPLE (needs to be removed)-->
                                 <div class="chats-item global-chat-item">
@@ -142,6 +139,9 @@
                                     <i class="bi bi-gear channels-settings icon-settings"></i> 
                                 </div> -->
                             </div>
+                            <div id="chatsTabContent2" class="chats-tab-content2">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -152,9 +152,9 @@
                     <div class="chat-tab">
                         <div class="chat-heading">
                             <i class="bi bi-chat-dots chat-icon"></i>
-                            <span class="social-text">{{ translations.messages }}</span>
+                            <span class="social-text" id="social-text">{{ translations.messages }}: General Chat</span>
                         </div>
-                        <div class="chat-messages" id="">
+                         <div class="chat-messages" id="">
                             <!-- MESSAGE EXANMPLE -->
 
                             <div class="chat-message">
@@ -172,7 +172,7 @@
                                         </div>
                                     </div>
                                     <div class="text-and-time">
-                                        <div class="message-text">test it test it test it test it</div>
+                                        <div class="message-text">test it test it test it test it deeez</div>
                                         <span class="message-time">test it</span>
                                     </div>
                                 </div>
@@ -261,11 +261,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="profile-body">
+                        <div id="profileBody" class="profile-body">
                             <div class="game-history">
                                 
                             </div>
-                            <div class="user-stats">
+                            <div id="userStats" class="user-stats">
                               
                             </div>
                         </div>
@@ -323,6 +323,10 @@
             </div>
         </div>
     </div>
+
+    <script type="text/javascript">
+        window.translatedMessages = "{{ translations.messages }}";
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

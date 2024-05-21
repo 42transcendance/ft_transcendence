@@ -113,35 +113,69 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const chatMessagesContainer = document.querySelector('.chat-messages');
 
     chatMessagesContainer.addEventListener('click', function(event) {
         const target = event.target;
 
-        if (target.classList.contains('messageIcon')) {
+        if (target.closest('.messageIcon')) {
             const parentContainer = target.closest('.nicknameAndIcon');
-            const senderId = parentContainer.querySelector('.nickname').id;
-            console.log("Icon clicked belongs to sender ID:", senderId);
-            handleIconClick(senderId, target);
+            if (parentContainer) {
+                const senderId = parentContainer.querySelector('.nickname').getAttribute('data-user-id');
+                const senderNickname = parentContainer.querySelector('.nickname').textContent;
+                console.log("Icon clicked belongs to sender ID:", senderId);
+                handleIconClick(senderId, senderNickname, target);
+            }
         }
     });
 });
 
-function handleIconClick(senderId, iconElement) {
+function handleIconClick(senderId, senderNickname, iconElement) {
     console.log(`Action triggered for ${senderId} by clicking on`, iconElement);
-    switch (iconElement.className.split(' ')[1]) {
+    switch (iconElement.classList[1]) {
         case 'bi-controller':
             console.log("Controller icon clicked for user:", senderId);
             break;
         case 'bi-plus-circle':
             console.log("Plus circle icon clicked for user:", senderId);
+            addFriend(senderNickname);
             break;
         case 'bi-person':
             console.log("Person icon clicked for user:", senderId);
+            simulateProfileTabClick(senderId);
             break;
         default:
             console.log("Unknown icon clicked for user:", senderId);
     }
 }
 
+function addFriend(senderNickname) {
+    $.ajax({
+        url: '/send_friend_request/',
+        method: 'GET',
+        data: { 'search_term': senderNickname }, // This should be the username if the API expects it
+        success: function() {
+            showNotification("Friend request sent to user: " + senderNickname, "rgb(81, 171, 81)");
+        },
+        error: function(xhr) {
+            showNotification("Failed to send friend request: " + xhr.responseJSON.message, "rgb(168, 64, 64)");
+        }
+    });
+}
+
+function simulateProfileTabClick(senderId) {
+    console.log('Profile view triggered for User ID:', senderId);
+
+    var navButtons = document.querySelectorAll('.nav-button');
+    const profileButton = document.querySelector('button[data-button="profile"]');
+
+
+    navButtons.forEach(btn => btn.classList.remove('active'));
+    profileButton.classList.add('active');
+
+    navbarPressed('profile');
+
+    fetchUserData(senderId);
+}
