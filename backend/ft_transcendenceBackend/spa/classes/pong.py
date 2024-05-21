@@ -16,8 +16,7 @@ class Paddle :
         self.height = 27
         self.x = 7 if side == 'left' else STD_WIDTH - (7 + self.width)
         self.y = STD_HEIGHT / 2 - self.height / 2
-        self.speed = 4
-        self.direction = 'idle'
+        self.speed = 3
 
 class Ball :
     def __init__(self) -> None:
@@ -25,7 +24,7 @@ class Ball :
         self.y = STD_HEIGHT / 2
         self.radius = 3
         self.direction = math.pi
-        self.speed = 2
+        self.speed = 3
 
 class PongGame :
     def __init__(self,  room_id) -> None:
@@ -47,30 +46,6 @@ class PongGame :
         self.rightPlayerName = None
         self.leftPlayerId = None
         self.rightPlayerId = None
-
-        self.leftPlayerDirection = 'idle'
-        self.rightPlayerDirection = 'idle'
-        
-
-    async def setDirection(self, paddle, message):
-        if message == 'wPress':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'up'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'up'
-
-        elif message == 'sPress':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'down'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'down'
-
-        elif message == 'wRelease' or message == 'sRelease':
-            if paddle == 'left':
-                self.leftPlayerDirection = 'idle'
-            elif paddle == 'right':
-                self.rightPlayerDirection = 'idle'
-    
 
     def setPlayer (self, user_id, userName):
         if self.leftPlayerId is None:
@@ -117,32 +92,8 @@ class PongGame :
             },
         }
 
-    async def updatePaddlePositions(self):
-        if self.leftPlayerDirection == 'up':
-            if self.leftPlayerPaddle.y > 0:
-                self.leftPlayerPaddle.y -= self.leftPlayerPaddle.speed
-            elif self.leftPlayerPaddle.y < 0:
-                self.leftPlayerPaddle.y = 0
-
-        elif self.leftPlayerDirection == 'down':
-            if self.leftPlayerPaddle.y < self.height - self.leftPlayerPaddle.height:
-                self.leftPlayerPaddle.y += self.leftPlayerPaddle.speed
-            elif self.leftPlayerPaddle.y > self.height - self.leftPlayerPaddle.height:
-                self.leftPlayerPaddle.y = self.height - self.leftPlayerPaddle.height
-
-        if self.rightPlayerDirection == 'up':
-            if self.rightPlayerPaddle.y > 0:
-                self.rightPlayerPaddle.y -= self.rightPlayerPaddle.speed
-            elif self.rightPlayerPaddle.y < 0:
-                self.rightPlayerPaddle.y = 0
-
-        elif self.rightPlayerDirection == 'down':
-            if self.rightPlayerPaddle.y < self.height - self.rightPlayerPaddle.height:
-                self.rightPlayerPaddle.y += self.rightPlayerPaddle.speed
-            elif self.rightPlayerPaddle.y > self.height - self.rightPlayerPaddle.height:
-                self.rightPlayerPaddle.y = self.height - self.rightPlayerPaddle.height
-
     async def updateBallPosition(self):
+
         self.ball.x += math.cos(self.ball.direction) * self.ball.speed
         self.ball.y += math.sin(self.ball.direction) * self.ball.speed
 
@@ -151,26 +102,30 @@ class PongGame :
             normalizedRelativeIntersectY = relativeIntersectY / (self.leftPlayerPaddle.height / 2)
             bounceAngle = normalizedRelativeIntersectY * (math.pi / 3)
             self.ball.direction = math.pi * 2 - bounceAngle
-            self.ball.speed += 0.5
+            if (self.ball.speed < 10):
+                self.ball.speed += 0.5
 
         elif self.ball.x <= self.leftPlayerPaddle.x + self.leftPlayerPaddle.width - 2:
             self.ball.x = self.width / 2
             self.ball.y = self.height / 2
             self.rightPlayerScore += 1
             self.interval = time.time()
+            self.ball.speed = 3
 
         if self.ball.y >= self.rightPlayerPaddle.y and self.ball.y <= self.rightPlayerPaddle.y + self.rightPlayerPaddle.height and self.ball.x + self.ball.radius >= self.rightPlayerPaddle.x:
             relativeIntersectY = (self.rightPlayerPaddle.y + (self.rightPlayerPaddle.height / 2)) - self.ball.y
             normalizedRelativeIntersectY = relativeIntersectY / (self.rightPlayerPaddle.height / 2)
             bounceAngle = normalizedRelativeIntersectY * (math.pi / 3)
             self.ball.direction = math.pi + bounceAngle
-            self.ball.speed += 0.5
+            if (self.ball.speed < 10):
+                self.ball.speed += 0.5
 
         elif self.ball.x >= self.rightPlayerPaddle.x - 2:
             self.ball.x = self.width / 2
             self.ball.y = self.height / 2
             self.leftPlayerScore += 1
             self.interval = time.time()
+            self.ball.speed = 3
 
         if ((self.ball.y + self.ball.radius) >= self.height):
             self.ball.direction = math.atan2(math.sin(self.ball.direction) * -1, math.cos(self.ball.direction))
@@ -190,11 +145,13 @@ class PongGame :
             await asyncio.sleep(1)
 
     async def gameLoop(self):
+        test = 0
         await self.countdown(5)
         while self.leftPlayerScore < 5 and self.rightPlayerScore < 5:
-            await self.updatePaddlePositions()
             if self.interval != None:
                 if time.time() - self.interval >= 1:
+                    print(test)
+                    test+=1
                     self.interval = None
             else:
                 await self.updateBallPosition()
@@ -211,7 +168,6 @@ class PongGame :
         player2username = response['rightPlayerName']
         player1score = response['leftPlayerScore']
         player2score = response['rightPlayerScore']
-        print("usernames : ", player1username, player2username)
 
         user1 = await sync_to_async(CustomUser.objects.get)(username=player1username)
         user2 = await sync_to_async(CustomUser.objects.get)(username=player2username)
@@ -220,8 +176,8 @@ class PongGame :
         game_history_entry1 =  await sync_to_async(GameHistory.objects.create)(user=user1, game=game)
         game_history_entry2 =  await sync_to_async(GameHistory.objects.create)(user=user2, game=game)
         await channel_layer.group_send(
-            self.room_id,
-            {
-                'type': 'ending.game',
-                'gamestate': self,
-            })
+        self.room_id,
+        {
+            'type': 'ending.game',
+            'gamestate': self,
+        })

@@ -2,15 +2,23 @@
 function hideButtons(){
     var duelButton = document.querySelectorAll('#button-container button')[0];
     var tournamentButton = document.querySelectorAll('#button-container button')[1];
+    var joinPrivateGameButton = document.querySelector('.join-private-game-form-button');
+    var createPrivateGameButton = document.querySelector('.create-private-game-button');
     duelButton.style.visibility = 'hidden';
     tournamentButton.style.visibility = 'hidden';
+    joinPrivateGameButton.style.visibility = 'hidden';
+    createPrivateGameButton.style.visibility = 'hidden';
 }
 
 function showButtons(){
     var duelButton = document.querySelectorAll('#button-container button')[0];
     var tournamentButton = document.querySelectorAll('#button-container button')[1];
+    var joinPrivateGameButton = document.querySelector('.join-private-game-form-button');
+    var createPrivateGameButton = document.querySelector('.create-private-game-button');
     duelButton.style.visibility = 'visible';
     tournamentButton.style.visibility = 'visible';
+    joinPrivateGameButton.style.visibility = 'visible';
+    createPrivateGameButton.style.visibility = 'visible';
 }
 function hideCanvas() {
     var pongGame = document.getElementById('gameCanvas');

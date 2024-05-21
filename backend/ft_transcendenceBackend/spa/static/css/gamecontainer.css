@@ -24,7 +24,7 @@
 
 #principal-container {
     width: auto;
-    height: 70%;
+    height: 100%;
     /* background-color: rgba(124, 48, 155, 0.7);  */
     justify-content: center;
     position : relative
@@ -97,6 +97,38 @@
     top: 0;
     left: 0;
     display: none;
+}
+
+.waiting-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    visibility: hidden;
+    justify-content: center;
+    align-items: center;
+}
+
+.waiting-text {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    animation: pulse 1s infinite alternate; /* Apply pulsating animation */
+}
+
+@keyframes pulse {
+    from {
+        opacity: 0.5; /* Lower opacity */
+        transform: scale(1);
+    }
+    to {
+        opacity: 1; /* Full opacity */
+        transform: scale(1.1); /* Scale up slightly */
+    }
 }
 
 #next-match{

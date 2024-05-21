@@ -64,11 +64,11 @@ class DuelsManager :
         self.PublicDuelRooms.add(newRoom)
         return room_id
     
-    def create_private_room(self, user_id, whitelisted_player_id) -> str:
+    def create_private_room(self, user_id) -> str:
         room_id = 'private-pong-' + str(uuid4())[:8]
         while self.get_room_by_id(room_id):
             room_id = 'private-pong-' + str(uuid4())[:8]
-        newRoom = PrivateDuelRoom(room_id, whitelisted_player_id)
+        newRoom = PrivateDuelRoom(room_id)
         self.PrivateDuelRooms.add(newRoom)
         self.add_user_to_room(user_id, room_id)
         return room_id
@@ -80,9 +80,12 @@ class DuelsManager :
                 return(room.room_id)
         return None
 
-    def delete_room(self, room_id):
+    async def delete_room(self, room_id):
         targetRoom = self.get_room_by_id(room_id)
-        if targetRoom.room_id.startswith("public-"):
-            self.PublicDuelRooms.remove(targetRoom)
-        elif targetRoom.room_id.startswith("private-"):
-            self.PrivateDuelRooms.remove(targetRoom)
+        if targetRoom:
+            if targetRoom.room_id.startswith("public-"):
+                await targetRoom.stopGameTask()
+                self.PublicDuelRooms.remove(targetRoom)
+            elif targetRoom.room_id.startswith("private-"):
+                await targetRoom.stopGameTask()
+                self.PrivateDuelRooms.remove(targetRoom)

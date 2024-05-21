@@ -3,7 +3,7 @@ function startDuelGame() {
     Pong = new Game();
     hideButtons();
 
-    Pong.start();
+    Pong.joinMatchmaking();
 
     checkGameState(Pong);
 }
@@ -20,5 +20,5 @@ function checkGameState(Pong) {
 function endGameDuel(Pong){
     showButtons();
     hideCanvas();
-    winningMsg(Pong);
+    // winningMsg(Pong);
 }

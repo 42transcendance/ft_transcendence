@@ -1,51 +1,239 @@
+const DIRECTION = {
+
+	IDLE: 0,
+	UP: 1,
+	DOWN: 2,
+	LEFT: 3,
+	RIGHT: 4,
+};
+
+// The paddle object (The two lines that move up and down)
+let Paddle = {
+
+	new: function (side, username) {
+
+		return {
+			username: username,
+			width: null,
+			height: null,
+			x: null,
+			y: null,
+			move: DIRECTION.IDLE,
+			speed: null,
+		};
+	},
+};
+
 class Game {
 	constructor() {		
 		this.principalContainer = document.getElementById('principal-container');
+		this.buttonContainer = document.getElementById('button-container');
+		this.waitingOverlay = document.getElementById('waitingOverlay');
+		this.buttonContainer.style.display = 'none';
+
+		this.over = false;
+		this.game_running = false
+		
 		this.canvas = document.getElementById('gameCanvas');
 		this.context = this.canvas.getContext('2d');
 		
 		this.canvas.width = this.principalContainer.clientWidth;
-		this.canvas.height = this.principalContainer.clientHeight;
+		this.canvas.height = this.principalContainer.clientWidth * 0.67;
 
 		this.canvas.style.width = this.canvas.width + 'px';
 		this.canvas.style.height = this.canvas.height + 'px';
 
 		this.color = '#1f2938';
+		this.playerPaddle = null;
+
+		this.test = 0;
+	}
+
+	joinMatchmaking() {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
+
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'join.matchmaking',
+			}));
+		};
+		this.wsListen();
+		this.animate();
+	}
+
+	createPrivateGame() {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
+
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'create.private.game',
+			}));
+		};
+		this.wsListen();
+		this.animate();
+	}
+
+	joinPrivateGame(room_id) {
+		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+	
+		this.pongSocket.onopen = () => {
+			this.connected = true;
+
+			this.pongSocket.send(JSON.stringify({ 
+				'type':'join.private.game',
+				'room_id': room_id,
+			}));
+		};
+		this.wsListen();
+		this.animate();
 	}
 
 	wsListen() {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
-			console.log(wsData);
 			switch (wsData.type) {
+
+				case ('game.setup'):
+					this.side = wsData.side;
+					this.username = wsData.username;
+					this.user_id = wsData.user_id;
+					this.playerPaddle = Paddle.new.call(this, this.side, this.username);
+					break ;
+
+				case ('matchmaking'):
+					this.waitingOverlay.style.visibility = 'visible';
+					break ;
+
 				case ('game.starting'):
-					this.game_running = true
+					this.waitingOverlay.style.visibility = 'hidden';
+					this.game_running = true;
 					this.inputsListen();
 					break ;
+
 				case ('game.state'):
 					this.lastGameState = wsData;
+					
+					this.diff = this.canvas.width / wsData.width;
+					if (this.test === 0) {
+						if (this.side === 'left') {
+							this.playerPaddle.x = wsData.leftPlayerPaddle.x * this.diff;
+							this.playerPaddle.y = wsData.leftPlayerPaddle.y * this.diff;
+							this.playerPaddle.width = wsData.leftPlayerPaddle.width * this.diff;
+							this.playerPaddle.height = wsData.leftPlayerPaddle.height * this.diff;
+							this.playerPaddle.speed = wsData.leftPlayerPaddle.speed * this.diff;
+						}
+						else if (this.side === 'right') {
+							this.playerPaddle.x = wsData.rightPlayerPaddle.x * this.diff;
+							this.playerPaddle.y = wsData.rightPlayerPaddle.y * this.diff;
+							this.playerPaddle.width = wsData.rightPlayerPaddle.width * this.diff;
+							this.playerPaddle.height = wsData.rightPlayerPaddle.height * this.diff;
+							this.playerPaddle.speed = wsData.rightPlayerPaddle.speed * this.diff;
+						}
+						this.test = 1;
+					}
+					
 					break ;
+
 				case ('countdown'):
 					this.countdown = wsData.countdown;
 					break ;
+				
+				case ('notification'):
+					console.log(wsData);
+					break;
+
 				case ('ending.game'):
+					console.log("Ending game");
 					this.game_running = false;
 
-					this.stopAnimation(this.animationId);
-					this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
-					
+					this.endGame(this.animationId);
+					this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 					break;
+
 				default:
 					break;
 			}
-			
         };
 
         this.pongSocket.onerror = (error) => {
             console.error('WebSocket error:', error);
         };
     }
-	
+
+	inputsListen() {
+		let wKeyPressed = false;
+		let sKeyPressed = false;
+
+		document.addEventListener('keydown', (key) => {		
+			if (key.key === 'w') {
+				this.playerPaddle.move = DIRECTION.UP;
+				wKeyPressed = true;
+			}
+
+			if (key.key === 's') {
+				this.playerPaddle.move = DIRECTION.DOWN;
+				sKeyPressed = true;
+			}
+		});
+
+		document.addEventListener('keyup', (key) => {
+			if (key.key === 'w') {
+				wKeyPressed = false;
+				if (sKeyPressed === true) this.playerPaddle.move = DIRECTION.DOWN;
+			}
+			if (key.key === 's') {
+				sKeyPressed = false;
+				if (wKeyPressed === true) this.playerPaddle.move = DIRECTION.UP;
+			}
+			if (sKeyPressed === false && wKeyPressed === false) this.playerPaddle.move = DIRECTION.IDLE;
+		});
+	}
+
+	updatePaddlePosition() {
+		if (this.playerPaddle.move === DIRECTION.UP) {
+			if ((this.playerPaddle.y - this.playerPaddle.speed) <= 0) this.playerPaddle.y = 0;
+			else this.playerPaddle.y -= this.playerPaddle.speed;
+		}
+		else if (this.playerPaddle.move === DIRECTION.DOWN) {
+			if (((this.playerPaddle.y + this.playerPaddle.height) + this.playerPaddle.speed) >= this.canvas.height) this.playerPaddle.y = this.canvas.height - this.playerPaddle.height;
+			else this.playerPaddle.y += this.playerPaddle.speed;
+		}
+	}
+
+	animate() {
+		if (this.playerPaddle != null) {
+			this.updatePaddlePosition();
+			
+			if (this.game_running === true)
+			this.pongSocket.send(JSON.stringify({ 
+				'type': 'user.update',
+				'paddleX': this.playerPaddle.x / this.diff,
+				'paddleY': this.playerPaddle.y / this.diff,
+			}));
+		}
+		this.draw();
+
+    	this.animationId = requestAnimationFrame(() => this.animate());
+	}
+
+	draw() {
+		if (!this.lastGameState) return;
+
+		this.drawBoard(this.lastGameState);
+		if (this.countdown > 0) this.drawCountdown(this.lastGameState, this.countdown);
+	}
+
+	endGame() {
+		cancelAnimationFrame(this.animationId);
+		this.over = true;
+		this.buttonContainer.style.display = 'flex';
+		this.waitingOverlay.style.visibility = 'hidden';
+	}
+
 	drawCountdown(wsData, count) {
 		const diff = this.canvas.width / wsData.width;
 		this.context.strokeStyle = 'white';
@@ -71,8 +259,10 @@ class Game {
 		
 		//Draw The paddle
 		this.context.fillStyle = '#ffffff';
-		this.context.fillRect( (wsData.leftPlayerPaddle.x * diff), (wsData.leftPlayerPaddle.y * diff), (wsData.leftPlayerPaddle.width * diff), (wsData.leftPlayerPaddle.height * diff));
-		this.context.fillRect( (wsData.rightPlayerPaddle.x * diff), (wsData.rightPlayerPaddle.y * diff), (wsData.rightPlayerPaddle.width * diff), (wsData.rightPlayerPaddle.height * diff));
+		this.context.fillRect( this.playerPaddle.x, this.playerPaddle.y, this.playerPaddle.width, this.playerPaddle.height );
+		if (this.side == 'left') this.context.fillRect( (wsData.rightPlayerPaddle.x * diff), (wsData.rightPlayerPaddle.y * diff), (wsData.rightPlayerPaddle.width * diff), (wsData.rightPlayerPaddle.height * diff));
+		else if (this.side == 'right') this.context.fillRect( (wsData.leftPlayerPaddle.x * diff), (wsData.leftPlayerPaddle.y * diff), (wsData.leftPlayerPaddle.width * diff), (wsData.leftPlayerPaddle.height * diff));
+
 
 		//Draw The Score
 		this.context.setLineDash([]);
@@ -88,84 +278,4 @@ class Game {
 		this.context.fill();
 	}
 
-	connect() {
-		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
-	
-		this.pongSocket.onopen = () => {
-			this.connected = true;
-
-			this.pongSocket.send(JSON.stringify({ 
-				'type':'join.matchmaking',
-			}));
-		};
-		this.wsListen();
-	}
-
-	inputsListen() {
-		// Creating events for movements on keydown
-		let wkeypressed = false
-		let skeypressed = false
-
-		document.addEventListener('keydown', (key) => {
-			if (key.key === 'w') {
-				if (wkeypressed == false) {
-					this.pongSocket.send(JSON.stringify({ 
-						'type':'user.input',
-						'message':'wPress',
-					}));
-					wkeypressed = true
-				}
-			}
-
-			if (key.key === 's') {
-				if (skeypressed == false) {
-					this.pongSocket.send(JSON.stringify({ 
-						'type':'user.input',
-						'message':'sPress',
-					}));
-					skeypressed = true
-				}
-			}
-		});
-
-		document.addEventListener('keyup', (key) => {
-			// Player key realease
-			if (key.key === 'w') {
-				this.pongSocket.send(JSON.stringify({ 
-					'type':'user.input',
-					'message':'wRelease',
-				}));
-				wkeypressed = false
-			}
-			if (key.key === 's') {
-				this.pongSocket.send(JSON.stringify({ 
-					'type':'user.input',
-					'message':'sRelease',
-				}));
-				skeypressed = false
-			}
-		});
-	}
-
-	animate() {
-		console.log("Animating");
-		this.draw();
-    	this.animationId = requestAnimationFrame(() => this.animate());
-	}
-
-	stopAnimation() {
-		cancelAnimationFrame(this.animationId);
-	}
-
-	draw() {
-		if (!this.lastGameState) return;
-
-		this.drawBoard(this.lastGameState);
-		if (this.countdown > 0) this.drawCountdown(this.lastGameState, this.countdown);
-	}
-
-	start() {
-		this.connect();
-		this.animate();
-	}
 }
