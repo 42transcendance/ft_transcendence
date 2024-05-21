@@ -1,39 +1,40 @@
-function showDuelForm() {
-    var duelForm = document.getElementById('duel-form');
-    duelForm.style.visibility = 'visible';
-    removeTournamentForm();
-    removeWinningMessage();
-    removeWinTournament();
-}
-
 function showTournamentForm() {
-    removeTournamentForm();
-    removeWinTournament();
-    createTournamentForm();
-    var tournamentForm = document.getElementById('tournament-form');
-    var tournamentInputContainer = document.getElementById('tournament-input-container');
+    $.ajax({
+        url: "get_user_details",
+        method: "GET",
+        success: function(data) {
+        removeTournamentForm();
+        removeWinTournament();
+        createTournamentForm(data);
+        var tournamentForm = document.getElementById('tournament-form');
+        var tournamentInputContainer = document.getElementById('tournament-input-container');
 
-    var addPlayerButtonContainer = createPlayerButtonContainer();
-    tournamentInputContainer.appendChild(addPlayerButtonContainer);
+        var addPlayerButtonContainer = createPlayerButtonContainer();
+        tournamentInputContainer.appendChild(addPlayerButtonContainer);
 
-    function createPlayerButtonContainer() {
-        var container = document.createElement('div');
-        container.className = 'grid-item';
+        function createPlayerButtonContainer() {
+            var container = document.createElement('div');
+            container.className = 'grid-item';
 
-        var addButton = document.createElement('button');
-        addButton.type = 'button';
-        addButton.className = 'add-player-button';
-        addButton.textContent = '+';
-        addButton.addEventListener('click', addPlayerInput);
+            var addButton = document.createElement('button');
+            addButton.type = 'button';
+            addButton.className = 'add-player-button';
+            addButton.textContent = '+';
+            addButton.addEventListener('click', addPlayerInput);
 
-        container.appendChild(addButton);
+            container.appendChild(addButton);
 
-        return container;
-    }
-    tournamentForm.style.visibility = 'visible';
-    var duelForm = document.getElementById('duel-form');
-    duelForm.style.visibility = 'hidden';
-    removeWinningMessage() ;
+            return container;
+        }
+        tournamentForm.style.visibility = 'visible';
+        var duelForm = document.getElementById('duel-form');
+        duelForm.style.visibility = 'hidden';
+        removeWinningMessage() ;
+    },
+        error: function(xhr, status, error) {
+            console.error("Failed to fetch user details:", error);
+        }
+    });
 }
 
 function removeTournamentForm(){
@@ -45,45 +46,52 @@ function removeTournamentForm(){
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    var duelButton = document.querySelector('#button-container button');
-    duelButton.addEventListener('click', showDuelForm);
-
     var tournamentButton = document.querySelectorAll('#button-container button')[1];
     tournamentButton.addEventListener('click', showTournamentForm);
 
-    var startGameButton = document.querySelector('#duel-form button');
-    startGameButton.addEventListener('click', startDuelGame);
+    var duelButton = document.querySelector('#button-container button');
+    duelButton.addEventListener('click', startDuelGame);
 
 });
 
 function addPlayerInput() {
-    var tournamentInputContainer = document.getElementById('tournament-input-container');
-    var playerCount = tournamentInputContainer.querySelectorAll('.player-input').length;
+    $.ajax({
+        url: "tournament_form_translate",
+        method: "GET",
+        success: function(data) {
+            var tournamentInputContainer = document.getElementById('tournament-input-container');
+            var playerCount = tournamentInputContainer.querySelectorAll('.player-input').length;
+        
+            if (playerCount < 8) {
+                var newPlayerLabel = document.createElement('label');
+                newPlayerLabel.textContent = data.translations.player + (playerCount + 1) + ':';
+        
+                var newPlayerInput = document.createElement('input');
+                newPlayerInput.type = 'text';
+                newPlayerInput.className = 'player-input';
+                newPlayerInput.name = 'player' + (playerCount + 1);
+                newPlayerInput.required = true;
+        
+                var newPlayerButtonContainer = createPlayerButtonContainer();
+        
+                var playerInputContainer = document.createElement('div');
+                playerInputContainer.className = 'grid-item';
+                playerInputContainer.appendChild(newPlayerLabel);
+                playerInputContainer.appendChild(newPlayerInput);
+        
+                tournamentInputContainer.replaceChild(playerInputContainer, tournamentInputContainer.lastElementChild);
+                tournamentInputContainer.appendChild(newPlayerButtonContainer);
+        
+                if (playerCount === 7) {
+                    newPlayerButtonContainer.style.display = 'none';
+                }
+            }
 
-    if (playerCount < 8) {
-        var newPlayerLabel = document.createElement('label');
-        newPlayerLabel.textContent = 'Player ' + (playerCount + 1) + ':';
-
-        var newPlayerInput = document.createElement('input');
-        newPlayerInput.type = 'text';
-        newPlayerInput.className = 'player-input';
-        newPlayerInput.name = 'player' + (playerCount + 1);
-        newPlayerInput.required = true;
-
-        var newPlayerButtonContainer = createPlayerButtonContainer();
-
-        var playerInputContainer = document.createElement('div');
-        playerInputContainer.className = 'grid-item';
-        playerInputContainer.appendChild(newPlayerLabel);
-        playerInputContainer.appendChild(newPlayerInput);
-
-        tournamentInputContainer.replaceChild(playerInputContainer, tournamentInputContainer.lastElementChild);
-        tournamentInputContainer.appendChild(newPlayerButtonContainer);
-
-        if (playerCount === 7) {
-            newPlayerButtonContainer.style.display = 'none';
+    },
+        error: function(xhr, status, error) {
+            console.error("Failed to fetch user details:", error);
         }
-    }
+    });
 }
 
 function createPlayerButtonContainer() {
@@ -101,7 +109,7 @@ function createPlayerButtonContainer() {
     return container;
 }
 
-function createTournamentForm() {
+function createTournamentForm(data) {
     var form = document.createElement("form");
     form.id = "tournament-game-form";
 
@@ -115,13 +123,18 @@ function createTournamentForm() {
 
         var label = document.createElement("label");
         label.setAttribute("for", "player" + i);
-        label.textContent = "Player " + i + ":";
+        label.textContent = data.translations.player + i + ":";
 
         var input = document.createElement("input");
         input.type = "text";
         input.className = "player-input";
         input.name = "player" + i;
         input.required = true;
+        if (i === 1) {
+            input.value = data.user_details.username;
+            input.readOnly = true;
+            input.style.color = "grey";
+        }
 
         gridItem.appendChild(label);
         gridItem.appendChild(input);
@@ -136,11 +149,9 @@ function createTournamentForm() {
     ButtonDiv.style.justifyContent = "center";
     ButtonDiv.appendChild(startButton);
     startButton.type = "button";
-    startButton.textContent = "Start Tournament";
+    startButton.textContent = data.translations.start_tournament;
     startButton.classList = "send-button";
     
-    // startButton.style.left = "35%";
-    // startButton.style.position = "relative";
     startButton.addEventListener('click', startTournament);
 
     form.appendChild(inputContainer);

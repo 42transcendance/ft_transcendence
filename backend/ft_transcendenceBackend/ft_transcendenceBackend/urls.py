@@ -25,6 +25,7 @@ from spa.usersManagement import pfp_utils
 from spa.usersManagement import game_history
 from spa.translate import modal_translate
 from spa.translate import profile_friends_translate
+from spa.translate import tournament_translate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -51,5 +52,11 @@ urlpatterns = [
     path('get_empty_translate/', profile_friends_translate.get_empty_translate, name='get_empty_translate'),
     path('get_block_translate/', modal_translate.get_block_translate, name='get_block_translate'),
     path('get_notif_translate/', modal_translate.get_notif_translate, name='get_notif_translate'),
+    path('tournament_form_translate/', tournament_translate.tournament_form_translate, name='tournament_form_translate'),
+    path('tournament_next_translate/', tournament_translate.tournament_next_translate, name='tournament_next_translate'),
+    path('tournament_win_translate/', tournament_translate.tournament_win_translate, name='tournament_win_translate'),
+    path('tournament_winmsg_translate/', tournament_translate.tournament_winmsg_translate, name='tournament_winmsg_translate'),
+    path('change_language/', views.change_language, name='change_language'),
 ]
+
 
