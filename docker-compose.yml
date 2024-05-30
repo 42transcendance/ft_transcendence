@@ -38,7 +38,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/backend
+      device: /home/ma1iik/ft_transcendence/backend
   postgresql:
     driver: local
     driver_opts:

@@ -1,15 +1,14 @@
 function adjustGameContainerSize() {
     const gameContainer = document.getElementById('inner-container2');
     if (gameContainer) {
-        const width = gameContainer.offsetWidth; 
-        const height = (2 / 3) * width; 
+        const width = gameContainer.offsetWidth;
+        const height = (2 / 3) * width;
         gameContainer.style.height = `${height}px`;
     }
 }
 
 // containers visibility management
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
-    
     if (isVisible) {
         if (container.classList.contains(slideOutClass)) {
             container.classList.remove(slideOutClass);
@@ -31,80 +30,80 @@ function setContainerVisibility(container, isVisible, slideOutClass, slideInClas
     }
 }
 
-function navbarPressed(buttonPressed ) {
-    // Define icons and tabs
-    var chatIcon = document.querySelector('.chat');
-    var settingsIcon = document.querySelector('.settings');
-    var profileIcon = document.querySelector('.friends');
-    var gameIcon = document.querySelector('.play');
-
+function showTab(route) {
     var chatTab = document.querySelector('.chat-tab');
     var settingsTab = document.querySelector('.settings-tab');
     var profileTab = document.querySelector('.profile-tab');
     var gameTab = document.querySelector('.game-container');
 
-    // Define container divs
     var firstTab = document.querySelector('.first-tab');
     var secondTab = document.querySelector('.second-tab');
     var thirdTab = document.querySelector('.third-tab');
 
     const gameContainer = document.getElementById('inner-container2');
 
-    switch (buttonPressed) {
+    var navButtons = document.querySelectorAll('.nav-button');
+    navButtons.forEach(function(button) {
+        button.classList.remove('active');
+        if (button.getAttribute('data-button') === route) {
+            button.classList.add('active');
+        }
+    });
+
+    switch (route) {
         case 'play':
             adjustGameContainerSize();
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
-    
-            // Hide all tabs' content
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'none';
             gameTab.style.display = 'block';
             break;
         case 'chat':
-            gameContainer.style.height = `${"75"}vh`;
+            gameContainer.style.height = "75vh";
             setContainerVisibility(firstTab, true, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
-    
             chatTab.style.display = 'flex';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'none';
             gameTab.style.display = 'none';
             break;
         case 'settings':
-            gameContainer.style.height = `${"75"}vh`;
+            gameContainer.style.height = "75vh";
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
-    
             chatTab.style.display = 'none';
             settingsTab.style.display = 'block';
             profileTab.style.display = 'none';
             gameTab.style.display = 'none';
             break;
         case 'profile':
-            gameContainer.style.height = `${"75"}vh`;
+            gameContainer.style.height = "75vh";
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'block';
             gameTab.style.display = 'none';
-
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
-
-            // fetchAllData();
             fetchUserData(userId);
             fetchFriendsList();
-
-    
             break;
-    }  
+    }
 }
 
+function navigate(route) {
+    history.pushState(null, null, `#${route}`);
+    showTab(route);
+}
+
+function navbarPressed(buttonPressed) {
+    navigate(buttonPressed);
+}
 
 var navButtons = document.querySelectorAll('.nav-button');
 var canPressButton = true;
@@ -121,18 +120,21 @@ navButtons.forEach(function(button) {
         navbarPressed(buttonPressed);
 
         setTimeout(function() {
-            canPressButton = true; // Re-enable button presses after 1 second
-        }, 500); // 1 second delay
+            canPressButton = true;
+        }, 500); 
     });
 });
-
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     var thirdTab = document.querySelector('.third-tab');
 
-    // Set initial visibility of the tabs
-    // setInitialVisibility();
     thirdTab.classList.add('right-slide-out');
+
+    const initialRoute = window.location.hash.substring(1) || 'chat';
+    showTab(initialRoute);
+
+    window.addEventListener('popstate', function() {
+        const route = window.location.hash.substring(1);
+        showTab(route);
+    });
 });

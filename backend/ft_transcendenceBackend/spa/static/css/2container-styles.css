@@ -136,7 +136,7 @@
 
 .nickname {
     font-weight: bold;
-    font-size: 0.9em;
+    font-size: 0.9rem;
     margin-bottom: 0px;
     margin-top: 5px;
     /* border: 1px solid red; */
@@ -154,22 +154,22 @@
     max-width: 100%;
     /* border: 1px solid red; */
     margin-right: auto;
-    margin-top: 0.2em;
-    font-size: 0.83em;
+    margin-top: 0.2rem;
+    font-size: 0.83rem;
     padding: 0px;
 }
 
 .message-time {
     align-self: flex-start; /* Aligns time to the end */
     color: #999999;
-    font-size: 0.7em; 
+    font-size: 0.7rem; 
     /* border: 1px solid red; */
     margin-left: auto;
 }
 
 /* SETTINGS TAB */
 .settings-tab {
-    font-size: 1.3em;
+    font-size: 1.3rem;
     display: none;
     flex-direction: column;
     height: 100vh;
@@ -188,13 +188,14 @@
 }
 
 .settings-icon {
-    font-size: 22px;
+    /* font-size: px; */
     padding-left: 10px;
     margin-right: 10px;
 }
 
 .settings-body {
     display: flex;
+    justify-content: space-between;
     /* justify-content: center; */
     /* align-items: center; */
     align-content: center;
@@ -202,7 +203,7 @@
     max-height: 63vh;
     margin: 20px auto;
     width: 80%;
-    margin-top: 5%;
+    margin-top: 2%;
 }
 
 /* User Profile Section */
@@ -220,12 +221,17 @@
 
 .user-info, .tfa-info {
     margin: 0 10%;
-    margin-bottom: 40px;
+    margin-bottom: 1.5rem;
 }
 
 .username-label, .tfa-label , .language-label{
     font-weight: bold;
-    margin-bottom: 10px;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.current-username, .current-tfa, .language-select {
+    font-size: 1.1rem;
 }
 
 .username-and-button, .tfa-and-button {
@@ -235,7 +241,7 @@
 }
 
 .change-username-button, .tfa-button, .change-language-button {
-    padding: 6px 12px;
+    padding: 2px 12px;
     font-size: 14px;
     border-radius: 5px;
     cursor: pointer;
@@ -252,13 +258,14 @@
     justify-content: space-around;
     align-items: center;
     margin-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .settings-toggles .toggle-item {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-size: 1rem;
 }
 
 .toggle-switch {
@@ -300,8 +307,8 @@
 }
 
 .settings-button {
-    margin-top: 4%;
-    padding: 5px 20px;
+    margin: 2%;
+    padding: 2px 20px;
     border-radius: 5px;
     cursor: pointer;
 }
@@ -566,7 +573,7 @@
 
 .language-selection {
     margin: 0 10%;
-    margin-bottom: 40px; 
+    margin-bottom: 1.5rem; 
 }
 
 .language-dropdown {

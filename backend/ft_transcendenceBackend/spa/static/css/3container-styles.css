@@ -55,7 +55,7 @@
 
 
 .icon-chat, .icon-controller, .icon-settings, .icon-block, .accept-request, .decline-request {
-    font-size: 1em;
+    font-size: 1rem;
     /* margin-left: auto;  */
     cursor: pointer;
     padding: 0 5px; 
@@ -83,7 +83,7 @@
 }
 
 .icon-friend-profile {
-    font-size: 1.5em;
+    font-size: 1.5rem;
     margin-left: auto; 
     cursor: pointer;
     padding: 0 5px; 
@@ -145,22 +145,22 @@
 }
 
 .messageIcon {
-    margin-left: 0.3em;
+    margin-left: 0.3rem;
 }
 
 .messageIcons {
-    margin-left: 0.2em;
+    margin-left: 0.2rem;
     display: none; /* Layout the icons in a row */
     /* border: 1px solid rgba(49, 48, 48, 0.5); */
     /* border-radius: 10px;
-    padding-left: 0.35em;
-    padding-right: 0.35em; */
+    padding-left: 0.35rem;
+    padding-right: 0.35rem; */
 
 }
 
 .messageAddIcon {
-    font-size: 0.85em;
-    margin-left: 0.5em;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
 }
 
 .messageIcon:hover {
@@ -185,9 +185,9 @@
 
 .bi-caret-right-fill {
     color: rgba(41, 41, 95, 0.7);
-    font-size: 0.75em;
+    font-size: 0.75rem;
     padding-top: 3px;
-    margin-left: 0.4em;
+    margin-left: 0.4rem;
 }
 
 /* .bi-caret-right-fill:hover {

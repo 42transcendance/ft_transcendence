@@ -9,9 +9,9 @@ function connectWebSocket() {
         console.log("WebSocket connection established.");
     };
 
-    chatSocket.onmessage = function(event) {
-        const data = JSON.parse(event.data);
-        handleWebSocketMessage(data);
+    chatSocket.onmessage = async function(e) {
+        const data = JSON.parse(e.data);
+        await handleWebSocketMessage(data);
     };
 
     chatSocket.onerror = function(error) {
@@ -23,7 +23,29 @@ function connectWebSocket() {
         setTimeout(connectWebSocket, 1000);
     };
 
-    function handleWebSocketMessage(data) {
+    function msgFromBlocked(source_user_id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/get_block_list/', 
+                method: 'GET',
+                dataType: 'json',
+                success: function(block_list) {
+                    if (block_list.length > 0) {
+                        const isBlocked = block_list.some(block => source_user_id == block.userid);
+                        resolve(isBlocked);
+                    } else {
+                        resolve(false);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    reject(error);
+                }
+            });
+        });
+    }       
+
+    async  function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
                 console.log("websocket: private message");
@@ -31,12 +53,20 @@ function connectWebSocket() {
                 addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
-            case 'global.message':
-                console.log("websocket: global message");
-                console.log(data.source_user);
-                addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
-                // displayGlobalMessage(data);
-                break;
+                case 'global.message':
+                    console.log("websocket: global message");
+                    console.log(data.source_user);
+                    try {
+                        const isBlocked = await msgFromBlocked(data.source_user_id);
+                        if (isBlocked) {
+                            console.log("Message blocked.");
+                            return;
+                        }
+                        addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
+                    } catch (error) {
+                        console.error("Error checking block list:", error);
+                    }
+                    break;
             case 'notification':
                 displayNotification(data.message);
                 break;
