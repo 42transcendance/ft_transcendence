@@ -28,6 +28,7 @@ function updateUI(action, containerId, contentOrId, isId = false) { //used to re
             console.warn(`Invalid action '${action}'. Use 'add' or 'delete'.`);
     }
 }
+
 function showNotification(message, color) {
     $.ajax({
         url: '/get_notif_translate/',
@@ -49,6 +50,23 @@ function showNotification(message, color) {
         }
     });  
 }
+
+function sendGameInvite(friendId) {
+    if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
+        const inviteMessage = {
+            type: 'game.invite.send',
+            invitedUser: friendId
+        };
+        window.chatSocket.send(JSON.stringify(inviteMessage));
+        showNotification("Game request sent !", "rgb(81, 171, 81)");
+        console.log("Game invite sent successfully");
+    } else {
+        console.error("WebSocket is not connected.");
+        showNotification("Failed to send game request.", "rgb(255, 0, 0)");
+    }
+}
+
+
 function removeRequestFromUI(requestId) {
     const requestElement = document.querySelector(`.friend-item[data-id="${requestId}"]`);
     if (requestElement) requestElement.remove();
@@ -366,6 +384,8 @@ document.addEventListener('DOMContentLoaded', function() {
             unblockBlockedUser(username);
         }
 		else if (event.target.classList.contains('icon-controller')) {
+            const friendId = event.target.dataset.id;
+            sendGameInvite(friendId);
             showNotification("Invitation Sent", "rgb(81, 171, 81)");
         }
 		else if (event.target.classList.contains('icon-block')) {
