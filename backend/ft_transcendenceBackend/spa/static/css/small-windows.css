@@ -134,5 +134,17 @@
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
-    display: none;
+    /* display: none; */
+}
+
+.game-notification {
+    position: fixed;
+    top: 50px; /* Ajustez la valeur selon votre préférence */
+    left: 20px; /* Ajustez la valeur selon votre préférence */
+    background-color: #aaa;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    margin-bottom: 10px; /* Espacement entre les notifications */
 }
