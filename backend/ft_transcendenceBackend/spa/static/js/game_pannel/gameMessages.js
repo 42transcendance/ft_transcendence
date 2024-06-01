@@ -20,6 +20,13 @@ function showButtons(){
     joinPrivateGameButton.style.visibility = 'visible';
     createPrivateGameButton.style.visibility = 'visible';
 }
+
+function showCanvas() {
+    var pongGame = document.getElementById('gameCanvas');
+    pongGame.style.visibility = 'visible';
+}
+
+
 function hideCanvas() {
     var pongGame = document.getElementById('gameCanvas');
     pongGame.style.visibility = 'hidden';

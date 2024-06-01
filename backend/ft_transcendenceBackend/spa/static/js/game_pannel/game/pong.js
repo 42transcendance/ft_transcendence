@@ -46,7 +46,14 @@ class Game {
 		this.color = '#1f2938';
 		this.playerPaddle = null;
 
-		this.test = 0;
+		this.setPaddle = 0;
+
+		this.room_id = null;
+	}
+
+	displayGameId(gameId) {
+		this.waitingText = document.querySelector('.waiting-text');
+		this.waitingText.textContent = "Invite code : " + gameId;
 	}
 
 	joinMatchmaking() {
@@ -102,6 +109,12 @@ class Game {
 					this.username = wsData.username;
 					this.user_id = wsData.user_id;
 					this.playerPaddle = Paddle.new.call(this, this.side, this.username);
+					this.room_id = wsData.room_id;
+					if (this.room_id != null) {
+						if (this.room_id.includes("private") == true) {
+							this.displayGameId(this.room_id);
+						}
+					}
 					break ;
 
 				case ('matchmaking'):
@@ -118,7 +131,7 @@ class Game {
 					this.lastGameState = wsData;
 					
 					this.diff = this.canvas.width / wsData.width;
-					if (this.test === 0) {
+					if (this.setPaddle === 0) {
 						if (this.side === 'left') {
 							this.playerPaddle.x = wsData.leftPlayerPaddle.x * this.diff;
 							this.playerPaddle.y = wsData.leftPlayerPaddle.y * this.diff;
@@ -133,7 +146,7 @@ class Game {
 							this.playerPaddle.height = wsData.rightPlayerPaddle.height * this.diff;
 							this.playerPaddle.speed = wsData.rightPlayerPaddle.speed * this.diff;
 						}
-						this.test = 1;
+						this.setPaddle = 1;
 					}
 					
 					break ;
@@ -147,7 +160,6 @@ class Game {
 					break;
 
 				case ('ending.game'):
-					console.log("Ending game");
 					this.game_running = false;
 
 					this.endGame(this.animationId);
