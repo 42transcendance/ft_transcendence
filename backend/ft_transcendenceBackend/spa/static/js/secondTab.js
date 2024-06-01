@@ -30,7 +30,6 @@ function  fetchUserData(theUsersId) {
             console.error("Failed to fetch game history:", error);
         }
     });
-    console.log("Fetching userdata of id: ", theUsersId);
 }
 
 function updateProfilePage(data) {

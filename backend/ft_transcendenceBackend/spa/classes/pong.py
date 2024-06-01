@@ -145,13 +145,10 @@ class PongGame :
             await asyncio.sleep(1)
 
     async def gameLoop(self):
-        test = 0
         await self.countdown(5)
         while self.leftPlayerScore < 5 and self.rightPlayerScore < 5:
             if self.interval != None:
                 if time.time() - self.interval >= 1:
-                    print(test)
-                    test+=1
                     self.interval = None
             else:
                 await self.updateBallPosition()

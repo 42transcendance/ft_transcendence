@@ -1,6 +1,12 @@
 function createPrivateGame() {
-    Pong = new Game();
 
+    if (Pong) {
+        Pong = null; // Remove the reference to the old game
+    }
+
+    removeTournamentForm()
+    showCanvas();
+    Pong = new Game();
     hideButtons();
 
     Pong.createPrivateGame();
@@ -9,8 +15,14 @@ function createPrivateGame() {
 }
 
 function joinPrivateGame(room_id) {
-    Pong = new Game();
 
+    if (Pong) {
+        Pong = null; // Remove the reference to the old game
+    }
+
+    removeTournamentForm()
+    showCanvas();
+    Pong = new Game();
     hideButtons();
 
     Pong.joinPrivateGame(room_id);

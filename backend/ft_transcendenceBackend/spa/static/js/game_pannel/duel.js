@@ -1,5 +1,13 @@
+let Pong = null;
+
 function startDuelGame() {
+
+    if (Pong) {
+        Pong = null; // Remove the reference to the old game
+    }
+
     removeTournamentForm()
+    showCanvas();
     Pong = new Game();
     hideButtons();
 

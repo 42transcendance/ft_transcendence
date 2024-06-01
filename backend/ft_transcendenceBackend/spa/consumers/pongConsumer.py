@@ -119,11 +119,13 @@ class pongConsumer(AsyncWebsocketConsumer):
             self.room_object.createGame()
             self.room_object.userReady()
             self.side = self.room_object.gameObject.setPlayer(self.user_id, self.username)
+            self.room_id = self.room_object.room_id
             await self.send(text_data=json.dumps({
                 'type': 'game.setup',
                 'side': self.side,
                 'userid': self.user_id,
                 'username': self.username,
+                'room_id': self.room_id,
             }))
 
             await self.channel_layer.group_send(
@@ -218,15 +220,7 @@ class pongConsumer(AsyncWebsocketConsumer):
         }))
     
     async def ending_game(self, event):
-        game_state = event['gamestate']
-        if event['gamestate'] != 'None':
-            await self.send(text_data=json.dumps({
-                'type': 'ending.game',
-                **game_state.to_dict(),
-            }))
-        else:
-            await self.send(text_data=json.dumps({
-                'type': 'ending.game'
-            }))
-
+        await self.send(text_data=json.dumps({
+            'type': 'ending.game'
+        }))
         await self.close()
