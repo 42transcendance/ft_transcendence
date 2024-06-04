@@ -3,19 +3,20 @@ PATH_YML = ./docker-compose.yml
 all: build start
 
 build:
-	@utils/setApiKeys.sh
-	@utils/setup.sh
+	@utils/djangoEnvSetup.sh
+	@utils/postgresEnvSetup.sh
 	docker-compose -f $(PATH_YML) build
 
 start:
-	@utils/setup.sh
+	@utils/postgresEnvSetup.sh
 	docker-compose -f $(PATH_YML) up
 
 stop:
 	@docker-compose -f $(PATH_YML) stop
 
 setup:
-	@utils/setup.sh
+	@utils/djangoEnvSetup.sh
+	@utils/postgresEnvSetup.sh
 
 prune: stop
 	
@@ -25,13 +26,10 @@ prune: stop
 	@docker system prune -af
 	@find ./backend/ft_transcendenceBackend/media/profile_pictures/ -type f ! -name 'nerdface.png' -exec rm {} +
 
-	@rm -rf .env
+	@rm -rf *.env
 
 	@rm -rf ./Docker/Backend/conf/.pgpass
 	@rm -rf ./Docker/Backend/conf/.pg_service.conf
-
-	@sed -i 's/API_SECRET_KEY=.*/API_SECRET_KEY=s/' docker-compose.yml
-	@sed -i 's/API_CLIENT_KEY=.*/API_CLIENT_KEY=u/' docker-compose.yml
 
 	@echo "Pruned docker system, deleted content of database, deleted env file"
 

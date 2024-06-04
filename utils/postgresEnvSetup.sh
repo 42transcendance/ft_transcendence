@@ -1,6 +1,6 @@
 #!/bin/bash
 
-directory="/home/$USER/goinfre/pgdatabase"
+directory="/goinfre/$USER/pgdatabase"
 
 if [ ! -d "$directory" ]; then
   echo "Database directory doesn't exist. Creating it now..."
@@ -11,7 +11,7 @@ else
 fi
 
 mkdir -p ./Docker/Backend/conf/
-env_file=".env"
+env_file="postgres.env"
 user_input=""
 password_file="./Docker/Backend/conf/.pgpass"
 service_file="./Docker/Backend/conf/.pg_service.conf"
