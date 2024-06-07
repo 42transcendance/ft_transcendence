@@ -112,7 +112,14 @@ def get_chat_history(request):
     messages = []
 
     if chat_type == 'global':
-        messages = ChatMessage.objects.filter(is_global=True).order_by('timestamp')
+        requesting_user = CustomUser.objects.get(userid=user_id)
+        blocked_users = requesting_user.blocklist.all()
+
+        messages = ChatMessage.objects.filter(
+            is_global=True
+        ).exclude(
+            sender__in=blocked_users
+        ).order_by('timestamp')
     elif chat_type == 'private' and target_user_id:
         messages = ChatMessage.objects.filter(
             models.Q(sender__userid=user_id, recipient__userid=target_user_id) |
