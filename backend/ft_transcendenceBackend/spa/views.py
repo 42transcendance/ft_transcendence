@@ -1,11 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseServerError, JsonResponse
-from spa.models import CustomUser, GameHistory, Game
+from spa.models import ChatMessage, CustomUser, GameHistory, Game
 from django.conf import settings
 from .usersManagement.pfp_utils import download_image, get_base64_image
 from .friend_requests import * 
 from .translate.static_translate import *
+from channels.db import database_sync_to_async
+from django.utils import timezone
+from django.db import models
+
+from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 
@@ -35,6 +40,8 @@ def extract_user_info_from_token(token):
         payload = jwt.decode(token, settings.JWT_SECRET_PHRASE, algorithms=['HS256'])
         user_id = payload.get('user_id')
         username = payload.get('username')
+        print(f"Extracted user_id: {user_id} (type: {type(user_id)})")
+        print(f"Extracted username: {username}")
         return user_id, username
     except jwt.ExpiredSignatureError:
         return None, None
@@ -93,3 +100,50 @@ def callback(request):
                 request.session['token'] = jwt_token
                 return redirect ('home')
     return HttpResponseServerError('ERROR')
+
+def get_chat_history(request):
+    user_id, username = extract_user_info_from_token(request.session.get('token'))
+    if not user_id:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    chat_type = request.GET.get('chat_type', 'global')
+    target_user_id = request.GET.get('target_user_id', None)
+    print(f"Fetching chat history for user: {user_id} chat_type: {chat_type} target_user_id: {target_user_id}")
+    messages = []
+
+    if chat_type == 'global':
+        messages = ChatMessage.objects.filter(is_global=True).order_by('timestamp')
+    elif chat_type == 'private' and target_user_id:
+        messages = ChatMessage.objects.filter(
+            models.Q(sender__userid=user_id, recipient__userid=target_user_id) |
+            models.Q(sender__userid=target_user_id, recipient__userid=user_id)
+        ).order_by('timestamp')
+    
+    print(f"Fetched messages: {messages}")
+
+    chat_history = []
+    for message in messages:
+        chat_history.append({
+            'sender': message.sender.username,
+            'sender_id': message.sender.userid,  # Add sender_id here
+            'recipient': message.recipient.username if message.recipient else 'global',
+            'recipient_id': message.recipient.userid if message.recipient else None,  # Add recipient_id here
+            'message': message.message,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+        })
+
+    print(f"Chat history response: {chat_history}")
+    return JsonResponse({'chat_history': chat_history})
+
+
+@database_sync_to_async
+def save_chat_message(sender_id, recipient_id, message, is_global):
+    try:
+        print(f"Saving message from sender_id: {sender_id} (type: {type(sender_id)}) to recipient_id: {recipient_id} (type: {type(recipient_id)})")
+        sender = CustomUser.objects.get(userid=sender_id)
+    except CustomUser.DoesNotExist:
+        print(f"Error: CustomUser with userid {sender_id} does not exist.")
+        return
+
+    recipient = CustomUser.objects.get(userid=recipient_id) if recipient_id else None
+    ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)

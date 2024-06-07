@@ -26,3 +26,10 @@ class Game(models.Model):
 class GameHistory(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='game_history')
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name='received_messages')
+    message = models.TextField()
+    timestamp = models.DateTimeField(default=timezone.now)
+    is_global = models.BooleanField(default=False)

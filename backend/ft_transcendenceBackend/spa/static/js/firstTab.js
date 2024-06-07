@@ -29,18 +29,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchChats() {
-        $.ajax({
-            url: '/api/chats', // REPLACE !!!
-            method: 'GET',
-            dataType: 'json',
-            success: function(data) {
-                displayChats(data.chats);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching chats:', error);
-                // displayErrorInChatContainer('Failed to load chats.');
-            }
-        });
+        // $.ajax({
+        //     url: '/api/chats', // REPLACE !!!
+        //     method: 'GET',
+        //     dataType: 'json',
+        //     success: function(data) {
+        //         displayChats(data.chats);
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('Error fetching chats:', error);
+        //         // displayErrorInChatContainer('Failed to load chats.');
+        //     }
+        // });
+        console.log("LELE");
     }
 
     function displayChats(chats) {

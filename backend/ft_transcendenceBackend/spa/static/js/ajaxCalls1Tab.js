@@ -118,42 +118,42 @@ function fetchFriends() {
     });
 }
 
-function loadChatWithFriend(friendId) {
-    const chatMessagesContainer = document.querySelector('.chat-messages');
-    chatMessagesContainer.id = `chat-with-${friendId}`;
-    chatMessagesContainer.innerHTML = '';
+// function loadChatWithFriend(friendId) {
+//     const chatMessagesContainer = document.querySelector('.chat-messages');
+//     chatMessagesContainer.id = `chat-with-${friendId}`;
+//     chatMessagesContainer.innerHTML = '';
 
-    $.ajax({
-        url: '/api/chat/history',
-        method: 'GET',
-        data: { 'friend_id': friendId },
-        success: function(data) {
-            data.forEach(message => {
-                const messageElement = document.createElement('div');
-                messageElement.className = 'chat-message';
-                messageElement.innerHTML = `
-                    <div class="user-icon-container">
-                        <img src="${message.userIcon || 'default-icon.png'}" alt="User" class="user-icon">
-                    </div>
-                    <div class="message-details">
-                        <div class="nicknameAndIcon">
-                            <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
-                        </div>
-                        <div class="text-and-time">
-                            <div class="message-text">${message.text}</div>
-                            <span class="message-time">${message.time}</span>
-                        </div>
-                    </div>
-                `;
-                chatMessagesContainer.appendChild(messageElement);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Failed to load chat history:', error);
-            // chatMessagesContainer.innerHTML = `<div class="error-message">Failed to load messages. Please try again later.</div>`;
-        }
-    });
-}
+//     $.ajax({
+//         url: '/api/chat/history',
+//         method: 'GET',
+//         data: { 'friend_id': friendId },
+//         success: function(data) {
+//             data.forEach(message => {
+//                 const messageElement = document.createElement('div');
+//                 messageElement.className = 'chat-message';
+//                 messageElement.innerHTML = `
+//                     <div class="user-icon-container">
+//                         <img src="${message.userIcon || 'default-icon.png'}" alt="User" class="user-icon">
+//                     </div>
+//                     <div class="message-details">
+//                         <div class="nicknameAndIcon">
+//                             <span class="nickname" data-user-id="${message.senderId}">${message.sender}</span>
+//                         </div>
+//                         <div class="text-and-time">
+//                             <div class="message-text">${message.text}</div>
+//                             <span class="message-time">${message.time}</span>
+//                         </div>
+//                     </div>
+//                 `;
+//                 chatMessagesContainer.appendChild(messageElement);
+//             });
+//         },
+//         error: function(xhr, status, error) {
+//             console.error('Failed to load chat history:', error);
+//             // chatMessagesContainer.innerHTML = `<div class="error-message">Failed to load messages. Please try again later.</div>`;
+//         }
+//     });
+// }
 
 
 
@@ -412,7 +412,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentChatContext = 'private';
                     currentRecipientId = friendId;
                     console.log(`Opening chat with friend ID: ${friendId}`);
-                    loadChatWithFriend(friendId);
+                    fetchChatHistory("private", friendId);
+                    // loadChatWithFriend(friendId);
                     messageWith("set", friendName);
                 }
             }
@@ -427,10 +428,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // }
         }
         else if (event.target.closest('.global-chat-item')) {
-            if (currentChatContext === 'global') {
-                console.log("Global chat is already open.");
-                return; // Exit if the global chat is already being displayed
-            }
+            // if (currentChatContext === 'global') {
+            //     console.log("Global chat is already open.");
+            //     return; // Exit if the global chat is already being displayed
+            // }
             currentChatContext = 'global';
             currentRecipientId = null;
             openGlobalChat();

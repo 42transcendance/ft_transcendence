@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+
 function scrollToBottom(element) {
     element.scrollTop = element.scrollHeight;
 }
@@ -52,7 +54,6 @@ function sendMessage(type, message, id=null) {
 }
 
 function messageWith(mode, username) {
-    console.log("LAWD HAVE MERCY IM BOUT TO BUST");
     let text = document.getElementById('social-text');
     if (mode == 'set')
         text.textContent = window.translatedMessages + ": " + username;
