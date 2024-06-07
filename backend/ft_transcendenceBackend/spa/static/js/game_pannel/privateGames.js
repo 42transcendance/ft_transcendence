@@ -20,7 +20,7 @@ function joinPrivateGame(room_id) {
         Pong = null; // Remove the reference to the old game
     }
 
-    removeTournamentForm()
+    removeTournamentForm();
     showCanvas();
     Pong = new Game();
     hideButtons();
@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const joinButton = document.querySelector('.join-private-game-form-button');
 
     function showPrivateForm() {
+        removeTournamentForm();
         formContainer.style.visibility = 'visible';
     }
 
