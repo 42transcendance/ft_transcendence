@@ -1,7 +1,7 @@
 // const boardHeight = 600;
 // const boardWidth = 925;
 
-const DIRECTION = {
+const LOCAL_DIRECTION = {
 
 	IDLE: 0,
 	UP: 1,
@@ -10,8 +10,8 @@ const DIRECTION = {
 	RIGHT: 4,
 };
 
-// The paddle object (The two lines that move up and down)
-let Paddle = {
+// The LOCAL_PADDLE object (The two lines that move up and down)
+let LOCAL_PADDLE = {
 
 	new: function (side, name) {
 
@@ -22,7 +22,7 @@ let Paddle = {
 			x: side === 'left' ? 20 : this.canvas.width - 30,
 			y: (this.canvas.height / 2) - 40,
 			score: 0,
-			move: DIRECTION.IDLE,
+			move: LOCAL_DIRECTION.IDLE,
 			speed: 5,
 		};
 	},
@@ -36,7 +36,7 @@ var Ball = {
 			radius: 8,
 			x: (this.canvas.width / 2),
 			y: (this.canvas.height / 2),
-			direction: -1,
+			LOCAL_DIRECTION: -1,
 			speed: 5,
 		};
 	},
@@ -58,8 +58,8 @@ class LocalGame {
 
 		this.color = '#1f2938';
 
-		this.player = Paddle.new.call(this, 'left', playerName || "Player 1");
-		this.opponent = Paddle.new.call(this, 'right', opponentName || "Player 2");
+		this.player = LOCAL_PADDLE.new.call(this, 'left', playerName || "Player 1");
+		this.opponent = LOCAL_PADDLE.new.call(this, 'right', opponentName || "Player 2");
 		this.ball = Ball.new.call(this);
 
 		this.running = this.over = false;
@@ -67,7 +67,7 @@ class LocalGame {
 	}
 
 	startGame () {
-		this.ball.direction = Math.PI;
+		this.ball.LOCAL_DIRECTION = Math.PI;
 		this.listen();
 		this.endScreen();
 	}
@@ -105,7 +105,7 @@ class LocalGame {
 		this.context.arc(this.ball.x, this.ball.y, this.ball.radius, 0, 2 * Math.PI);
 		this.context.fill();
 
-		// Draw the paddles
+		// Draw the LOCAL_PADDLEs
 		this.context.fillStyle = '#ffffff';
 		this.context.fillRect( this.player.x, this.player.y, this.player.width, this.player.height );
 		this.context.fillRect( this.opponent.x, this.opponent.y, this.opponent.width, this.opponent.height );
@@ -117,18 +117,18 @@ class LocalGame {
 			// Update Canvas size
 			// These handle the ball's movements and collisions
 			if (this.running === true) {
-				if (this.ball.direction != -1)
+				if (this.ball.LOCAL_DIRECTION != -1)
 				{
-					this.ball.x += Math.cos(this.ball.direction) * this.ball.speed;
-					this.ball.y += Math.sin(this.ball.direction) * this.ball.speed;
+					this.ball.x += Math.cos(this.ball.LOCAL_DIRECTION) * this.ball.speed;
+					this.ball.y += Math.sin(this.ball.LOCAL_DIRECTION) * this.ball.speed;
 
-					// Handles player's's paddle collision
+					// Handles player's's LOCAL_PADDLE collision
 					if (this.ball.y >= this.player.y && this.ball.y <= this.player.y + this.player.height && this.ball.x - this.ball.radius <= this.player.x + this.player.width) {
-						// Calculate relative position of the ball to the center of the paddle
+						// Calculate relative position of the ball to the center of the LOCAL_PADDLE
 						let relativeIntersectY = (this.player.y + (this.player.height / 2)) - this.ball.y;
 						let normalizedRelativeIntersectY = relativeIntersectY / (this.player.height / 2);
 						let bounceAngle = normalizedRelativeIntersectY * (Math.PI / 3); // Max angle is 60 degrees
-						this.ball.direction = Math.PI * 2 - bounceAngle; // Reflect the ball's direction
+						this.ball.LOCAL_DIRECTION = Math.PI * 2 - bounceAngle; // Reflect the ball's LOCAL_DIRECTION
 						if (this.ball.speed < 100) this.ball.speed += 0.2;
 					}
 					// Handles if the balls is scored on the player's goal
@@ -140,13 +140,13 @@ class LocalGame {
 						this.ball.speed = 5;
 						this.handleScore();
 					}
-					// Handles opponent's's paddle collisionw
+					// Handles opponent's's LOCAL_PADDLE collisionw
 					if ((this.ball.y >= this.opponent.y && this.ball.y <= this.opponent.y + this.opponent.height && this.ball.x + this.ball.radius >= this.opponent.x))
 					{
 						let relativeIntersectY = (this.opponent.y + (this.opponent.height / 2)) - this.ball.y; // =40
 						let normalizedRelativeIntersectY = relativeIntersectY / (this.opponent.height / 2); // =1
 						let bounceAngle = normalizedRelativeIntersectY * (Math.PI / 3); // Max angle is 60 degrees
-						this.ball.direction = Math.PI + bounceAngle; // Reflect the ball's direction
+						this.ball.LOCAL_DIRECTION = Math.PI + bounceAngle; // Reflect the ball's LOCAL_DIRECTION
 						if (this.ball.speed < 100) this.ball.speed += 0.2;
 					}
 					// Handles if the balls is scored on the opponent's goal
@@ -160,26 +160,26 @@ class LocalGame {
 					}
 
 					// Top and Bottom walls collision
-					if ((this.ball.y + this.ball.radius) >= this.canvas.height) this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
-					else if ((this.ball.y - this.ball.radius) <= 0) 			this.ball.direction = Math.atan2(Math.sin(this.ball.direction) * -1, Math.cos(this.ball.direction));
+					if ((this.ball.y + this.ball.radius) >= this.canvas.height) this.ball.LOCAL_DIRECTION = Math.atan2(Math.sin(this.ball.LOCAL_DIRECTION) * -1, Math.cos(this.ball.LOCAL_DIRECTION));
+					else if ((this.ball.y - this.ball.radius) <= 0) 			this.ball.LOCAL_DIRECTION = Math.atan2(Math.sin(this.ball.LOCAL_DIRECTION) * -1, Math.cos(this.ball.LOCAL_DIRECTION));
 				}
 			}
 			
-			// These handle the Player's paddle wall collisions and movements
-			if (this.player.move === DIRECTION.UP) {
+			// These handle the Player's LOCAL_PADDLE wall collisions and movements
+			if (this.player.move === LOCAL_DIRECTION.UP) {
 				if ((this.player.y - this.player.speed) <= 0) this.player.y = 0;
 				else this.player.y -= this.player.speed;
 			}
-			else if (this.player.move === DIRECTION.DOWN) {
+			else if (this.player.move === LOCAL_DIRECTION.DOWN) {
 				if (((this.player.y + this.player.height) + this.player.speed) >= this.canvas.height) this.player.y = this.canvas.height - this.player.height;
 				else this.player.y += this.player.speed;
 			}
-			// These handle the Opponent's paddle wall collisions and movements
-			if (this.opponent.moveY === DIRECTION.UP) {
+			// These handle the Opponent's LOCAL_PADDLE wall collisions and movements
+			if (this.opponent.moveY === LOCAL_DIRECTION.UP) {
 				if ((this.opponent.y - this.opponent.speed) <= 0) this.opponent.y = 0;
 				else this.opponent.y -= this.opponent.speed;
 			}
-			else if (this.opponent.moveY === DIRECTION.DOWN) {
+			else if (this.opponent.moveY === LOCAL_DIRECTION.DOWN) {
 				if (((this.opponent.y + this.opponent.height) + this.opponent.speed) >= this.canvas.height) this.opponent.y = this.canvas.height - this.opponent.height;
 				else this.opponent.y += this.opponent.speed;
 			}
@@ -218,22 +218,22 @@ class LocalGame {
 			//console.log(key.key);	
 			// Handle w key events
 			if (key.key === 'w') {
-				this.player.move = DIRECTION.UP;
+				this.player.move = LOCAL_DIRECTION.UP;
 				wKeyPressed = true;
 			}
 			// Handle s key events
 			if (key.key === 's') {
-				this.player.move = DIRECTION.DOWN;
+				this.player.move = LOCAL_DIRECTION.DOWN;
 				sKeyPressed = true;
 			}
 			
 			// Opponent's movements
 			if (key.key === 'ArrowUp') {
-				this.opponent.moveY = DIRECTION.UP;
+				this.opponent.moveY = LOCAL_DIRECTION.UP;
 				ArrowUpKeyPressed = true;
 			}
 			if (key.key === 'ArrowDown') {
-				this.opponent.moveY = DIRECTION.DOWN;
+				this.opponent.moveY = LOCAL_DIRECTION.DOWN;
 				ArrowDownKeyPressed = true;
 			}
 		});
@@ -243,24 +243,24 @@ class LocalGame {
 			// Player key realease
 			if (key.key === 'w') {
 				wKeyPressed = false;
-				if (sKeyPressed === true) this.player.move = DIRECTION.DOWN;
+				if (sKeyPressed === true) this.player.move = LOCAL_DIRECTION.DOWN;
 			}
 			if (key.key === 's') {
 				sKeyPressed = false;
-				if (wKeyPressed === true) this.player.move = DIRECTION.UP;
+				if (wKeyPressed === true) this.player.move = LOCAL_DIRECTION.UP;
 			}
-			if (sKeyPressed === false && wKeyPressed === false) this.player.move = DIRECTION.IDLE;
+			if (sKeyPressed === false && wKeyPressed === false) this.player.move = LOCAL_DIRECTION.IDLE;
 
 			//Opponent key releases
 			if (key.key === 'ArrowUp') {
 				ArrowUpKeyPressed = false;
-				if (ArrowDownKeyPressed === true) this.opponent.moveY = DIRECTION.DOWN;
+				if (ArrowDownKeyPressed === true) this.opponent.moveY = LOCAL_DIRECTION.DOWN;
 			}
 			if (key.key === 'ArrowDown') {
 				ArrowDownKeyPressed = false;
-				if (ArrowUpKeyPressed === true) this.opponent.moveY = DIRECTION.UP;
+				if (ArrowUpKeyPressed === true) this.opponent.moveY = LOCAL_DIRECTION.UP;
 			}
-			if (ArrowDownKeyPressed === false && ArrowUpKeyPressed === false) this.opponent.moveY = DIRECTION.IDLE;
+			if (ArrowDownKeyPressed === false && ArrowUpKeyPressed === false) this.opponent.moveY = LOCAL_DIRECTION.IDLE;
 		});
 	}
 

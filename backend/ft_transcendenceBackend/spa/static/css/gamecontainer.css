@@ -1,5 +1,6 @@
 
 .game-container {
+    position: relative;
     height: 100%; 
     background-color: rgba(124, 48, 155, 0.7);
     /* border: 2px solid rgba(103, 40, 128, 0.7);  */
@@ -139,3 +140,4 @@
     color: white;
     cursor: pointer;
 }
+

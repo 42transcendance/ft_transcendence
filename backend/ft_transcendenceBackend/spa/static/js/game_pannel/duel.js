@@ -6,7 +6,8 @@ function startDuelGame() {
         Pong = null; // Remove the reference to the old game
     }
 
-    removeTournamentForm()
+    removeTournamentForm();
+    removeWinTournament();
     showCanvas();
     Pong = new Game();
     hideButtons();
