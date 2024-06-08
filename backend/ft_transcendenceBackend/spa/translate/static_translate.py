@@ -31,13 +31,19 @@ def translate_static(language):
         'ply_1': _("Player 1:"),
         'ply_2': _("Player 2:"),
         'ply_3': _("Player 3:"),
-        'carrers': _("Carrer's"),
+        'carrer': _("Carrer"),
         'logout': _("Logout"),
         'message_ph': _("Type your message here..."),
         'language' : _("Language Selection :"),
         'en' : _("English"),
         'fr' :_("French"),
         'it' :_("Italian"),
+        'crt_priv' : _("Create Private Game"),
+        'join_priv' : _("Join Private Game"),
+        'wfo' : _("Waiting for opponent.."),
+        'join' : _("Join"),
+        'privid' : _("Enter private game id."),
+        'genchat' : _("General Chat"),
     }
 
     return translations

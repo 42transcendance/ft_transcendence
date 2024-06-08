@@ -275,21 +275,21 @@
                         <div id="button-container">
                             <button class="send-button">{{ translations.duel }}</button>
                             <button class="send-button">{{ translations.tourn }}</button>
-                            <button class="send-button create-private-game-button">Create Private Game</button>
-                            <button class="send-button join-private-game-form-button">Join Private Game</button>
+                            <button class="send-button create-private-game-button">{{ translations.crt_priv }}</button>
+                            <button class="send-button join-private-game-form-button">{{ translations.join_priv }}</button>
                         </div>
                         <div id="principal-container">
                             <div id="tournament-form" class="form-container">
                             </div>
                             <div id="join-private-game-div" class="form-container">
                                 <form id="join-private-game-form">
-                                    <input type="text" class="input-private-game-id" required="" placeholder="Enter private game id.">
-                                    <button type="button" class="send-button join">Join</button>
+                                    <input type="text" class="input-private-game-id" required="" placeholder="{{ translations.privid}}">
+                                    <button type="button" class="send-button join">{{ translations.join}}</button>
                                 </form>
                             </div>
                             <div id="pong-container">
                                 <div class="waiting-overlay" id="waitingOverlay">
-                                    <div class="waiting-text">Waiting for opponent...</div>
+                                    <div class="waiting-text">{{ translations.wfo}}</div>
                                 </div>
                                 <canvas id="gameCanvas" width="100" height="100"></canvas>
                             </div>
@@ -302,7 +302,7 @@
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
-                        <span class="career-text">{{ translations.carrers }}</span>
+                        <span class="career-text">{{ translations.carrer }}</span>
                     </div>
                     <!-- Friends List Content -->
                     <div id="friendsListContent" class="friends-list-content">

@@ -35,8 +35,8 @@ function  fetchUserData(theUsersId) {
 function updateProfilePage(data) {
     document.getElementById('username').textContent = data.user_details.username;
     document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
-    document.getElementById('joinedDate').textContent = `Joined: ${data.user_details.joinedDate}`;
-    document.getElementById('matchesPlayed').textContent = `Matches Played: ${data.user_details.gamesPlayed}`;
+    document.getElementById('joinedDate').textContent = `${data.translations.join} ${data.user_details.joinedDate}`;
+    document.getElementById('matchesPlayed').textContent = `${data.translations.nb_match} ${data.user_details.gamesPlayed}`;
 }
 
 function addGameHistoryItem(game, container, translations) {
