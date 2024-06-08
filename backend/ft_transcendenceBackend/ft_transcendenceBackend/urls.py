@@ -57,6 +57,7 @@ urlpatterns = [
     path('tournament_win_translate/', tournament_translate.tournament_win_translate, name='tournament_win_translate'),
     path('tournament_winmsg_translate/', tournament_translate.tournament_winmsg_translate, name='tournament_winmsg_translate'),
     path('change_language/', views.change_language, name='change_language'),
+    path('invite_code_translate/', tournament_translate.invite_code_translate, name='invite_code_translate'),
 ]
 
 

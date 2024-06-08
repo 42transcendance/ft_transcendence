@@ -52,8 +52,19 @@ class Game {
 	}
 
 	displayGameId(gameId) {
-		this.waitingText = document.querySelector('.waiting-text');
-		this.waitingText.textContent = "Invite code : " + gameId;
+		$.ajax({
+            url: '/invite_code_translate/',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+				this.waitingText = document.querySelector('.waiting-text');
+				this.waitingText.textContent = data.translations.inv_code + gameId;
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+
 	}
 
 	joinMatchmaking() {

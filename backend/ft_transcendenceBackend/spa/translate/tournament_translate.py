@@ -39,3 +39,12 @@ def tournament_winmsg_translate(request):
         'winmsg': _(" has won the tournament !"),
         }
     return JsonResponse({'translations' : translations})
+
+
+@csrf_exempt
+def invite_code_translate(request):
+    activate(request.session.get('language'))
+    translations = {
+        'inv_code': _("Invite code : "),
+        }
+    return JsonResponse({'translations' : translations})

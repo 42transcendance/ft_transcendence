@@ -84,7 +84,7 @@ function connectWebSocket() {
 
 function gameNotification(data) {
     const username = data.source_user;
-    const message = `${username} invited you to a game`;
+    const message = `invited you to a game`;
     console.log(message);
 
     $.ajax({
@@ -107,7 +107,7 @@ function gameNotification(data) {
                 // notification.style.position = "relative";
 
                 const notificationMessage = document.createElement('span');
-                notificationMessage.textContent = response.translations.message;
+                notificationMessage.textContent = username + " " + response.translations.message;
 
                 const buttonContainer = document.createElement('div');
                 buttonContainer.style.display = "flex";

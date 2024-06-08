@@ -283,3 +283,33 @@ msgstr "Inserisci un nome per ogni giocatore."
 
 msgid "Two Players cannot have the same username."
 msgstr "Due giocatori non possono avere lo stesso nome utente."
+
+msgid "Create Private Game"
+msgstr "Crea una partita privata"
+
+msgid "Join Private Game"
+msgstr "Unisciti a una partita privata"
+
+msgid "Game request sent !"
+msgstr "Invito a una partita inviato!"
+
+msgid "Failed to send game request."
+msgstr "Invio dell'invito a una partita fallito."
+
+msgid "Waiting for opponent.."
+msgstr "In attesa dell'avversario.."
+
+msgid "Join"
+msgstr "Unisciti"
+
+msgid "Enter private game id."
+msgstr "Inserisci l'ID del gioco privato."
+
+msgid "General Chat"
+msgstr "Chat generale"
+
+msgid "Invite code : "
+msgstr "Codice d'invito : "
+
+msgid "invited you to a game"
+msgstr "ti ha invitato a una partita"
