@@ -122,7 +122,7 @@ function createTournamentForm(data) {
     form.id = "tournament-game-form";
 
     var disclaimer = document.createElement("p");
-    disclaimer.textContent = "Note: Tournament mode does not impact player statistics in their profile.";
+    disclaimer.textContent = data.translations.note;
     disclaimer.style.color = "grey";
     disclaimer.style.fontSize = "0.6em";
     disclaimer.style.textAlign = "center";

@@ -313,3 +313,6 @@ msgstr "Codice d'invito : "
 
 msgid "invited you to a game"
 msgstr "ti ha invitato a una partita"
+
+msgid "Note: Tournament mode does not impact player statistics in their profile."
+msgstr "Nota: la modalità torneo non influisce sulle statistiche dei giocatori nel loro profilo."

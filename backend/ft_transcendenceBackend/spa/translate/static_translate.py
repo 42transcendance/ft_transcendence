@@ -20,8 +20,6 @@ def translate_static(language):
         'send': _("Send"),
         'settings': _("Settings"),
         'user_name': _("Username:"),
-        'two_fa': _("Two Factor Authentication:"),
-        'disable': _("Disabled"),
         'change': _("Change"),
         'joined': _("Joined"),
         'mtch_plyd': _("Matches Played:"),
