@@ -12,7 +12,7 @@ function tournamentMatchmaking(players){
     annonceNextMatch(players[0], players[1],players);
 }
 
-function annonceNextMatch(player1, player2,players){
+function annonceNextMatch(player1, player2, players) {
     $.ajax({
         url: "tournament_next_translate",
         method: "GET",
@@ -21,23 +21,27 @@ function annonceNextMatch(player1, player2,players){
             var message = document.createElement('div');
             message.className = 'annonce-message';
             message.id = 'annonce-message';
-            message.style = "position : absolute; top : 50%;left: 50%;transform: translateX(-50%);";
+            message.style = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);color : white;text-shadow: 2px 2px rgb(0, 0, 0);font-size: 1.5em";
         
-            message.textContent = data.translations.next + player1 + data.translations.against + player2 + " .";
+            message.innerHTML = data.translations.next +'<span style="color: #00bfff;">' + player1 + '</span>' + data.translations.against + '<span style="color: #00bfff;">' + player2 + '</span>.';
             
-            var principalContainer = document.getElementById('principal-container');
-            principalContainer.appendChild(message);
+            var gameContainer = document.querySelector('.game-container');
+            gameContainer.style.position = 'relative'; 
+            gameContainer.appendChild(message);
+
             var nextButton = document.createElement("button");
             nextButton.type = "button";
             nextButton.textContent = data.translations.snm;
-            nextButton.style.left = "40%";
-            nextButton.style.position = "relative";
             nextButton.id = "next-match";
+            nextButton.style.position = "absolute";
+            nextButton.style.left = "50%";
+            nextButton.style.transform = "translateX(-50%)";
+            nextButton.style.bottom = "20px"; 
             nextButton.addEventListener('click', function() {
-                startNextMatch(player1, player2,players);
+                startNextMatch(player1, player2, players);
             });
-        
-            document.getElementById('bottom-container').append(nextButton);
+            
+            gameContainer.appendChild(nextButton);
         },
         error: function(xhr, status, error) {
             console.error("Error", error);
@@ -48,23 +52,23 @@ function annonceNextMatch(player1, player2,players){
 function startNextMatch(player1Name, player2Name,players){
     var annonceMessage = document.getElementById('annonce-message');
     if (annonceMessage) {
-        var principalContainer = document.getElementById('principal-container');
-        principalContainer.removeChild(annonceMessage);
+        var gameContainer = document.querySelector('.game-container'); 
+        gameContainer.removeChild(annonceMessage);
     }
     removeWinningMessage();
     var nextButton = document.getElementById('next-match');
     if (nextButton){
-        document.getElementById('bottom-container').removeChild(nextButton);
+        document.querySelector('.game-container').removeChild(nextButton);
     }
     Pong = new LocalGame(player1Name, player2Name);
 
     var placeholderCanvas = document.getElementById('gameCanvas');
     placeholderCanvas.style.visibility = 'visible';
-    var gameContainer = document.getElementById('pong-container');
-    gameContainer.replaceChild(Pong.canvas, placeholderCanvas);
+    var pongContainer = document.getElementById('pong-container');
+    pongContainer.replaceChild(Pong.canvas, placeholderCanvas);
 
-    Pong.canvas.width = gameContainer.clientWidth;
-    Pong.canvas.height = gameContainer.clientHeight;
+    Pong.canvas.width = pongContainer.clientWidth;
+    Pong.canvas.height = pongContainer.clientHeight;
 
     Pong.start();
 

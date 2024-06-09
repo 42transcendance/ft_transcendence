@@ -121,6 +121,15 @@ function createTournamentForm(data) {
     var form = document.createElement("form");
     form.id = "tournament-game-form";
 
+    var disclaimer = document.createElement("p");
+    disclaimer.textContent = data.translations.note;
+    disclaimer.style.color = "grey";
+    disclaimer.style.fontSize = "0.6em";
+    disclaimer.style.textAlign = "center";
+    disclaimer.style.fontStyle = "italic";
+
+    form.appendChild(disclaimer);
+
     var inputContainer = document.createElement("div");
     inputContainer.id = "tournament-input-container";
     inputContainer.className = "grid-container";

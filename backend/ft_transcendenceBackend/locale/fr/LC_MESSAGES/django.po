@@ -127,7 +127,7 @@ msgstr "Lancer le Duel"
 msgid "Start Tournament"
 msgstr "Lancer le Tournois"
 
-msgid "Career's"
+msgid "Career"
 msgstr "Carrière"
 
 
@@ -299,3 +299,36 @@ msgstr "Veuillez entrer un nom pour chaque joueur."
 
 msgid "Two Players cannot have the same username."
 msgstr "Deux joueurs ne peuvent pas avoir le même nom d’utilisateur."
+
+msgid "Create Private Game"
+msgstr "Créer une partie privé"
+
+msgid "Join Private Game"
+msgstr "Rejoindre une partie privé"
+
+msgid "Game request sent !"
+msgstr "Invitation à une partie envoyée !"
+
+msgid "Failed to send game request."
+msgstr "Échec de l'envoi de l'invitation à une partie."
+
+msgid "Waiting for opponent.."
+msgstr "En attente de l'adversaire.."
+
+msgid "Join"
+msgstr "Rejoindre"
+
+msgid "Enter private game id."
+msgstr "Entrez l'identifiant de partie privé."
+
+msgid "General Chat"
+msgstr "Chat général"
+
+msgid "Invite code : "
+msgstr "Code d'invitation : "
+
+msgid "invited you to a game"
+msgstr "vous a invité à une partie"
+
+msgid "Note: Tournament mode does not impact player statistics in their profile."
+msgstr "Remarque : le mode tournoi n’a pas d’impact sur les statistiques des joueurs dans leur profil."

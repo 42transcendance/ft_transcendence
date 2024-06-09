@@ -90,10 +90,13 @@ function winTheTournament(winner){
             let message = document.createElement('div');
             message.className = 'winning-tournament';
             message.id = 'winning-tournament';
-            message.style = "position : absolute; top : 40%; left: 50%;transform: translateX(-50%);";
+            message.style = "position : absolute; top : 40%; left: 50%;transform: translateX(-50%);color : white;text-shadow: 2px 2px rgb(0, 0, 0);font-size: 1.5em";
         
-            message.textContent = winner + data.translations.winmsg;
+            message.innerHTML = '<span style="color: #36FF00;">' + winner  + '</span>'+ data.translations.winmsg;
             document.getElementById('principal-container').appendChild(message);
+            setTimeout(function() {
+                message.remove();
+            }, 5000);
 
     },
         error: function(xhr, status, error) {
@@ -110,7 +113,7 @@ function winningMsgTournament(Pong) {
             var message = document.createElement('div');
             message.className = 'winning-message';
             message.id = 'winning-message';
-            message.style = "position : absolute; top : 40%;left: 50%; transform: translateX(-50%);";
+            message.style = "position : absolute; top : 40%;left: 50%; transform: translateX(-50%);color : white;text-shadow: 2px 2px rgb(0, 0, 0);font-size: 1.3em";
 
             if (Pong.player.score > Pong.opponent.score){
                 var winnerName = Pong.player.name;
@@ -124,7 +127,7 @@ function winningMsgTournament(Pong) {
                 var loserScore = Pong.player.score;
             }
 
-            message.textContent = winnerName + data.translations.win + winnerScore + '-' + loserScore + data.translations.against+ loserName + '.\n';
+            message.innerHTML = '<span style="color: #36FF00;">' + winnerName  + '</span>' + data.translations.win + winnerScore + '-' + loserScore + data.translations.against+ '<span style="color: #FF0000;">' +loserName + '</span>.\n';
             document.getElementById('principal-container').appendChild(message);
 
     },

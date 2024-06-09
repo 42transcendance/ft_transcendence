@@ -3,8 +3,8 @@ function createPrivateGame() {
     if (Pong) {
         Pong = null; // Remove the reference to the old game
     }
-
-    removeTournamentForm()
+    removeTournamentForm();
+    removeWinTournament();
     showCanvas();
     Pong = new Game();
     hideButtons();
@@ -20,7 +20,9 @@ function joinPrivateGame(room_id) {
         Pong = null; // Remove the reference to the old game
     }
 
-    removeTournamentForm()
+    removeTournamentForm();
+    
+    
     showCanvas();
     Pong = new Game();
     hideButtons();
@@ -32,7 +34,7 @@ function joinPrivateGame(room_id) {
 
 // Event to create a private game
 document.addEventListener('DOMContentLoaded', function () {
-
+    
     var createPrivateGameButton = document.querySelector('.create-private-game-button');
     createPrivateGameButton.addEventListener('click', createPrivateGame);
 });
@@ -43,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const joinButton = document.querySelector('.join-private-game-form-button');
 
     function showPrivateForm() {
+        removeTournamentForm();
+        removeWinTournament();
         formContainer.style.visibility = 'visible';
     }
 

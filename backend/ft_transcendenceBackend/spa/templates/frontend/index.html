@@ -152,7 +152,7 @@
                     <div class="chat-tab">
                         <div class="chat-heading">
                             <i class="bi bi-chat-dots chat-icon"></i>
-                            <span class="social-text" id="social-text">{{ translations.messages }}: General Chat</span>
+                            <span class="social-text" id="social-text">{{ translations.messages }}: {{translations.genchat}}</span>
                         </div>
                          <div class="chat-messages" id="" data-id="global" style="display: block;">
                             <!-- MESSAGE EXANMPLE -->
@@ -205,15 +205,6 @@
                                     <button class="change-username-button">{{ translations.change }}</button>
                                 </div>
                             </div>
-                        
-                            <!-- 2FA Section -->
-                            <div class="tfa-info">
-                                <div class="tfa-label">{{ translations.two_fa }}</div>
-                                <div class="tfa-and-button">
-                                    <div class="current-tfa">{{ translations.disable }}</div>
-                                    <button class="tfa-button">{{ translations.change }}</button>
-                                </div>
-                            </div>
                             <!-- Language Selection Section -->
                             <div class="language-selection">
                                 <div class="language-label">{{ translations.language }}</div>
@@ -226,25 +217,8 @@
                                     <button id="changeLanguageButton" class="change-language-button">{{ translations.change }}</button>
                                 </div>
                             </div>
-                        
-                            <!-- Toggles for Music, Animations, and Sound Effects -->
-                            <div class="settings-toggles">
-                                <div class="toggle-item">
-                                    <span>Music</span>
-                                    <div class="toggle-switch" id="music-toggle" onclick="toggleSetting(this)"></div>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>Animations</span>
-                                    <div class="toggle-switch" id="animations-toggle" onclick="toggleSetting(this)"></div>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>Sound Effects</span>
-                                    <div class="toggle-switch" id="sound-effects-toggle" onclick="toggleSetting(this)"></div>
-                                </div>
-                            </div>
                             <div class="settings-actions">
                                 <button class="settings-button logout-button">{{ translations.logout }}</button>
-                            
                             </div>
                         </div>
                     </div>
@@ -274,21 +248,21 @@
                         <div id="button-container">
                             <button class="send-button">{{ translations.duel }}</button>
                             <button class="send-button">{{ translations.tourn }}</button>
-                            <button class="send-button create-private-game-button">Create Private Game</button>
-                            <button class="send-button join-private-game-form-button">Join Private Game</button>
+                            <button class="send-button create-private-game-button">{{ translations.crt_priv }}</button>
+                            <button class="send-button join-private-game-form-button">{{ translations.join_priv }}</button>
                         </div>
                         <div id="principal-container">
                             <div id="tournament-form" class="form-container">
                             </div>
                             <div id="join-private-game-div" class="form-container">
                                 <form id="join-private-game-form">
-                                    <input type="text" class="input-private-game-id" required="" placeholder="Enter private game id.">
-                                    <button type="button" class="send-button join">Join</button>
+                                    <input type="text" class="input-private-game-id" required="" placeholder="{{ translations.privid}}">
+                                    <button type="button" class="send-button join">{{ translations.join}}</button>
                                 </form>
                             </div>
                             <div id="pong-container">
                                 <div class="waiting-overlay" id="waitingOverlay">
-                                    <div class="waiting-text">Waiting for opponent...</div>
+                                    <div class="waiting-text">{{ translations.wfo}}</div>
                                 </div>
                                 <canvas id="gameCanvas" width="100" height="100"></canvas>
                             </div>
@@ -301,32 +275,10 @@
                 <div class="inner-container3 mx-1">
                     <div class="career-select">
                         <i class="bi bi-clock-history clock-icon"></i>
-                        <span class="career-text">{{ translations.carrers }}</span>
+                        <span class="career-text">{{ translations.carrer }}</span>
                     </div>
                     <!-- Friends List Content -->
                     <div id="friendsListContent" class="friends-list-content">
-                        <!-- Friend Item Example (to be dynamically generated/updated) -->
-                        <div class="friend-item3">
-                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                            <div class="friend-info">
-                                <div class="friend-nickname" data-user-id="someFriend1">Friend's Name</div>
-                            </div>
-                            <i class="bi bi-person icon-friend-profile"></i>
-                        </div>
-                        <div class="friend-item3">
-                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                            <div class="friend-info">
-                                <div class="friend-nickname" data-user-id="someFriend2">Friend's Name</div>
-                            </div>
-                            <i class="bi bi-person icon-friend-profile"></i>
-                        </div>
-                        <div class="friend-item3">
-                            <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                            <div class="friend-info">
-                                <div class="friend-nickname" data-user-id="someFriend3">Friend's Name</div>
-                            </div>
-                            <i class="bi bi-person icon-friend-profile"></i>
-                        </div>
                         <!-- Additional friend items will be similar -->
                     </div>
                 </div>

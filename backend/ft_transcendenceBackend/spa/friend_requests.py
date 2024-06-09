@@ -44,7 +44,8 @@ def get_user_details(request):
                 'join': _("Joined:"),
                 'nb_match' : _("Matches Played:"),
                 'player' : _("Player "),
-                'start_tournament' : _("Start Tournament")
+                'start_tournament' : _("Start Tournament"),
+                'note': _("Note: Tournament mode does not impact player statistics in their profile."),
             }
             return JsonResponse({'user_details': user_details, 'translations': translations})
         except CustomUser.DoesNotExist:

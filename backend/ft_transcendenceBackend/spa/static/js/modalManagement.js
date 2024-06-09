@@ -146,8 +146,8 @@ function showChangeUsernameModal() {
                     document.getElementById('inputNewUsername').value = '';
                     closeModal('modalChangeUsername');
                     showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                    fetchUserProfile();
-                    fetchUserSettings();
+                    window.location.reload();
+                    
                 },
                 error: function(xhr, status, error) {
                     document.getElementById('inputNewUsername').value = '';
@@ -238,8 +238,7 @@ function showUploadProfilePictureModal() {
                     success: function(response) {
                         closeModal('modalUploadProfilePicture');
                         showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                        fetchUserProfile();
-                        fetchUserSettings();
+                        window.location.reload();
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
@@ -264,6 +263,7 @@ function changeLanguageModal(){
         data: { 'language': selectedLanguage },
         success: function() {
             showNotification("Language has been changed !", "rgb(81, 171, 81)");
+            window.location.reload();
         },
         error: function(xhr, status, error) {
             console.error(error);
