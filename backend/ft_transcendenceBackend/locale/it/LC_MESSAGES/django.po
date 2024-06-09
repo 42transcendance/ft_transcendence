@@ -316,3 +316,6 @@ msgstr "ti ha invitato a una partita"
 
 msgid "Note: Tournament mode does not impact player statistics in their profile."
 msgstr "Nota: la modalità torneo non influisce sulle statistiche dei giocatori nel loro profilo."
+
+msgid "You cannot send a friend request to yourself."
+msgstr "Non puoi inviare una richiesta di amicizia a te stesso."

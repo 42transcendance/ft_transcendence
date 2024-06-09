@@ -91,6 +91,9 @@ def send_friend_request(request):
             user_id, username = extract_user_info_from_token(token)
             current_user = CustomUser.objects.get(userid=user_id)
 
+            if current_user.username == friend.username:
+                return JsonResponse({'error': 'SelfFriendRequest', 'message': 'You cannot send a friend request to yourself.'}, status=400)
+
             if current_user.friends.filter(username=friend.username).exists():
                 return JsonResponse({'error': 'AlreadyFriends', 'message': 'You are already friends with this user.'}, status=400)
             
