@@ -111,7 +111,6 @@
                         <!-- Chats Container -->
                         <div id="chatsContainer" class="content-container">
                             <div id="chatsTabContent" class="chats-tab-content">
-                                <!--EXAMPLE (needs to be removed)-->
                                 <div class="chats-item global-chat-item">
                                     <i class="bi bi-globe2 global-chat-icon"></i>
                                     <div class="friend-info">
@@ -120,16 +119,16 @@
                                     <i class="bi bi-chat chats-icon "></i>
                                 </div>
 
-                                <div class="chatsTabContent2"></div>
-
-                                <!-- <div class="chats-item" data-id="channelId1">
-                                    <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
-                                    <div class="friend-info">
-                                        <div>Channels Name</div>
+                                <!-- <div id="chatsTabContent2 "class="chatsTabContent2">
+                                    <div class="chats-item" data-id="channelId1">
+                                        <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
+                                        <div class="friend-info">
+                                            <div>Friends Name</div>
+                                        </div>
+                                        <i class="bi bi-chat channels-chat icon-chat"></i> 
                                     </div>
-                                    <i class="bi bi-chat channels-chat icon-chat"></i> 
-                                    <i class="bi bi-gear channels-settings icon-settings"></i>
                                 </div> -->
+
 
                                 <!-- <div class="chats-item"  data-id="channelId2">
                                     <img src="{% static 'assets/pfp.png' %}" alt="Friend's Name" class="friend-image">
@@ -139,8 +138,8 @@
                                     <i class="bi bi-chat channels-chat icon-chat"></i>
                                     <i class="bi bi-gear channels-settings icon-settings"></i> 
                                 </div> -->
+                                <div id="chatsTabContent2" class="chats-tab-content2">
                             </div>
-                            <div id="chatsTabContent2" class="chats-tab-content2">
 
                             </div>
                         </div>
@@ -155,7 +154,7 @@
                             <i class="bi bi-chat-dots chat-icon"></i>
                             <span class="social-text" id="social-text">{{ translations.messages }}: General Chat</span>
                         </div>
-                         <div class="chat-messages" id="">
+                         <div class="chat-messages" id="" data-id="global" style="display: block;">
                             <!-- MESSAGE EXANMPLE -->
 
                             <div class="chat-message">

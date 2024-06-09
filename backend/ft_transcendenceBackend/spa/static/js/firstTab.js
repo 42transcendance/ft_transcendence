@@ -6,15 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const friendsContainer = document.getElementById('friendsContainer');
     const chatsContainer = document.getElementById('chatsContainer');
     const chatsTabContent2 = document.getElementById('chatsTabContent2');
+    checkAndUpdateChatItems();
 
-    // Event listeners for tab buttons
     friendsBtn.addEventListener('click', () => showTab(friendsContainer, chatsContainer));
-    chatsBtn.addEventListener('click', () => showTab(chatsContainer, friendsContainer));
+    chatsBtn.addEventListener('click', () => {
+        showTab(chatsContainer, friendsContainer);
+        checkAndUpdateChatItems();
+    });
 
     function showTab(activeContainer, inactiveContainer) {
         activeContainer.style.display = 'block';
         inactiveContainer.style.display = 'none';
-        activeContainer === chatsContainer ? fetchChats() : null;
+        // activeContainer === chatsContainer ? fetchChats() : null;
         updateTabButtonStyles(activeContainer);
     }
 
@@ -28,65 +31,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function fetchChats() {
-        // $.ajax({
-        //     url: '/api/chats', // REPLACE !!!
-        //     method: 'GET',
-        //     dataType: 'json',
-        //     success: function(data) {
-        //         displayChats(data.chats);
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('Error fetching chats:', error);
-        //         // displayErrorInChatContainer('Failed to load chats.');
-        //     }
-        // });
-        console.log("LELE");
-    }
 
-    function displayChats(chats) {
-        chatsTabContent2.innerHTML = '';
+    async function checkAndUpdateChatItems() {
+        try {
+            const chatUsersResponse = await fetch('/get_chat_users/');
+            const chatUsersData = await chatUsersResponse.json();
 
-        chats.forEach(chat => {
-            const chatItem = document.createElement('div');
-            chatItem.className = 'chats-item';
-            chatItem.setAttribute('data-user-id', chat.userId);
+            const friendsResponse = await fetch('/get_friends/');
+            const friendsData = await friendsResponse.json();
+            const friendsIds = friendsData.map(friend => friend.userid);
 
-            chatItem.innerHTML = `
-                <img src="${chat.profilePicture || 'assets/pfp.png'}" alt="${chat.name}" class="friend-image">
-                <div class="friend-info">
-                    <div>${chat.name}</div>
-                </div>
-                <i class="bi bi-chat chats-chat icon-chat"></i>
-                <i class="bi bi-gear chats-settings icon-settings"></i>
-            `;
-            chatsTabContent2.appendChild(chatItem);
-        });
-    }
+            const blockListResponse = await fetch('/get_block_list/');
+            const blockListData = await blockListResponse.json();
+            const blockedIds = blockListData.map(blocked => blocked.userid);
 
-    function displayErrorInChatContainer(message) {
-        chatsTabContent2.innerHTML = `<p class="error">${message}</p>`;
-    }
+            if (chatUsersData.chat_users) {
+                const existingChatItems = Array.from(chatsTabContent2.querySelectorAll('.chats-item'));
+                const existingChatIds = existingChatItems.map(item => item.getAttribute('data-id'));
 
-    // Handling clicks on chat icons and settings within chatsTabContent2
-    chatsTabContent2.addEventListener('click', function(event) {
-        if (event.target.classList.contains('icon-chat')) {
-            const TheuserId = event.target.closest('.chats-item').getAttribute('data-user-id');
-            openChat(TheuserId);
-        } else if (event.target.classList.contains('icon-settings')) {
-            const TheuserId = event.target.closest('.chats-item').getAttribute('data-user-id');
-            openSettings(TheuserId);
+                // Remove chat items for users who are no longer friends or are blocked
+                existingChatItems.forEach(item => {
+                    const userId = item.getAttribute('data-id');
+                    if (!friendsIds.includes(userId) || blockedIds.includes(userId)) {
+                        chatsTabContent2.removeChild(item);
+                    }
+                });
+
+                // Add new chat items
+                chatUsersData.chat_users.forEach(user => {
+                    const userId = user[0];
+                    const userName = user[1];
+                    const userPfp = user[2];
+
+                    if (!existingChatIds.includes(userId) && friendsIds.includes(userId) && !blockedIds.includes(userId)) {
+                        const chatItem = createChatItem(userId, userName, userPfp);
+                        chatsTabContent2.appendChild(chatItem);
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error checking and updating chat items:', error);
         }
-    });
-
-    function openChat(TheuserId) {
-        console.log('Open chat with user:', TheuserId);
-        // Implement your logic to open chat
-    }
-
-    function openSettings(TheuserId) {
-        console.log('Open settings for user:', TheuserId);
-        // Implement your logic to open settings
     }
 });
 

@@ -180,3 +180,111 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('.current-username').textContent = data.user_details.username;
     }
 });
+
+// Chats History Load
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await initializeChatDivs();
+    checkAndUpdateChatItems();});
+
+async function initializeChatDivs() {
+    try {
+        const response = await fetch('/get_chat_users/');
+        const data = await response.json();
+
+        if (data.chat_users) {
+            for (const user of data.chat_users) {
+                const userId = user[0];
+                const userName = user[1];
+                const userPfp = user[2];
+                createChatDiv(userId, userName);
+                await loadChatHistory(userId, 'private');
+            }
+        }
+
+        createChatDiv('global', 'Global Chat');
+        await loadChatHistory('global', 'global');
+
+    } catch (error) {
+        console.error('Error initializing chat divs:', error);
+    }
+}
+
+async function loadChatHistory(userId, chatType) {
+    let requestData = { 'chat_type': chatType };
+    if (chatType === 'private') {
+        requestData['target_user_id'] = userId;
+    }
+
+    try {
+        const response = await fetch(`/get_chat_history/?chat_type=${chatType}&target_user_id=${userId}`);
+        const data = await response.json();
+        if (data.chat_history) {
+            const chatMessagesDiv = document.querySelector(`.chat-messages[data-id='${userId}']`);
+            updateChatInterface(chatMessagesDiv, data.chat_history);
+        }
+    } catch (error) {
+        console.error('Error fetching chat history:', error);
+    }
+}
+
+function createChatDiv(userId, userName) {
+    let chatDiv = document.querySelector(`.chat-messages[data-id='${userId}']`);
+    if (!chatDiv) {
+        chatDiv = document.createElement('div');
+        chatDiv.className = 'chat-messages';
+        chatDiv.setAttribute('data-id', userId);
+        chatDiv.setAttribute('data-username', userName);
+        chatDiv.style.display = 'none';
+        document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
+    }
+}
+
+// chat items
+
+async function loadChatItems() {
+    try {
+        const response = await fetch('/get_chat_users/');
+        const data = await response.json();
+
+        if (data.chat_users) {
+            const chatsTabContent = document.getElementById('chatsTabContent2');
+
+            for (const user of data.chat_users) {
+                const userId = user[0];
+                const userName = user[1];
+                const userPfp = user[2];
+
+                const chatItem = createChatItem(userId, userName, userPfp);
+                chatsTabContent.appendChild(chatItem);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading chat items:', error);
+    }
+}
+
+function createChatItem(userId, userName, userPfp) {
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chats-item';
+    chatItem.setAttribute('data-id', userId);
+    chatItem.setAttribute('data-username', userName);
+
+    const img = document.createElement('img');
+    img.src = userPfp || '/static/assets/default-pfp.png';
+    img.alt = userName;
+    img.className = 'friend-image';
+
+    const friendInfo = document.createElement('div');
+    friendInfo.className = 'friend-info';
+    friendInfo.innerHTML = `<div>${userName}</div>`;
+
+    const chatIcon = document.createElement('i');
+    chatIcon.className = 'bi bi-chat channels-chat icon-chat';
+
+    chatItem.appendChild(img);
+    chatItem.appendChild(friendInfo);
+    chatItem.appendChild(chatIcon);
+
+    return chatItem;
+}

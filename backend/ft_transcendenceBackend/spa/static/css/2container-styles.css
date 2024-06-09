@@ -201,6 +201,7 @@
     align-content: center;
     flex-direction: column;
     max-height: 63vh;
+    height: 63vh;
     margin: 20px auto;
     width: 80%;
     margin-top: 2%;

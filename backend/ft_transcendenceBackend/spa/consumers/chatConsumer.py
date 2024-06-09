@@ -33,31 +33,33 @@ class chatConsumer(AsyncWebsocketConsumer):
         print(f"Sender ID: {self.user_id} (type: {type(self.user_id)})")
         
         if text_data_json.get("type") == 'global.message':
-            await save_chat_message(self.user_id, None, message, True)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'global.message',
-                    'message': message,
-                    'source_user': self.username,
-                    'source_user_id': self.user_id,
-                }
-            )
+            message_saved = await save_chat_message(self.user_id, None, message, True)
+            if message_saved:  # Only send the message if it was saved successfully
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'global.message',
+                        'message': message,
+                        'source_user': self.username,
+                        'source_user_id': self.user_id,
+                    }
+                )
 
         elif text_data_json.get("type") == 'private.message':
             target_user_id = text_data_json.get("target_user_id")
             print(f"Private message to: {target_user_id} (type: {type(target_user_id)})")
-            await save_chat_message(self.user_id, target_user_id, message, False)
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'private.message',
-                    'message': message,
-                    'source_user': self.username,
-                    'source_user_id': self.user_id,
-                    'target_user_id': target_user_id,
-                }
-            )
+            message_saved = await save_chat_message(self.user_id, target_user_id, message, False)
+            if message_saved:  # Only send the message if it was saved successfully
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'private.message',
+                        'message': message,
+                        'source_user': self.username,
+                        'source_user_id': self.user_id,
+                        'target_user_id': target_user_id,
+                    }
+                )
     
     async def global_message(self, event):
         message = event['message']

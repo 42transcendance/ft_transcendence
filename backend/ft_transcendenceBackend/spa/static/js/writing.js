@@ -3,22 +3,19 @@ let currentRecipientId = null;
 let userId = null;
 let userUsername = null;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const sendMessageButton = document.querySelector('.send-button');
     const messageInput = document.querySelector('.message-input');
-    const chatMessagesDiv = document.querySelector('.chat-messages');
 
     sendMessageButton.addEventListener('click', function() {
         const messageText = messageInput.value.trim();
         if (!messageText) return;
 
-        // addMessageToChatUI(messageText, 'You');
         if (currentChatContext === 'global') {
             sendMessage('global.message', messageText);
         } else if (currentChatContext === 'private' && currentRecipientId) {
-            console.log("recep ID: ", currentRecipientId);
             sendMessage('private.message', messageText, currentRecipientId);
-		}
+        }
         messageInput.value = '';
     });
 
@@ -29,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
 
 
 
@@ -53,7 +52,7 @@ function sendMessage(type, message, id=null) {
     }
 }
 
-function messageWith(mode, username) {
+function messageWith(mode, username=null) {
     let text = document.getElementById('social-text');
     if (mode == 'set')
         text.textContent = window.translatedMessages + ": " + username;

@@ -148,9 +148,45 @@ def save_chat_message(sender_id, recipient_id, message, is_global):
     try:
         print(f"Saving message from sender_id: {sender_id} (type: {type(sender_id)}) to recipient_id: {recipient_id} (type: {type(recipient_id)})")
         sender = CustomUser.objects.get(userid=sender_id)
-    except CustomUser.DoesNotExist:
-        print(f"Error: CustomUser with userid {sender_id} does not exist.")
-        return
+        recipient = CustomUser.objects.get(userid=recipient_id) if recipient_id else None
 
-    recipient = CustomUser.objects.get(userid=recipient_id) if recipient_id else None
-    ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)
+        # Check if the sender and recipient are friends
+        if recipient and not sender.friends.filter(userid=recipient.userid).exists():
+            print(f"Message not saved: {sender.username} and {recipient.username} are not friends.")
+            return False
+
+        # Check if either the sender or recipient has blocked the other
+        if recipient and (sender.blocklist.filter(userid=recipient.userid).exists() or recipient.blocklist.filter(userid=sender.userid).exists()):
+            print(f"Message not saved: {sender.username} and {recipient.username} have blocked each other.")
+            return False
+
+        ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)
+        print("Message saved successfully.")
+        return True
+    except CustomUser.DoesNotExist as e:
+        print(f"Error: {e}")
+        return False
+
+
+def get_chat_users(request):
+    user_id, _ = extract_user_info_from_token(request.session.get('token'))
+    if not user_id:
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    sent_messages = ChatMessage.objects.filter(sender__userid=user_id).values(
+        'recipient__userid', 'recipient__username', 'recipient__profile_picture'
+    ).distinct()
+    received_messages = ChatMessage.objects.filter(recipient__userid=user_id).values(
+        'sender__userid', 'sender__username', 'sender__profile_picture'
+    ).distinct()
+
+    users = set()
+    for msg in sent_messages:
+        if msg['recipient__userid']:
+            users.add((msg['recipient__userid'], msg['recipient__username'], msg['recipient__profile_picture']))
+    for msg in received_messages:
+        if msg['sender__userid']:
+            users.add((msg['sender__userid'], msg['sender__username'], msg['sender__profile_picture']))
+
+    return JsonResponse({'chat_users': list(users)})
+

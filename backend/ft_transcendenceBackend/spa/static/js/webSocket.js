@@ -50,19 +50,19 @@ function connectWebSocket() {
             case 'private.message':
                 console.log("websocket: private message");
                 console.log(data)
-                addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
+                await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
                 case 'global.message':
                     console.log("websocket: global message");
                     console.log(data.source_user);
                     try {
-                        const isBlocked = await msgFromBlocked(data.source_user_id);
-                        if (isBlocked) {
-                            console.log("Message blocked.");
-                            return;
-                        }
-                        addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
+                        // const isBlocked = await msgFromBlocked(data.source_user_id);
+                        // if (isBlocked) {
+                        //     console.log("Message blocked.");
+                        //     return;
+                        // }
+                        await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
                     } catch (error) {
                         console.error("Error checking block list:", error);
                     }

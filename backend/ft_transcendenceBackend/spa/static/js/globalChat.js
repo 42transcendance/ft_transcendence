@@ -1,49 +1,27 @@
 function openGlobalChat() {
-    const chatMessagesContainer = document.querySelector('.chat-messages');
-    chatMessagesContainer.id = '';
-    chatMessagesContainer.innerHTML = '';
+    document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+        chatDiv.style.display = 'none';
+    });
 
-    fetchChatHistory("global");
-    // loadGlobalChatHistory();
-    messageWith("general");
-
-}
-
-function fetchChatHistory(chatType, targetUserId = null) {
-    // console.log("Fetching general");
-    let requestData = { 'chat_type': chatType };
-    if (chatType === 'private' && targetUserId) {
-        requestData['target_user_id'] = targetUserId;
+    const globalChatDiv = document.querySelector(`.chat-messages[data-id='global']`);
+    if (globalChatDiv) {
+        globalChatDiv.style.display = 'block';
     }
 
-    $.ajax({
-        url: '/get_chat_history/',
-        method: 'GET',
-        data: requestData,
-        success: function(data) {
-            console.log('Chat history:', data); 
-            if (data.chat_history) {
-                updateChatInterface(data.chat_history);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching chat history:', error);
-        }
-    });
+    messageWith('general');
 }
 
-async function updateChatInterface(chatHistory) {
-    const chatMessagesDiv = document.querySelector('.chat-messages');
-    chatMessagesDiv.innerHTML = ''; // Clear current messages
 
-    // Sort the chat history by timestamp before rendering
+async function updateChatInterface(chatMessagesDiv, chatHistory) {
+    chatMessagesDiv.innerHTML = '';
+
     chatHistory.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     for (const chat of chatHistory) {
         if (chat.recipient === 'global') {
-            await addMessageToGlobalChatUI(chat.message, chat.sender, chat.sender_id);
+            await addMessageToGlobalChatUI(chat.message, chat.sender, chat.sender_id, chatMessagesDiv);
         } else {
-            await addMessageToChatUI(chat.message, chat.sender, chat.sender_id, chat.recipient_id);
+            await addMessageToChatUI(chat.message, chat.sender, chat.sender_id, chat.recipient_id, chatMessagesDiv);
         }
     }
 
@@ -99,20 +77,22 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
                 }
                 const messageDetailsHTML = messageDetailsHTML1;
 
+                const globalChatDiv = document.querySelector(`.chat-messages[data-id='global']`);
                 messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-                document.querySelector('.chat-messages').appendChild(messageElement);
-                scrollToBottom(document.querySelector('.chat-messages'));
-                resolve(); // Resolve the promise after the message is added
+                globalChatDiv.appendChild(messageElement);
+                scrollToBottom(globalChatDiv);
+                resolve();
             },
             error: function(xhr, status, error) {
                 console.error("Failed to fetch pfp:", error);
-                reject(error); // Reject the promise in case of an error
+                reject(error);
             }
         });
     });
 }
 
-function addMessageToChatUI(message, sender, senderid, id) {
+
+function addMessageToChatUI(message, sender, senderid, recipientid) {
     return new Promise((resolve, reject) => {
         const messageElement = document.createElement('div');
         messageElement.className = 'chat-message';
@@ -123,7 +103,7 @@ function addMessageToChatUI(message, sender, senderid, id) {
             data: { 'profile_id': senderid },
             dataType: 'json',
             success: function(data) {
-                let pfp = data.user_details.userPfp || 'assets/pfp.png';
+                let pfp = data.user_details.userPfp || 'static/assets/pfp.png';
                 const userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
                 const messageDetailsHTML = `
                     <div class="message-details">
@@ -135,31 +115,19 @@ function addMessageToChatUI(message, sender, senderid, id) {
                     </div>
                 `;
                 messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-                document.querySelector('.chat-messages').appendChild(messageElement);
-                scrollToBottom(document.querySelector('.chat-messages'));
-                resolve(); // Resolve the promise after the message is added
+                const chatDivId = senderid === userId ? recipientid : senderid;
+                const chatDiv = document.querySelector(`.chat-messages[data-id='${chatDivId}']`);
+                chatDiv.appendChild(messageElement);
+                scrollToBottom(chatDiv);
+                resolve();
             },
             error: function(xhr, status, error) {
                 console.error("Failed to fetch pfp:", error);
-                reject(error); // Reject the promise in case of an error
+                reject(error);
             }
         });
     });
 }
-
-
-
-// function loadGlobalChatHistory() {
-//     console.log(`loading global chat`);
-//     fetch(`/api/global-chat/history`)
-//     .then(response => response.json())
-//     .then(messages => {
-//         messages.forEach(message => {
-//             displayChatMessage(message);
-//         });
-//     })
-//     .catch(error => console.error('Failed to load Global Chat history:', error));
-// }
 
 function displayChatMessage(message) {
     const chatMessagesContainer = document.querySelector('.chat-messages');
@@ -195,27 +163,3 @@ function displayChatMessage(message) {
     chatMessagesContainer.appendChild(messageElement);
     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
-
-
-//overall messages in the chhat events
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const chatMessagesContainer = document.querySelector('.chat-messages');
-
-//     chatMessagesContainer.addEventListener('click', function(event) {
-//         console.log("clicked");
-//         if (event.target.classList.contains('bi-person')) {
-//             const nicknameElement = event.target.closest('.nicknameAndIcon').querySelector('.nickname');
-//             const TheId = nicknameElement.getAttribute('data-user-id');
-
-//             console.log('User ID:', TheId);
-
-//             const profileTab = document.querySelector('.profile-tab');
-//             profileTab.click();
-//         }
-//     });
-// });
-
-// function handleUserIconClick(TheId) {
-//     console.log('Handling click for user:', TheId);
-// }
