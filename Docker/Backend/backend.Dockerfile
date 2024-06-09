@@ -21,6 +21,7 @@ COPY ./conf/.pg_service.conf /pg_service.conf
 
 COPY ./conf/.pgpass /.pgpass
 
+WORKDIR /djangoSource/ft_transcendenceBacken
 
 ENTRYPOINT [ "tail", "-f", "/dev/null"]
 
