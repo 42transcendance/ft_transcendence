@@ -2,6 +2,8 @@ function connectWebSocket() {
     console.log("WebSocket log.");
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
     const webSocketURL = `${wsScheme}://${window.location.host}/ws/chat/`;
+    
+    console.log(webSocketURL);
 
     const chatSocket = new WebSocket(webSocketURL);
 

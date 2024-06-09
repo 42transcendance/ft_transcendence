@@ -31,6 +31,8 @@ prune: stop
 	@rm -rf ./Docker/Backend/conf/.pgpass
 	@rm -rf ./Docker/Backend/conf/.pg_service.conf
 
+	@rm -rf ./backend/ft_transcendenceBackend/staticfiles
+	
 	@echo "Pruned docker system, deleted content of database, deleted env file"
 
 re: prune all

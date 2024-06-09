@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install \
 
 RUN pip install django
 
-RUN python3 -m pip install Pillow channels==3.0.4 requests pyjwt python-dotenv django-environ django-sslserver
+RUN python3 -m pip install Pillow channels==3.0.4 requests pyjwt python-dotenv django-environ django-sslserver whitenoise
 
 RUN openssl genpkey -algorithm RSA -out /key.pem \
     && openssl req -new -key /key.pem -out /csr.pem -subj "/CN=localhost" \
@@ -21,6 +21,7 @@ COPY ./conf/.pg_service.conf /pg_service.conf
 
 COPY ./conf/.pgpass /.pgpass
 
+WORKDIR /djangoSource/ft_transcendenceBacken
 
 ENTRYPOINT [ "tail", "-f", "/dev/null"]
 
