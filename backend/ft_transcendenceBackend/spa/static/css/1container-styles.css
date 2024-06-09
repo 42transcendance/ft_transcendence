@@ -258,7 +258,7 @@
     
 }
 
-.global-chat-item:hover {
+.global-chat-item:hover, .chats-item:hover {
     color: rgba(164, 94, 202); 
     border: 2px solid rgba(173, 102, 255, 0.7);
 }

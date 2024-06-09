@@ -1,23 +1,132 @@
 function openGlobalChat() {
-    const chatMessagesContainer = document.querySelector('.chat-messages');
-    chatMessagesContainer.id = '';
-    chatMessagesContainer.innerHTML = '';
+    document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+        chatDiv.style.display = 'none';
+    });
 
-    loadGlobalChatHistory();
-    messageWith("general");
+    const globalChatDiv = document.querySelector(`.chat-messages[data-id='global']`);
+    if (globalChatDiv) {
+        globalChatDiv.style.display = 'block';
+    }
 
+    messageWith('general');
 }
 
-function loadGlobalChatHistory() {
-    console.log(`loading global chat`);
-    fetch(`/api/global-chat/history`)
-    .then(response => response.json())
-    .then(messages => {
-        messages.forEach(message => {
-            displayChatMessage(message);
+
+async function updateChatInterface(chatMessagesDiv, chatHistory) {
+    chatMessagesDiv.innerHTML = '';
+
+    chatHistory.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    for (const chat of chatHistory) {
+        if (chat.recipient === 'global') {
+            await addMessageToGlobalChatUI(chat.message, chat.sender, chat.sender_id, chatMessagesDiv);
+        } else {
+            await addMessageToChatUI(chat.message, chat.sender, chat.sender_id, chat.recipient_id, chatMessagesDiv);
+        }
+    }
+
+    scrollToBottom(chatMessagesDiv);
+}
+
+function addMessageToGlobalChatUI(message, sender, sender_id) {
+    return new Promise((resolve, reject) => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'chat-message';
+        let userIconHTML = '';
+
+        $.ajax({
+            url: '/get_user_details/',
+            method: 'GET',
+            data: { 'profile_id': sender_id },
+            dataType: 'json',
+            success: function(data) {
+                let pfp = data.user_details.userPfp || 'assets/pfp.png';
+                userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
+
+                let messageDetailsHTML1;
+                if (sender_id == userId) {
+                    messageDetailsHTML1 = `
+                    <div class="message-details">
+                        <div class="nicknameAndIcon">
+                            <span class="nickname" data-user-id="${sender_id}">${sender}</span>
+                        </div>
+                        <div class="text-and-time">
+                            <div class="message-text">${message}</div>
+                            <span class="message-time">${getCurrentTime()}</span>
+                        </div>
+                    </div>
+                    `;
+                } else {
+                    messageDetailsHTML1 = `
+                    <div class="message-details">
+                        <div class="nicknameAndIcon">
+                            <span class="nickname" data-user-id="${sender_id}">${sender}</span>
+                            <i class="bi bi-caret-right-fill toggle-icons"></i>
+                            <div class="messageIcons">
+                                <i class="bi bi-controller messageIcon"></i>
+                                <i class="bi bi-plus-circle messageIcon"></i>
+                                <i class="bi bi-person messageIcon"></i>
+                            </div>
+                        </div>
+                        <div class="text-and-time">
+                            <div class="message-text">${message}</div>
+                            <span class="message-time">${getCurrentTime()}</span>
+                        </div>
+                    </div>
+                    `;
+                }
+                const messageDetailsHTML = messageDetailsHTML1;
+
+                const globalChatDiv = document.querySelector(`.chat-messages[data-id='global']`);
+                messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+                globalChatDiv.appendChild(messageElement);
+                scrollToBottom(globalChatDiv);
+                resolve();
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch pfp:", error);
+                reject(error);
+            }
         });
-    })
-    .catch(error => console.error('Failed to load Global Chat history:', error));
+    });
+}
+
+
+function addMessageToChatUI(message, sender, senderid, recipientid) {
+    return new Promise((resolve, reject) => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'chat-message';
+
+        $.ajax({
+            url: '/get_user_details/',
+            method: 'GET',
+            data: { 'profile_id': senderid },
+            dataType: 'json',
+            success: function(data) {
+                let pfp = data.user_details.userPfp || 'static/assets/pfp.png';
+                const userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
+                const messageDetailsHTML = `
+                    <div class="message-details">
+                        <span class="nickname">${sender}</span>
+                        <div class="text-and-time">
+                            <div class="message-text">${message}</div>
+                            <span class="message-time">${getCurrentTime()}</span>
+                        </div>
+                    </div>
+                `;
+                messageElement.innerHTML = userIconHTML + messageDetailsHTML;
+                const chatDivId = senderid === userId ? recipientid : senderid;
+                const chatDiv = document.querySelector(`.chat-messages[data-id='${chatDivId}']`);
+                chatDiv.appendChild(messageElement);
+                scrollToBottom(chatDiv);
+                resolve();
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch pfp:", error);
+                reject(error);
+            }
+        });
+    });
 }
 
 function displayChatMessage(message) {
@@ -54,27 +163,3 @@ function displayChatMessage(message) {
     chatMessagesContainer.appendChild(messageElement);
     chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
 }
-
-
-//overall messages in the chhat events
-
-// document.addEventListener('DOMContentLoaded', function() {
-//     const chatMessagesContainer = document.querySelector('.chat-messages');
-
-//     chatMessagesContainer.addEventListener('click', function(event) {
-//         console.log("clicked");
-//         if (event.target.classList.contains('bi-person')) {
-//             const nicknameElement = event.target.closest('.nicknameAndIcon').querySelector('.nickname');
-//             const TheId = nicknameElement.getAttribute('data-user-id');
-
-//             console.log('User ID:', TheId);
-
-//             const profileTab = document.querySelector('.profile-tab');
-//             profileTab.click();
-//         }
-//     });
-// });
-
-// function handleUserIconClick(TheId) {
-//     console.log('Handling click for user:', TheId);
-// }

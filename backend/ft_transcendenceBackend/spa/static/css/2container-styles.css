@@ -201,6 +201,7 @@
     align-content: center;
     flex-direction: column;
     max-height: 63vh;
+    height: 63vh;
     margin: 20px auto;
     width: 80%;
     margin-top: 2%;
@@ -459,6 +460,8 @@
     border-radius: 8px;
     margin-right: 5px;
     overflow-y: auto;
+    max-height: calc(75vh - 110px);
+    position: relative;
 }
 
 .game-item {
@@ -471,7 +474,7 @@
     align-items: center;
     margin-left: 10px;
     margin-right: 10px;
-    width: 70%;
+    width: 85%;
 }
 
 .game-details, .game-info {
@@ -537,11 +540,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(124, 48, 155, 0.7);
+    background-color: rgb(162, 114, 180);
     border-radius: 8px 8px 0 0;
     padding: 5px;
     box-sizing: border-box;
     width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Ensure it is above other content */
 }
 
 /* Responsive adjustments */
