@@ -90,8 +90,12 @@ function showTab(route) {
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
-            fetchUserData(userId);
-            fetchFriendsList();
+            fetchUserSettings().then(() => {
+                fetchUserData(userId);
+                fetchFriendsList();
+            }).catch(error => {
+                console.error('Error fetching user settings:', error);
+            });
             break;
     }
 }

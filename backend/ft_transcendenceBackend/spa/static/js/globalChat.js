@@ -115,7 +115,9 @@ function addMessageToChatUI(message, sender, senderid, recipientid) {
                     </div>
                 `;
                 messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-                const chatDivId = senderid === userId ? recipientid : senderid;
+                const chatDivId = senderid == userId ? recipientid : senderid;
+                // console.log(`sender: ${senderid}  userID: ${userId}  recipientid: ${recipientid}`);
+                // console.log(chatDivId);
                 const chatDiv = document.querySelector(`.chat-messages[data-id='${chatDivId}']`);
                 chatDiv.appendChild(messageElement);
                 scrollToBottom(chatDiv);
