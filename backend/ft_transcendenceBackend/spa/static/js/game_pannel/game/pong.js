@@ -68,7 +68,7 @@ class Game {
 	}
 
 	joinMatchmaking() {
-		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+		this.pongSocket = new WebSocket('wss://' + window.location.host + '/ws/pong/');
 	
 		this.pongSocket.onopen = () => {
 			this.connected = true;
@@ -82,7 +82,7 @@ class Game {
 	}
 
 	createPrivateGame() {
-		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+		this.pongSocket = new WebSocket('wss://' + window.location.host + '/ws/pong/');
 	
 		this.pongSocket.onopen = () => {
 			this.connected = true;
@@ -96,7 +96,7 @@ class Game {
 	}
 
 	joinPrivateGame(room_id) {
-		this.pongSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
+		this.pongSocket = new WebSocket('wss://' + window.location.host + '/ws/pong/');
 	
 		this.pongSocket.onopen = () => {
 			this.connected = true;
@@ -140,7 +140,6 @@ class Game {
 
 				case ('game.state'):
 					this.lastGameState = wsData;
-					
 					this.diff = this.canvas.width / wsData.width;
 					if (this.setPaddle === 0) {
 						if (this.side === 'left') {
@@ -159,7 +158,6 @@ class Game {
 						}
 						this.setPaddle = 1;
 					}
-					
 					break ;
 
 				case ('countdown'):
@@ -172,9 +170,13 @@ class Game {
 
 				case ('ending.game'):
 					this.game_running = false;
-
 					this.endGame(this.animationId);
 					this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+					break;
+
+				case ('Error'):
+					console.log(wsData.message);
+					this.endGame();
 					break;
 
 				default:

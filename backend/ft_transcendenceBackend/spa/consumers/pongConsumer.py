@@ -46,11 +46,13 @@ class pongConsumer(AsyncWebsocketConsumer):
         message_type = data.get('type')
         message = data.get('message')
         
-        # Check if user is already in a game
-        # if self.room_id != None:
-        #     self.send_notification("Error", "You are already involved in a game.")
-        #     await self.close()
-        #     return
+        """
+        Check if user is already in a game
+        if self.room_id != None:
+            self.send_notification("Error", "You are already involved in a game.")
+            await self.close()
+            return
+        """
         
         if message_type == 'user.update':
             if self.side == 'right':
@@ -153,8 +155,8 @@ class pongConsumer(AsyncWebsocketConsumer):
             room_id_to_join = data.get('room_id')
             self.room_id = DuelsManager.join_private_room(self.user_id, room_id_to_join)
             if self.room_id == None:
+                print("Hello There")
                 await self.send_notification("Error", "Cannot join private room")
-                await self.close()
                 return
             await self.channel_layer.group_add( self.room_id, self.channel_name)
             self.room_object = DuelsManager.get_room_by_id(self.room_id)

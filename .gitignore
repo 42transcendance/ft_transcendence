@@ -3,3 +3,4 @@
 /Docker/Backend/conf/.pg_service.conf
 **/__pycache__/
 *.pyc
+/backend/ft_transcendenceBackend/staticfiles
