@@ -1,10 +1,7 @@
 function connectWebSocket() {
-    console.log("WebSocket log.");
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
     const webSocketURL = `${wsScheme}://${window.location.host}/ws/chat/`;
     
-    console.log(webSocketURL);
-
     const chatSocket = new WebSocket(webSocketURL);
 
     chatSocket.onopen = function(e) {
@@ -48,16 +45,13 @@ function connectWebSocket() {
     }       
 
     async  function handleWebSocketMessage(data) {
+        console.log(data);
         switch(data.type) {
             case 'private.message':
-                console.log("websocket: private message");
-                console.log(data)
                 await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
                 case 'global.message':
-                    console.log("websocket: global message");
-                    console.log(data.source_user);
                     try {
                         // const isBlocked = await msgFromBlocked(data.source_user_id);
                         // if (isBlocked) {
@@ -76,7 +70,7 @@ function connectWebSocket() {
             case 'friendRequest':
                 handleFriendRequest(data);
                 break;
-            case 'game.invite.recieve':
+            case 'game.invite.receive':
                 gameNotification(data);
             break;
         }
@@ -87,7 +81,6 @@ function connectWebSocket() {
 function gameNotification(data) {
     const username = data.source_user;
     const message = `invited you to a game`;
-    console.log(message);
 
     $.ajax({
         url: '/get_notif_translate/',
