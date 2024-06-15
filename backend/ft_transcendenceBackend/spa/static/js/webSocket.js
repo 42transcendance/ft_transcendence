@@ -62,7 +62,7 @@ function connectWebSocket() {
                     } catch (error) {
                         console.error("Error checking block list:", error);
                     }
-                    gameNotification(data);
+                    // gameNotification(data);
                     break;
             case 'notification':
                 displayNotification(data.message);
@@ -71,7 +71,12 @@ function connectWebSocket() {
                 handleFriendRequest(data);
                 break;
             case 'game.invite.receive':
+                console.log("invite recieved");
                 gameNotification(data);
+                break;
+            case 'game.invite.send':
+                showNotification(data.message, "rgb(81, 171, 81)");
+                break;
             break;
         }
     }
