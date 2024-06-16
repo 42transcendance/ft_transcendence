@@ -66,6 +66,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
                                 <i class="bi bi-controller messageIcon"></i>
                                 <i class="bi bi-plus-circle messageIcon"></i>
                                 <i class="bi bi-person messageIcon"></i>
+                                <i class="bi bi-slash-circle messageIcon"></i>
                             </div>
                         </div>
                         <div class="text-and-time">
@@ -142,6 +143,7 @@ function displayChatMessage(message) {
             <i class="bi bi-controller messageIcon"></i>
             <i class="bi bi-plus-circle messageIcon"></i>
             <i class="bi bi-person messageIcon"></i>
+            <i class="bi bi-slash-circle"></i>
         </div>
     ` : '';
 

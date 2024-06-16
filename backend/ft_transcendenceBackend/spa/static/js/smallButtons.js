@@ -146,6 +146,9 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             console.log("Person icon clicked for user:", senderId);
             simulateProfileTabClick(senderId);
             break;
+        case 'bi-slash-circle':
+            blockUser(senderNickname)
+            break;
         default:
             console.log("Unknown icon clicked for user:", senderId);
     }
@@ -161,6 +164,18 @@ function addFriend(senderNickname) {
         },
         error: function(xhr) {
             showNotification("Failed to send friend request: " + xhr.responseJSON.message, "rgb(168, 64, 64)");
+        }
+    });
+}
+function blockUser(username) {
+    $.ajax({
+        url: '/block_friend/',
+        method: 'GET',
+        data: { 'friend_username': username },
+        success: function(data) {
+            fetchFriends();
+            fetchBlockedContacts();
+            showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
         }
     });
 }
