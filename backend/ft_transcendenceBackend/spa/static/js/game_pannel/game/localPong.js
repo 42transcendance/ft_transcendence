@@ -46,15 +46,17 @@ class LocalGame {
 
 	constructor(playerName, opponentName) {
 
-		this.test = document.getElementById('principal-container');
+		this.principalContainer = document.getElementById('principal-container');
 		this.canvas = document.getElementById('gameCanvas');
+		this.buttonContainer = document.getElementById('button-container');
 		this.context = this.canvas.getContext('2d');
 		
-		this.canvas.width = this.test.clientWidth;
-		this.canvas.height = this.test.clientHeight;
+		this.buttonContainer.style.display = 'none';
+		this.canvas.width = this.principalContainer.clientWidth;
+		this.canvas.height = this.principalContainer.clientWidth * 0.67;
 
-		this.canvas.style.width = this.test.clientWidth + 'px';
-		this.canvas.style.height = this.test.clientHeight + 'px';
+		this.canvas.style.width = this.canvas.width + 'px';
+		this.canvas.style.height = this.canvas.height + 'px';
 
 		this.color = '#1f2938';
 
@@ -73,7 +75,6 @@ class LocalGame {
 	}
 
 	drawBoard () {
-		console.log("Drawing");
 		this.context.clearRect(0 ,0 ,this.canvas.width,this.canvas.height);
 		this.context.fillStyle = this.color;
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -89,8 +90,8 @@ class LocalGame {
 
 		// Draw Score
 		this.context.font = "300px Arial";
-		this.context.strokeText(this.player.score, 150, (this.canvas.height / 2) + 110);
-		this.context.strokeText(this.opponent.score, 600, (this.canvas.height / 2) + 110);
+		this.context.strokeText(this.player.score, this.canvas.width / 8, (this.canvas.height / 2) + 110);
+		this.context.strokeText(this.opponent.score, this.canvas.width * 0.6, (this.canvas.height / 2) + 110);
 
 		//Draw Names
 		this.context.fillStyle = '#002f7a';
@@ -187,14 +188,15 @@ class LocalGame {
 	}
 
 	gameLoop() {
-		this.canvas.style.width = this.test.clientWidth + 'px';
-		this.canvas.style.height = this.test.clientHeight + 'px';
+		this.canvas.style.width = this.principalContainer.clientWidth + 'px';
+		this.canvas.style.height = this.principalContainer.clientHeight + 'px';
 		this.update();
 		this.drawBoard();
 		if (this.player.score >= 5 || this.opponent.score >= 5)
 		{
 			this.running = false;
 			this.over = true;
+			this.buttonContainer.style.display = 'flex';
 		}
 		if (!this.over) {
 			window.requestAnimationFrame(this.gameLoop.bind(this));
@@ -268,8 +270,8 @@ class LocalGame {
 		this.drawBoard();
 		let countdown = 5; // Initial countdown value
 		const countdownInterval = setInterval(() => {
-			this.canvas.style.width = this.test.clientWidth + 'px';
-			this.canvas.style.height = this.test.clientHeight + 'px';
+			this.canvas.style.width = this.principalContainer.clientWidth + 'px';
+			this.canvas.style.height = this.principalContainer.clientHeight + 'px';
 			this.drawBoard();
 			this.context.fillStyle = '#38515e';
 			this.context.font = "200px Arial";
