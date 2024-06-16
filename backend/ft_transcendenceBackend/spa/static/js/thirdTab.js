@@ -26,7 +26,7 @@ function addFriendsListItems3(containerId, friendsList) {
     friendsList.forEach(friend => {
         container.innerHTML += `
             <div class="friend-item3" data-id="${friend.userid}">
-                <img src="${friend.userPfp || 'assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                <img src="${friend.userPfp || 'static/assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
                 <div class="friend-info">
                     <div class="friend-nickname" data-user-id="${friend.userid}">${friend.username}</div>
                 </div>
@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // fetchUserProfile(userId);
                 // fetchGameHistory(userId);
                 fetchUserData(theUser);
-
             }
         }
     });

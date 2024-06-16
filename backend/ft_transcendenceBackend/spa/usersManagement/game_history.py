@@ -20,11 +20,11 @@ def extract_user_info_from_token(token):
 
 
 def get_game_history(request):
-    #When you will pass the userID to get the historic replace the userid on the  getof CustomUser
-    # token = request.session.get('token')
     users_id = request.GET.get('profile_id')
-    # if token:
-    #     user_id, username = extract_user_info_from_token(token)
+    if not users_id:
+        token = request.session.get('token')
+        if token:
+            users_id, username = extract_user_info_from_token(token)
     if users_id:
         try:
             #The get() right below >>>
