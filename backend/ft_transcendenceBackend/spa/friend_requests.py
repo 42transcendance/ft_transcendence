@@ -171,8 +171,6 @@ def block_friend(request):
             current_user.friends.remove(friend)
             friend.friends.remove(current_user)
 
-            print("no more friends")
-
             current_user.blocklist.add(friend)
             return JsonResponse({}, status=200)
         except CustomUser.DoesNotExist:

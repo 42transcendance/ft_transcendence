@@ -20,6 +20,7 @@ function  fetchUserData(theUsersId) {
         data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
+           
             if (data.gameHistory.length > 0) {
                 addGameHistoryItems(data.gameHistory, data.currentUser, data.translations);
             } else {
@@ -34,7 +35,7 @@ function  fetchUserData(theUsersId) {
 
 function updateProfilePage(data) {
     document.getElementById('username').textContent = data.user_details.username;
-    document.getElementById('userPfp').src = data.user_details.userPfp || 'assets/pfp.png';
+    document.getElementById('userPfp').src = data.user_details.userPfp || 'static/assets/pfp.png';
     document.getElementById('joinedDate').textContent = `${data.translations.join} ${data.user_details.joinedDate}`;
     document.getElementById('matchesPlayed').textContent = `${data.translations.nb_match} ${data.user_details.gamesPlayed}`;
 }

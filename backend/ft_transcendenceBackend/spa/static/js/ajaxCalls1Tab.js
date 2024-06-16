@@ -120,7 +120,8 @@ function fetchFriends() {
 function displayFriends(containerId, friends) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    friends.forEach(friend => {
+    if (friends){
+        friends.forEach(friend => {
         container.innerHTML += `
             <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
                 <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
@@ -133,6 +134,7 @@ function displayFriends(containerId, friends) {
             </div>
         `;  
     });
+    }
 }    
 //////////////////////////////////////////////////////////
 function fetchFriends() {
@@ -652,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function blockUser(userId) {
         console.log(`Blocking user: ${userId}`);
         //placeholder
-        let userImage = '/assets/pfp.png';
+        let userImage = 'static/static/assets/pfp.png';
         let userName = 'Blocked User';
         updateUI('delete', 'friendsContainer', userId);
         const blockedUserHTML = `

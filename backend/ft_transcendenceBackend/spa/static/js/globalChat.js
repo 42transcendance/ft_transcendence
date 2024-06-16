@@ -40,7 +40,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
             data: { 'profile_id': sender_id },
             dataType: 'json',
             success: function(data) {
-                let pfp = data.user_details.userPfp || 'assets/pfp.png';
+                let pfp = data.user_details.userPfp || 'static/assets/pfp.png';
                 userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
 
                 let messageDetailsHTML1;
@@ -103,7 +103,7 @@ function addMessageToChatUI(message, sender, senderid, recipientid) {
             data: { 'profile_id': senderid },
             dataType: 'json',
             success: function(data) {
-                let pfp = data.user_details.userPfp || 'static/assets/pfp.png';
+                let pfp = data.user_details.userPfp || 'static/static/assets/pfp.png';
                 const userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
                 const messageDetailsHTML = `
                     <div class="message-details">
