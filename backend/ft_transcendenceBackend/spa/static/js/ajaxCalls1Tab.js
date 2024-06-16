@@ -654,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function blockUser(userId) {
         console.log(`Blocking user: ${userId}`);
         //placeholder
-        let userImage = 'static/static/assets/pfp.png';
+        let userImage = 'static/assets/pfp.png';
         let userName = 'Blocked User';
         updateUI('delete', 'friendsContainer', userId);
         const blockedUserHTML = `
