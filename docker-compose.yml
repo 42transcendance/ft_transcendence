@@ -6,11 +6,8 @@ services:
     build:
       context: Docker/Backend/
       dockerfile: backend.Dockerfile
-    environment:
-      - PGSERVICEFILE=/pg_service.conf
-      - API_SECRET_KEY=s
-      - API_CLIENT_KEY=u
-      - JWT_SECRET_PHRASE=jwt-string
+    env_file:
+      - django.env
     volumes:
       - backend:/djangoSource
     ports:
@@ -25,7 +22,7 @@ services:
       context: Docker/PostgreSQL
       dockerfile: postgresql.Dockerfile
     env_file:
-      - .env
+      - postgres.env
     volumes:
       - postgresql:/usr/local/pgsql/data
     restart: on-failure
@@ -44,4 +41,4 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/goinfre/pgdatabase
+      device: /goinfre/${USER}/pgdatabase

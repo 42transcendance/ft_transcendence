@@ -27,6 +27,7 @@ from spa.translate import modal_translate
 from spa.translate import profile_friends_translate
 from spa.translate import tournament_translate
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
@@ -61,6 +62,7 @@ urlpatterns = [
 	  path('save_chat_message/', views.save_chat_message, name='save_chat_message'),
 	  path('get_chat_users/', views.get_chat_users, name='get_chat_users'),
     path('invite_code_translate/', tournament_translate.invite_code_translate, name='invite_code_translate'),
+	path('check_authentication/', views.check_authentication, name='check_authentication'),
 
 ]
 

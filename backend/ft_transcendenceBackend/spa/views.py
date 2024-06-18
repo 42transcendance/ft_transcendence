@@ -14,6 +14,8 @@ from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 
+from django.views.decorators.http import require_GET
+
 import requests
 import jwt
 import os   
@@ -34,6 +36,12 @@ def custom_logout(request):
         del request.session['token']
     return redirect ('home')
 
+
+
+def check_authentication(request):
+    if 'token' in request.session:
+        return JsonResponse({'authenticated': True})
+    return JsonResponse({'authenticated': False})
 
 def extract_user_info_from_token(token):
     try:
