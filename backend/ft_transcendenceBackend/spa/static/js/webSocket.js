@@ -56,8 +56,6 @@ function connectWebSocket() {
                 // displayPrivateMessage(data);
                 break;
                 case 'global.message':
-                    console.log("websocket: global message");
-                    console.log(data.source_user);
                     try {
                         // const isBlocked = await msgFromBlocked(data.source_user_id);
                         // if (isBlocked) {
@@ -68,7 +66,6 @@ function connectWebSocket() {
                     } catch (error) {
                         console.error("Error checking block list:", error);
                     }
-                    gameNotification(data);
                     break;
             case 'notification':
                 displayNotification(data.message);
@@ -292,7 +289,7 @@ function getCurrentTime() {
     return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 }
 
-document.addEventListener('DOMContentLoaded', connectWebSocket);
+document.addEventListener('authenticated', connectWebSocket);
 
 function displayPrivateMessage(data) {
     console.log(`Private message from ${data.sender}: ${data.message}`);

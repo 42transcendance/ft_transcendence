@@ -149,7 +149,7 @@ function displayEmptyT(translations) {
 
 //Settings tab pfp load
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchUserSettings();
 
     
@@ -189,7 +189,7 @@ function fetchUserSettings() {
 
 // Chats History Load
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('authenticated', async function() {
     await initializeChatDivs();
 });
 

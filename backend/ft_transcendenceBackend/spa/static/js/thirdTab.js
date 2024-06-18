@@ -36,7 +36,7 @@ function addFriendsListItems3(containerId, friendsList) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchFriendsList();
 });
 

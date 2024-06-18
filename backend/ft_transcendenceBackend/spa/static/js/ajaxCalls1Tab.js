@@ -263,7 +263,7 @@ function displayEmpty(containerId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchAllData();
 
     function fetchAllData() {

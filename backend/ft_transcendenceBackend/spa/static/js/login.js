@@ -32,6 +32,7 @@
         .then(data => {
             if (data.authenticated) {
                 console.log('User is authenticated');
+                document.dispatchEvent(new CustomEvent('authenticated'));
                 if (callback) callback(true);
             } else {
                 console.log('User is not authenticated');
