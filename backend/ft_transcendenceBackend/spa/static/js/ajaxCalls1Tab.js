@@ -116,26 +116,28 @@ function fetchFriends() {
         }
     });
 }
-
 function displayFriends(containerId, friends) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     if (friends){
         friends.forEach(friend => {
-        container.innerHTML += `
-            <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
-                <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
-                <div class="friend-info">
-                    <div>${friend.username}</div>
+            container.innerHTML += `
+                <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
+                    <div class="profile-picture-container">
+                        <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="friend-info">
+                        <div>${friend.username}</div>
+                    </div>
+                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
                 </div>
-                <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
-                <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
-                <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
-            </div>
-        `;  
-    });
+            `;  
+        });
     }
-}    
+}  
 //////////////////////////////////////////////////////////
 function fetchFriends() {
     $.ajax({

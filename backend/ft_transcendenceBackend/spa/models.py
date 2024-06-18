@@ -14,6 +14,9 @@ class CustomUser(AbstractUser):
     groups = models.ManyToManyField('auth.Group', blank=True, related_name='user_custom')
     user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name='user_custom')
 
+    is_online = models.BooleanField(default=False)
+    is_ingame = models.BooleanField(default=False)
+
     def __str__(self):
         return self.username
 class Game(models.Model):

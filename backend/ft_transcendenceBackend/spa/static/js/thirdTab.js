@@ -16,17 +16,17 @@ function fetchFriendsList() {
         }
     });
 }
-
 function addFriendsListItems3(containerId, friendsList) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    // const friendsListContainer = document.querySelector('.friends-list-content');
-    // friendsListContainer.innerHTML = '';
 
     friendsList.forEach(friend => {
         container.innerHTML += `
             <div class="friend-item3" data-id="${friend.userid}">
-                <img src="${friend.userPfp || 'static/assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                <div class="profile-picture-container">
+                    <img src="${friend.userPfp || 'static/assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                        <div class="offline-status"></div>
+                </div>
                 <div class="friend-info">
                     <div class="friend-nickname" data-user-id="${friend.userid}">${friend.username}</div>
                 </div>

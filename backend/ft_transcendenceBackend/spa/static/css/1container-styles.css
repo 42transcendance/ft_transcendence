@@ -246,6 +246,45 @@
 
 }
 
+.profile-picture-container {
+    position: relative;
+    display: inline-block;
+}
+
+.online-status {
+    position: absolute;
+    bottom: -15%;
+    width: 13px;
+    right: 20%;
+    height: 13px;
+    background-color:  rgba(0, 128, 0);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.offline-status {
+    position: absolute;
+    bottom: -15%;
+    width: 13px;
+    right: 20%;
+    height: 13px;
+    background-color:  rgb(256, 0, 0);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.ingame-status {
+    position: absolute;
+    bottom: -15%;
+    width: 13px;
+    right: 20%;
+    height: 13px;
+    background-color:  rgb(0, 174, 255);
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+
 /* cards in channels tab */
 
 .global-chat-icon{
