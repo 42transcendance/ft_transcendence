@@ -51,12 +51,13 @@ function showNotification(message, color) {
     });  
 }
 
-function sendGameInvite(friendId, friendUsername) {
+function sendGameInvite(friendId, friendUsername, roomId) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const inviteMessage = {
             type: 'game.invite.send',
             target_user_id: friendId,
             target_user_name: friendUsername,
+            room_id: roomId, 
         };
         window.chatSocket.send(JSON.stringify(inviteMessage));
         console.log("Game invite sent successfully");
@@ -347,7 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const friendItem = event.target.closest('.friend-item');
             const friendId = friendItem.getAttribute('data-id');
             const friendUsername = friendItem.getAttribute('data-username');
-            sendGameInvite(friendId, friendUsername);
+    
+            document.querySelector('.nav-button.play').click();
+    
+            createPrivateGame(true, function(roomId) {
+                sendGameInvite(friendId, friendUsername, roomId);
+            });
         }
 		else if (event.target.classList.contains('icon-block')) {
             const friendItem = event.target.closest('.friend-item');

@@ -120,7 +120,8 @@ function gameNotification(data) {
                 acceptButton.style.background = "none";
                 acceptButton.innerHTML = '<i class="bi bi-check-circle" style="color: white; font-size: 1.15rem;"></i>';
                 acceptButton.onclick = () => {
-                    acceptGameInvite(data.source_user_id);
+                    document.querySelector('.nav-button.play').click();
+                    acceptGameInvite(data.source_user_id, data.room_id); // Pass the room_id
                     notification.remove();
                     updateNotificationStyles();
                 };
@@ -162,16 +163,21 @@ function gameNotification(data) {
     });
 }
 
-function acceptGameInvite(friendId) {
-    if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-        const inviteMessage = {
-            type: 'game.invite.accept',
-            inviter: friendId,
-            invited: userId
-        };
-        window.chatSocket.send(JSON.stringify(inviteMessage));
-    }
+function acceptGameInvite(friendId, roomId) {
+    // if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
+    //     const inviteMessage = {
+    //         type: 'game.invite.accept',
+    //         inviter: friendId,
+    //         invited: userId,
+    //         room_id: roomId // Include room_id
+    //     };
+    //     window.chatSocket.send(JSON.stringify(inviteMessage));
+
+    //     // Join the game immediately
+        joinPrivateGame(roomId);
+    // }
 }
+
 
 function updateNotificationStyles() {
     const notifications = document.querySelectorAll('.game-notification');

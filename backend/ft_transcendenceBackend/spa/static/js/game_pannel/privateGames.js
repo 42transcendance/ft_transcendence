@@ -1,5 +1,4 @@
-function createPrivateGame() {
-
+function createPrivateGame(isInvite = false, callback = null) {
     if (Pong) {
         Pong = null; // Remove the reference to the old game
     }
@@ -11,8 +10,28 @@ function createPrivateGame() {
 
     Pong.createPrivateGame();
 
+    // If it's an invite scenario, wait for the room_id
+    if (isInvite) {
+        let waitTime = 0;
+        const interval = setInterval(() => {
+            if (Pong.room_id) {
+                clearInterval(interval);
+                if (callback) {
+                    callback(Pong.room_id);
+                }
+            } else {
+                waitTime += 100;
+                if (waitTime >= 5000) { // Wait for max 5 seconds
+                    clearInterval(interval);
+                    console.error("Failed to get room_id within 5 seconds.");
+                }
+            }
+        }, 100);
+    }
+
     checkGameState(Pong);
 }
+
 
 function joinPrivateGame(room_id) {
 

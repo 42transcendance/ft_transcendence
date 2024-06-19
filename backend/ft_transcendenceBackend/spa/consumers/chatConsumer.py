@@ -64,7 +64,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         elif text_data_json.get("type") == 'game.invite.send':
             target_user_id = text_data_json.get("target_user_id")
             target_user_name = text_data_json.get("target_user_name")
-            if (target_user_id is not None):
+            room_id = text_data_json.get("room_id")  # Added to handle room_id
+            if target_user_id is not None:
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
@@ -73,6 +74,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                         'source_user_id': self.user_id,
                         'target_user_id': target_user_id,
                         'target_user_name': target_user_name,
+                        'room_id': room_id,  # Added room_id
                     }
                 )
     
@@ -103,6 +105,7 @@ class chatConsumer(AsyncWebsocketConsumer):
         target_id = event['target_user_id']
         source_id = event['source_user_id']
         target_user_name = event['target_user_name']
+        room_id = event.get('room_id')  # Added to handle room_id
 
         if str(target_id) == str(self.user_id):
             await self.send(text_data=json.dumps({
@@ -112,10 +115,11 @@ class chatConsumer(AsyncWebsocketConsumer):
                 'source_user_id': source_id,
                 'target_user_id': target_id,
                 'target_user_name': target_user_name,
+                'room_id': room_id,  # Added room_id
             }))
 
         if str(source_id) == str(self.user_id):
             await self.send(text_data=json.dumps({
                 'type': 'game.invite.send',
-                'message': "Invitation successfully senst to " + str(target_user_name),
+                'message': "Invitation successfully sent to " + str(target_user_name),
             }))
