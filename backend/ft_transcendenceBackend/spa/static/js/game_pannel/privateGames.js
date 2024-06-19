@@ -9,7 +9,7 @@ function createPrivateGame() {
     Pong = new Game();
     hideButtons();
 
-    Pong.createPrivateGame();
+    Pong.createPrivateGame(false);
 
     checkGameState(Pong);
 }

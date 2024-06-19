@@ -280,6 +280,8 @@ def get_user_info(user):
             'userPfp': get_base64_image(user.profile_picture) if user.profile_picture else None,
             'joinedDate': formatted_joined_date,
             'userid': user.userid,
+            'is_online': user.is_online,
+            'is_ingame': user.is_ingame,
         }
         return user_details
     except CustomUser.DoesNotExist:

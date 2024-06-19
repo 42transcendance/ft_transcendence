@@ -121,6 +121,7 @@ function displayFriends(containerId, friends) {
     container.innerHTML = '';
     if (friends){
         friends.forEach(friend => {
+            console.log(friend.is_online);
             container.innerHTML += `
                 <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
                     <div class="profile-picture-container">
