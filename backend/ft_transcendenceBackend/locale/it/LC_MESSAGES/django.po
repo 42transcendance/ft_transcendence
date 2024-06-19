@@ -319,3 +319,14 @@ msgstr "Nota: la modalità torneo non influisce sulle statistiche dei giocatori 
 
 msgid "You cannot send a friend request to yourself."
 msgstr "Non puoi inviare una richiesta di amicizia a te stesso."
+
+msgid "Online"
+msgstr "Online"
+
+#: path/to/your/view.py:line_number
+msgid "Offline"
+msgstr "Offline"
+
+#: path/to/your/view.py:line_number
+msgid "In-game"
+msgstr "In gioco"

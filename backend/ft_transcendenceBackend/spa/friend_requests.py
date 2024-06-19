@@ -246,11 +246,19 @@ def get_friends(request):
             for friend in friend_list:
                 friend_data = get_user_info(friend)
                 friends.append(friend_data)
-            return JsonResponse(friends, safe=False)
+            activate(request.session.get('language'))
+            translations = {
+                'online': _("Online"),
+                'offline' : _("Offline"),
+                'ingame' : _("In-game"),
+            }
+
+            return JsonResponse({'friends': friends, 'translations': translations})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:
         return JsonResponse({'error': 'Token not found in session'}, status=400)
+
 
 @csrf_exempt
 def get_block_list(request):

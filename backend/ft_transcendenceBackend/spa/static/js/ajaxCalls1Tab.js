@@ -104,9 +104,10 @@ function fetchFriends() {
         url: '/get_friends/', 
         method: 'GET',
         dataType: 'json',
-        success: function(friends) {
-            if (friends.length > 0) {
-                displayFriends('friendsTabContent', friends);
+        success: function(data) {
+            console.log(data);
+            if (data.friends.length > 0) {
+                displayFriends('friendsTabContent', data);
             } else {
                 displayEmpty('friendsTabContent');
             }
@@ -116,47 +117,41 @@ function fetchFriends() {
         }
     });
 }
-function displayFriends(containerId, friends) {
+function displayFriends(containerId, data) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    if (friends){
-        friends.forEach(friend => {
-            console.log(friend.is_online);
-            container.innerHTML += `
-                <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
-                    <div class="profile-picture-container">
-                        <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
-                        <div class="online-status"></div>
+    data.friends.forEach(friend => {
+        let statusClass = '';
+        let statusText = '';
+        if (friend.is_ingame) {
+            statusClass = 'ingame-status';
+            statusText = data.translations.ingame;
+        } else if (friend.is_online) {
+            statusClass = 'online-status';
+            statusText = data.translations.online;
+        } else {
+            statusClass = 'offline-status';
+            statusText = data.translations.offline;
+        }
+        container.innerHTML += `
+            <div class="friend-item" data-id="${friend.userid}" data-username="${friend.username}">
+                <div class="profile-picture-container">
+                    <img src="${friend.userPfp}" alt="${friend.username}" class="friend-image">
+                    <div class="${statusClass}">
+                        <div class="status-tooltip">${statusText}</div>
                     </div>
-                    <div class="friend-info">
-                        <div>${friend.username}</div>
-                    </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
                 </div>
-            `;  
+                <div class="friend-info">
+                    <div>${friend.username}</div>
+                </div>
+                <i class="bi bi-chat icon-chat small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-controller icon-controller small-icons" data-id="${friend.id}"></i>
+                <i class="bi bi-x-circle icon-block small-icons" data-id="${friend.id}"></i>
+            </div>
+        `;  
         });
-    }
 }  
 //////////////////////////////////////////////////////////
-function fetchFriends() {
-    $.ajax({
-        url: '/get_friends/', 
-        method: 'GET',
-        dataType: 'json',
-        success: function(friends) {
-            if (friends.length > 0) {
-                displayFriends('friendsTabContent', friends);
-            } else {
-                displayEmpty('friendsTabContent');
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
 
 function fetchOutgoingRequests() {
     $.ajax({

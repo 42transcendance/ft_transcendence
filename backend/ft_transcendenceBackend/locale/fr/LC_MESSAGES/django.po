@@ -336,3 +336,11 @@ msgstr "Remarque : le mode tournoi n’a pas d’impact sur les statistiques de
 msgid "You cannot send a friend request to yourself."
 msgstr "Vous ne pouvez pas vous envoyer une demande d’ami."
 
+msgid "Online"
+msgstr "En ligne"
+
+msgid "Offline"
+msgstr "Hors ligne"
+
+msgid "In-game"
+msgstr "En jeu"

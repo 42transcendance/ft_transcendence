@@ -284,6 +284,38 @@
     border: 2px solid white;
 }
 
+.status-tooltip {
+    display: none;
+    position: absolute;
+    bottom: -100%;
+    left: 350%;
+    transform: translateX(-50%);
+    padding: 5px;
+    border-radius: 3px;
+    color: white;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.online-status:hover .status-tooltip,
+.offline-status:hover .status-tooltip,
+.ingame-status:hover .status-tooltip {
+    display: block;
+    font-size : 0.7em;
+}
+
+.online-status:hover .status-tooltip {
+    background-color: rgba(0, 128, 0);
+}
+
+.offline-status:hover .status-tooltip {
+    background-color: rgb(256, 0, 0);
+}
+
+.ingame-status:hover .status-tooltip {
+    background-color: rgb(0, 174, 255);
+}
+
 
 /* cards in channels tab */
 

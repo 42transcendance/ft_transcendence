@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const friendsResponse = await fetch('/get_friends/');
             const friendsData = await friendsResponse.json();
-            const friendsIds = friendsData.map(friend => friend.userid);
+            const friendsIds = friendsData.friends.map(friend => friend.userid);
 
             const blockListResponse = await fetch('/get_block_list/');
             const blockListData = await blockListResponse.json();
