@@ -49,6 +49,10 @@ class Game {
 		this.setPaddle = 0;
 
 		this.room_id = null;
+		
+		this.lastFrameTime = performance.now();
+		this.frameRate = 60;
+		this.frameInterval = 1000 / this.frameRate;
 	}
 
 	displayGameId(gameId) {
@@ -107,7 +111,7 @@ class Game {
 			}));
 		};
 		this.wsListen();
-		this.animate();
+		this.startAnimation();
 	}
 
 	wsListen() {
@@ -229,20 +233,39 @@ class Game {
 		}
 	}
 
-	animate() {
-		if (this.playerPaddle != null) {
-			this.updatePaddlePosition();
-			
-			if (this.game_running === true)
-			this.pongSocket.send(JSON.stringify({ 
-				'type': 'user.update',
-				'paddleX': this.playerPaddle.x / this.diff,
-				'paddleY': this.playerPaddle.y / this.diff,
-			}));
+	startAnimation() {
+		this.lastFrameTime = performance.now();
+		this.animationId = requestAnimationFrame((currentTime) => this.animate(currentTime));
+	}
+	
+	stopAnimation() {
+		if (this.animationId !== null) {
+		  cancelAnimationFrame(this.animationId);
+		  this.animationId = null;
 		}
-		this.draw();
+	}
 
-    	this.animationId = requestAnimationFrame(() => this.animate());
+	animate(currentTime) {
+		this.animationId = requestAnimationFrame((currentTime) => this.animate(currentTime));
+	
+		let deltaTime = currentTime - this.lastFrameTime;
+		
+		if (deltaTime >= this.frameInterval) {
+			this.lastFrameTime = currentTime - (deltaTime % this.frameInterval);
+	
+			if (this.playerPaddle != null) {
+				this.updatePaddlePosition();
+	
+				if (this.game_running === true) {
+				  	this.pongSocket.send(JSON.stringify({ 
+						'type': 'user.update',
+						'paddleX': this.playerPaddle.x / this.diff,
+						'paddleY': this.playerPaddle.y / this.diff,
+				  	}));
+				}
+			}
+			this.draw();
+		}
 	}
 
 	draw() {
