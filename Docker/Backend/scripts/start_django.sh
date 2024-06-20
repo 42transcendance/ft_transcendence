@@ -3,7 +3,7 @@ python3 /djangoSource/ft_transcendenceBackend/manage.py makemigrations
 python3 /djangoSource/ft_transcendenceBackend/manage.py migrate
 
 # python3 manage.py runsslserver 0.0.0.0:8000 --certificate /cert.pem --key /key.pem
-python3 /djangoSource/ft_transcendenceBackend/manage.py collectstatic
+python3 /djangoSource/ft_transcendenceBackend/manage.py collectstatic --no-input
 
 export DJANGO_SETTINGS_MODULE=ft_transcendenceBackend.settings
 
