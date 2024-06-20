@@ -35,9 +35,38 @@ function  fetchUserData(theUsersId) {
 
 function updateProfilePage(data) {
     document.getElementById('username').textContent = data.user_details.username;
-    document.getElementById('userPfp').src = data.user_details.userPfp || 'static/assets/pfp.png';
     document.getElementById('joinedDate').textContent = `${data.translations.join} ${data.user_details.joinedDate}`;
     document.getElementById('matchesPlayed').textContent = `${data.translations.nb_match} ${data.user_details.gamesPlayed}`;
+    const container = document.getElementById('profile-pfp');
+    container.innerHTML = '';
+    let statusClass = '';
+        let statusText = '';
+        if (data.user_details.is_ingame) {
+            statusClass = 'ingame-status';
+            statusText = data.translations.ingame;
+        } else if (data.user_details.is_online) {
+            statusClass = 'online-status';
+            statusText = data.translations.online;
+        } else {
+            if (data.user_details.myid == data.user_details.userid){
+                statusClass = 'online-status';
+                statusText = data.translations.online;
+            }else {
+                statusClass = 'offline-status';
+                statusText = data.translations.offline;
+            }
+            
+        }
+
+        container.innerHTML += `
+                <div class="profile-picture-container">
+                    <img src="${data.user_details.userPfp || 'static/assets/pfp.png'}"alt="User" class="user-pfp">
+                    <div class="${statusClass} status-pellet">
+                        <div class="status-tooltip">${statusText}</div>
+                    </div>
+                </div>
+        `;
+
 }
 
 function addGameHistoryItem(game, container, translations) {

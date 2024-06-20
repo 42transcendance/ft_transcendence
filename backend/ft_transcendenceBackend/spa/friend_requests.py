@@ -33,12 +33,15 @@ def get_user_details(request):
             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
             activate(request.session.get('language'))
             user_details = {
+                'myid' : user_id,
                 'username': user.username,
                 'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
                 'joinedDate' : formatted_joined_date,
                 'userid'    : user.userid,
                 'gamesPlayed' : user.game_history.count(),
-                'language' : request.session.get('language')
+                'language' : request.session.get('language'),
+                'is_online': user.is_online,
+                'is_ingame': user.is_ingame
             }
             translations = {
                 'join': _("Joined:"),
@@ -46,6 +49,9 @@ def get_user_details(request):
                 'player' : _("Player "),
                 'start_tournament' : _("Start Tournament"),
                 'note': _("Note: Tournament mode does not impact player statistics in their profile."),
+                'online': _("Online"),
+                'offline' : _("Offline"),
+                'ingame' : _("In-game"),
             }
             return JsonResponse({'user_details': user_details, 'translations': translations})
         except CustomUser.DoesNotExist:
