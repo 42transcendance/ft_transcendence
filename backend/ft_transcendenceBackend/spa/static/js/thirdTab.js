@@ -4,9 +4,9 @@ function fetchFriendsList() {
         url: '/get_friends/', 
         method: 'GET',
         dataType: 'json',
-        success: function(friends) {
-            if (friends.length > 0) {
-                addFriendsListItems3('friendsListContent', friends);
+        success: function(data) {
+            if (data.friends.length > 0) {
+                addFriendsListItems3('friendsListContent', data);
             } else {
                 displayEmpty('friendsTabContent'); 
             }
@@ -16,17 +16,32 @@ function fetchFriendsList() {
         }
     });
 }
-
-function addFriendsListItems3(containerId, friendsList) {
+function addFriendsListItems3(containerId, data) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    // const friendsListContainer = document.querySelector('.friends-list-content');
-    // friendsListContainer.innerHTML = '';
 
-    friendsList.forEach(friend => {
+    data.friends.forEach(friend => {
+        let statusClass = '';
+        let statusText = '';
+        if (friend.is_ingame) {
+            statusClass = 'ingame-status';
+            statusText = data.translations.ingame;
+        } else if (friend.is_online) {
+            statusClass = 'online-status';
+            statusText = data.translations.online;
+        } else {
+            statusClass = 'offline-status';
+            statusText = data.translations.offline;
+        }
+
         container.innerHTML += `
             <div class="friend-item3" data-id="${friend.userid}">
-                <img src="${friend.userPfp || 'static/assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                <div class="profile-picture-container">
+                    <img src="${friend.userPfp || 'static/assets/pfp.png'}" alt="${friend.username}'s Profile Picture" class="friend-image">
+                    <div class="${statusClass}">
+                        <div class="status-tooltip">${statusText}</div>
+                    </div>
+                </div>
                 <div class="friend-info">
                     <div class="friend-nickname" data-user-id="${friend.userid}">${friend.username}</div>
                 </div>

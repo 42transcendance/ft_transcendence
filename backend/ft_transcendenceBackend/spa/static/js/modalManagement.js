@@ -287,5 +287,4 @@ document.querySelector('.add-friend-button').addEventListener('click', showAddFr
 // document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
-document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
 document.querySelector('.change-language-button').addEventListener('click', changeLanguageModal);

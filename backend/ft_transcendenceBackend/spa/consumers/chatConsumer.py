@@ -1,6 +1,8 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from ..views import extract_user_info_from_token, save_chat_message
+from spa.models import CustomUser
+from asgiref.sync import sync_to_async
 
 class chatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -11,6 +13,12 @@ class chatConsumer(AsyncWebsocketConsumer):
             return
         
         print(f"Connecting user: {self.username} with ID: {self.user_id} (type: {type(self.user_id)})")  # Debug statement
+
+        self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
+
+        self.userObject.is_online = True
+        await sync_to_async(self.userObject.save)()
+                                                 
         self.room_group_name = 'global'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
@@ -23,9 +31,12 @@ class chatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def disconnect(self, close_code):
+        self.userObject.is_online = False
+        await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
+        print("STATUS : ", self.userObject.is_online)
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         print(f"Received message: {message} (type: {type(message)})")
