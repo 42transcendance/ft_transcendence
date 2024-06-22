@@ -139,7 +139,11 @@ function handleIconClick(senderId, senderNickname, iconElement) {
     switch (iconElement.classList[1]) {
         case 'bi-controller':
             console.log("Controller icon clicked for user:", senderId);
-            sendGameInvite(senderId, senderNickname);
+            document.querySelector('.nav-button.play').click();
+
+            createPrivateGame(true, function(roomId) {
+                sendGameInvite(senderId, senderNickname, roomId);
+            });
             break;
         case 'bi-plus-circle':
             console.log("Plus circle icon clicked for user:", senderId);
