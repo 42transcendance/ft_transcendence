@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 document.addEventListener('DOMContentLoaded', async function() {
     await initializeChatDivs();
-    checkAndUpdateChatItems();});
+});
 
 async function initializeChatDivs() {
     try {

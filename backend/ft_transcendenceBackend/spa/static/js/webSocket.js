@@ -1,10 +1,7 @@
 function connectWebSocket() {
-    console.log("WebSocket log.");
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
     const webSocketURL = `${wsScheme}://${window.location.host}/ws/chat/`;
     
-    console.log(webSocketURL);
-
     const chatSocket = new WebSocket(webSocketURL);
 
     chatSocket.onopen = function(e) {
@@ -48,16 +45,13 @@ function connectWebSocket() {
     }       
 
     async  function handleWebSocketMessage(data) {
+        console.log(data);
         switch(data.type) {
             case 'private.message':
-                console.log("websocket: private message");
-                console.log(data)
                 await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
                 // displayPrivateMessage(data);
                 break;
                 case 'global.message':
-                    console.log("websocket: global message");
-                    console.log(data.source_user);
                     try {
                         // const isBlocked = await msgFromBlocked(data.source_user_id);
                         // if (isBlocked) {
@@ -68,7 +62,7 @@ function connectWebSocket() {
                     } catch (error) {
                         console.error("Error checking block list:", error);
                     }
-                    gameNotification(data);
+                    // gameNotification(data);
                     break;
             case 'notification':
                 displayNotification(data.message);
@@ -76,8 +70,13 @@ function connectWebSocket() {
             case 'friendRequest':
                 handleFriendRequest(data);
                 break;
-            case 'game.invite.recieve':
+            case 'game.invite.receive':
+                console.log("invite recieved");
                 gameNotification(data);
+                break;
+            case 'game.invite.send':
+                showNotification(data.message, "rgb(81, 171, 81)");
+                break;
             break;
         }
     }
@@ -87,7 +86,6 @@ function connectWebSocket() {
 function gameNotification(data) {
     const username = data.source_user;
     const message = `invited you to a game`;
-    console.log(message);
 
     $.ajax({
         url: '/get_notif_translate/',
@@ -122,7 +120,8 @@ function gameNotification(data) {
                 acceptButton.style.background = "none";
                 acceptButton.innerHTML = '<i class="bi bi-check-circle" style="color: white; font-size: 1.15rem;"></i>';
                 acceptButton.onclick = () => {
-                    acceptGameInvite(data.source_user_id);
+                    document.querySelector('.nav-button.play').click();
+                    acceptGameInvite(data.source_user_id, data.room_id); // Pass the room_id
                     notification.remove();
                     updateNotificationStyles();
                 };
@@ -164,16 +163,21 @@ function gameNotification(data) {
     });
 }
 
-function acceptGameInvite(friendId) {
-    if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-        const inviteMessage = {
-            type: 'game.invite.accept',
-            inviter: friendId,
-            invited: userId
-        };
-        window.chatSocket.send(JSON.stringify(inviteMessage));
-    }
+function acceptGameInvite(friendId, roomId) {
+    // if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
+    //     const inviteMessage = {
+    //         type: 'game.invite.accept',
+    //         inviter: friendId,
+    //         invited: userId,
+    //         room_id: roomId // Include room_id
+    //     };
+    //     window.chatSocket.send(JSON.stringify(inviteMessage));
+
+    //     // Join the game immediately
+        joinPrivateGame(roomId);
+    // }
 }
+
 
 function updateNotificationStyles() {
     const notifications = document.querySelectorAll('.game-notification');

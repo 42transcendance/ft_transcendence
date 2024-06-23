@@ -51,14 +51,15 @@ function showNotification(message, color) {
     });  
 }
 
-function sendGameInvite(friendId) {
+function sendGameInvite(friendId, friendUsername, roomId) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const inviteMessage = {
             type: 'game.invite.send',
-            invitedUser: friendId
+            target_user_id: friendId,
+            target_user_name: friendUsername,
+            room_id: roomId, 
         };
         window.chatSocket.send(JSON.stringify(inviteMessage));
-        showNotification("Game request sent !", "rgb(81, 171, 81)");
         console.log("Game invite sent successfully");
     } else {
         console.error("WebSocket is not connected.");
@@ -67,37 +68,39 @@ function sendGameInvite(friendId) {
 }
 
 
+
+
 function removeRequestFromUI(requestId) {
     const requestElement = document.querySelector(`.friend-item[data-id="${requestId}"]`);
     if (requestElement) requestElement.remove();
 }
 
 
-function handleWebSocketMessage(data) {
-    switch(data.type) {
-        case 'friend_request_accepted':
-            removeRequestFromUI(data.requestId);
+// function handleWebSocketMessage(data) {
+//     switch(data.type) {
+//         case 'friend_request_accepted':
+//             removeRequestFromUI(data.requestId);
             
-            // Create HTML content for the new friend
-            const newFriendHTML = `
-                <div class="friend-item" data-id="${data.friendInfo.id}">
-                    <img src="${data.friendInfo.image}" alt="${data.friendInfo.name}" class="friend-image">
-                    <div class="friend-info">
-                        <div>${data.friendInfo.name}</div>
-                    </div>
-                    <i class="bi bi-chat icon-chat small-icons" data-id="${data.friendInfo.id}"></i>
-                    <i class="bi bi-controller icon-controller small-icons" data-id="${data.friendInfo.id}"></i>
-                    <i class="bi bi-x-circle icon-block small-icons" data-id="${data.friendInfo.id}"></i>
-                </div>
-            `;
-            updateUI('add', 'friendsTabContent', newFriendHTML);
-            break;
-        case 'friend_request_declined':
-            removeRequestFromUI(data.requestId);
-            break;
-        // Add more cases as needed
-    }
-}
+//             // Create HTML content for the new friend
+//             const newFriendHTML = `
+//                 <div class="friend-item" data-id="${data.friendInfo.id}">
+//                     <img src="${data.friendInfo.image}" alt="${data.friendInfo.name}" class="friend-image">
+//                     <div class="friend-info">
+//                         <div>${data.friendInfo.name}</div>
+//                     </div>
+//                     <i class="bi bi-chat icon-chat small-icons" data-id="${data.friendInfo.id}"></i>
+//                     <i class="bi bi-controller icon-controller small-icons" data-id="${data.friendInfo.id}"></i>
+//                     <i class="bi bi-x-circle icon-block small-icons" data-id="${data.friendInfo.id}"></i>
+//                 </div>
+//             `;
+//             updateUI('add', 'friendsTabContent', newFriendHTML);
+//             break;
+//         case 'friend_request_declined':
+//             removeRequestFromUI(data.requestId);
+//             break;
+//         // Add more cases as needed
+//     }
+// }
 
 function fetchFriends() {
     $.ajax({
@@ -342,9 +345,15 @@ document.addEventListener('DOMContentLoaded', function() {
             unblockBlockedUser(username);
         }
 		else if (event.target.classList.contains('icon-controller')) {
-            const friendId = event.target.dataset.id;
-            sendGameInvite(friendId);
-            showNotification("Invitation Sent", "rgb(81, 171, 81)");
+            const friendItem = event.target.closest('.friend-item');
+            const friendId = friendItem.getAttribute('data-id');
+            const friendUsername = friendItem.getAttribute('data-username');
+    
+            document.querySelector('.nav-button.play').click();
+    
+            createPrivateGame(true, function(roomId) {
+                sendGameInvite(friendId, friendUsername, roomId);
+            });
         }
 		else if (event.target.classList.contains('icon-block')) {
             const friendItem = event.target.closest('.friend-item');

@@ -40,13 +40,11 @@ function scrollToBottom(element) {
 function sendMessage(type, message, id=null) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const messageData = { type, message };
-        console.log("type: ", type);
         if (id) {
             console.log("id present: ", id);
             messageData.target_user_id = id;
         }
         window.chatSocket.send(JSON.stringify(messageData));
-        console.log("sent successfully");
     } else {
         console.error("WebSocket is not connected.");
     }
