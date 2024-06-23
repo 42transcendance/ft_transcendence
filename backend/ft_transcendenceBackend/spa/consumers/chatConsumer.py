@@ -12,8 +12,6 @@ class chatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         
-        print(f"Connecting user: {self.username} with ID: {self.user_id} (type: {type(self.user_id)})")  # Debug statement
-
         self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
 
         self.userObject.is_online = True
@@ -36,12 +34,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
-        print("STATUS : ", self.userObject.is_online)
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
-        print(f"Received message: {message} (type: {type(message)})")
-        print(f"Message type: {text_data_json.get('type')}")
-        print(f"Sender ID: {self.user_id} (type: {type(self.user_id)})")
         
         if text_data_json.get("type") == 'global.message':
             message_saved = await save_chat_message(self.user_id, None, message, True)
@@ -58,7 +52,6 @@ class chatConsumer(AsyncWebsocketConsumer):
 
         elif text_data_json.get("type") == 'private.message':
             target_user_id = text_data_json.get("target_user_id")
-            print(f"Private message to: {target_user_id} (type: {type(target_user_id)})")
             message_saved = await save_chat_message(self.user_id, target_user_id, message, False)
             if message_saved:  # Only send the message if it was saved successfully
                 await self.channel_layer.group_send(

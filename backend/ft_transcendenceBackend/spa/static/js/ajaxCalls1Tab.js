@@ -60,7 +60,6 @@ function sendGameInvite(friendId, friendUsername, roomId) {
             room_id: roomId, 
         };
         window.chatSocket.send(JSON.stringify(inviteMessage));
-        console.log("Game invite sent successfully");
     } else {
         console.error("WebSocket is not connected.");
         showNotification("Failed to send game request.", "rgb(255, 0, 0)");
@@ -75,40 +74,12 @@ function removeRequestFromUI(requestId) {
     if (requestElement) requestElement.remove();
 }
 
-
-// function handleWebSocketMessage(data) {
-//     switch(data.type) {
-//         case 'friend_request_accepted':
-//             removeRequestFromUI(data.requestId);
-            
-//             // Create HTML content for the new friend
-//             const newFriendHTML = `
-//                 <div class="friend-item" data-id="${data.friendInfo.id}">
-//                     <img src="${data.friendInfo.image}" alt="${data.friendInfo.name}" class="friend-image">
-//                     <div class="friend-info">
-//                         <div>${data.friendInfo.name}</div>
-//                     </div>
-//                     <i class="bi bi-chat icon-chat small-icons" data-id="${data.friendInfo.id}"></i>
-//                     <i class="bi bi-controller icon-controller small-icons" data-id="${data.friendInfo.id}"></i>
-//                     <i class="bi bi-x-circle icon-block small-icons" data-id="${data.friendInfo.id}"></i>
-//                 </div>
-//             `;
-//             updateUI('add', 'friendsTabContent', newFriendHTML);
-//             break;
-//         case 'friend_request_declined':
-//             removeRequestFromUI(data.requestId);
-//             break;
-//         // Add more cases as needed
-//     }
-// }
-
 function fetchFriends() {
     $.ajax({
         url: '/get_friends/', 
         method: 'GET',
         dataType: 'json',
         success: function(data) {
-            console.log(data);
             if (data.friends.length > 0) {
                 displayFriends('friendsTabContent', data);
             } else {
@@ -322,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
 			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
-			console.log("Accepting request with ID: " + requestId);
 			if (requestId) {
 				acceptFriendRequest(requestId, username);
 			}
@@ -332,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
 			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
-			console.log("Declining request with ID: " + requestId + username);
 			if (requestId) {
                 declineFriendRequest(requestId,username);
 			}
@@ -359,7 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const friendItem = event.target.closest('.friend-item');
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
-            console.log("Blocking friend: ", username);
             const FriendUserId = friendItem ? friendItem.getAttribute('data-id') : null;
             if (userId) {
                 showConfirmBlockModal(FriendUserId, username);
@@ -565,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             fetchBlockedContacts();
                             break;
                         default:
-                            console.log('Unknown tab');
+                            console.error('Unknown tab');
                     }
                 }
     
@@ -659,7 +627,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function blockUser(userId) {
-        console.log(`Blocking user: ${userId}`);
         //placeholder
         let userImage = 'static/assets/pfp.png';
         let userName = 'Blocked User';
@@ -756,7 +723,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         fetchBlockedContacts();
                         break;
                     default:
-                        console.log('Unknown tab');
+                        console.error('Unknown tab');
                 }
             }
 

@@ -53,7 +53,6 @@ function winningMsg(Pong) {
                 var winnerScore = Pong.opponent.score;
                 var loserScore = Pong.player.score;
             }
-            console.log("is this caLLED ?");
             message.textContent = winnerName + data.translations.next + winnerScore + '-' + loserScore + data.translations.against + loserName + '.';
             
             var principalContainer = document.getElementById('principal-container');

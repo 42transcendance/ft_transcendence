@@ -26,7 +26,6 @@ class pongConsumer(AsyncWebsocketConsumer):
         else:
             self.userObject = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
             self.username = self.userObject.username
-            print("WS Connection : ", self.username, " ", self.user_id)
             self.room_id = None
             self.userObject.is_ingame = True
             await sync_to_async(self.userObject.save)()
@@ -112,7 +111,6 @@ class pongConsumer(AsyncWebsocketConsumer):
                 })
 
             tasks = asyncio.all_tasks()
-            print(f"Currently running tasks: {len(tasks)}")
             DuelsManager.debug()
 
         elif message_type == 'create.private.game':
@@ -164,7 +162,6 @@ class pongConsumer(AsyncWebsocketConsumer):
             room_id_to_join = data.get('room_id')
             self.room_id = DuelsManager.join_private_room(self.user_id, room_id_to_join)
             if self.room_id == None:
-                print("Hello There")
                 await self.send_notification("Error", "Cannot join private room")
                 return
             await self.channel_layer.group_add( self.room_id, self.channel_name)

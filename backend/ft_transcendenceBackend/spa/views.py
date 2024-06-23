@@ -40,8 +40,6 @@ def extract_user_info_from_token(token):
         payload = jwt.decode(token, settings.JWT_SECRET_PHRASE, algorithms=['HS256'])
         user_id = payload.get('user_id')
         username = payload.get('username')
-        print(f"Extracted user_id: {user_id} (type: {type(user_id)})")
-        print(f"Extracted username: {username}")
         return user_id, username
     except jwt.ExpiredSignatureError:
         return None, None
@@ -51,7 +49,6 @@ def extract_user_info_from_token(token):
 def change_language(request):
     if request.method == 'GET':
         language = request.GET.get('language', None)
-        print(language)
         if language in ['en', 'fr', 'it']:
             request.session['language'] = language
             return JsonResponse({'success': True})
@@ -68,10 +65,8 @@ def callback(request):
             'redirect_uri': 'https://localhost:8000/callback',
             'code': code
         })
-        print(response.json())
         if response.status_code == 200:
             access_token = response.json().get('access_token')
-            print("ACCESS TOKEN ------------------------- ",access_token)
             headers = {
                 'Authorization': 'Bearer ' + access_token
             }
@@ -108,7 +103,6 @@ def get_chat_history(request):
 
     chat_type = request.GET.get('chat_type', 'global')
     target_user_id = request.GET.get('target_user_id', None)
-    print(f"Fetching chat history for user: {user_id} chat_type: {chat_type} target_user_id: {target_user_id}")
     messages = []
 
     if chat_type == 'global':
@@ -126,7 +120,6 @@ def get_chat_history(request):
             models.Q(sender__userid=target_user_id, recipient__userid=user_id)
         ).order_by('timestamp')
     
-    print(f"Fetched messages: {messages}")
 
     chat_history = []
     for message in messages:
@@ -139,29 +132,24 @@ def get_chat_history(request):
             'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
         })
 
-    print(f"Chat history response: {chat_history}")
     return JsonResponse({'chat_history': chat_history})
 
 
 @database_sync_to_async
 def save_chat_message(sender_id, recipient_id, message, is_global):
     try:
-        print(f"Saving message from sender_id: {sender_id} (type: {type(sender_id)}) to recipient_id: {recipient_id} (type: {type(recipient_id)})")
         sender = CustomUser.objects.get(userid=sender_id)
         recipient = CustomUser.objects.get(userid=recipient_id) if recipient_id else None
 
         # Check if the sender and recipient are friends
         if recipient and not sender.friends.filter(userid=recipient.userid).exists():
-            print(f"Message not saved: {sender.username} and {recipient.username} are not friends.")
             return False
 
         # Check if either the sender or recipient has blocked the other
         if recipient and (sender.blocklist.filter(userid=recipient.userid).exists() or recipient.blocklist.filter(userid=sender.userid).exists()):
-            print(f"Message not saved: {sender.username} and {recipient.username} have blocked each other.")
             return False
 
         ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)
-        print("Message saved successfully.")
         return True
     except CustomUser.DoesNotExist as e:
         print(f"Error: {e}")

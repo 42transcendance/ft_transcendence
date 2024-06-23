@@ -41,7 +41,6 @@ function sendMessage(type, message, id=null) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const messageData = { type, message };
         if (id) {
-            console.log("id present: ", id);
             messageData.target_user_id = id;
         }
         window.chatSocket.send(JSON.stringify(messageData));
