@@ -127,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (parentContainer) {
                 const senderId = parentContainer.querySelector('.nickname').getAttribute('data-user-id');
                 const senderNickname = parentContainer.querySelector('.nickname').textContent;
-                console.log("Icon clicked belongs to sender ID:", senderId);
                 handleIconClick(senderId, senderNickname, target);
             }
         }
@@ -135,10 +134,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function handleIconClick(senderId, senderNickname, iconElement) {
-    console.log(`Action triggered for ${senderId} by clicking on`, iconElement);
     switch (iconElement.classList[1]) {
         case 'bi-controller':
-            console.log("Controller icon clicked for user:", senderId);
             document.querySelector('.nav-button.play').click();
 
             createPrivateGame(true, function(roomId) {
@@ -146,18 +143,16 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             });
             break;
         case 'bi-plus-circle':
-            console.log("Plus circle icon clicked for user:", senderId);
             addFriend(senderNickname);
             break;
         case 'bi-person':
-            console.log("Person icon clicked for user:", senderId);
             simulateProfileTabClick(senderId);
             break;
         case 'bi-slash-circle':
             blockUser(senderNickname)
             break;
         default:
-            console.log("Unknown icon clicked for user:", senderId);
+            console.error("Unknown icon clicked for user:", senderId);
     }
 }
 
@@ -188,7 +183,6 @@ function blockUser(username) {
 }
 
 function simulateProfileTabClick(senderId) {
-    console.log('Profile view triggered for User ID:', senderId);
 
     var navButtons = document.querySelectorAll('.nav-button');
     const profileButton = document.querySelector('button[data-button="profile"]');

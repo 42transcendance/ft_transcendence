@@ -169,7 +169,6 @@ class Game {
 					break ;
 				
 				case ('notification'):
-					console.log(wsData);
 					break;
 
 				case ('ending.game'):
@@ -179,7 +178,6 @@ class Game {
 					break;
 
 				case ('Error'):
-					console.log(wsData.message);
 					this.endGame();
 					break;
 

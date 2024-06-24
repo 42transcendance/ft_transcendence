@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (friendItem) {
             const theUser = friendItem.querySelector('.friend-nickname').getAttribute('data-user-id');
             if (theUser) {
-                console.log("Opening friend profile for user ID:", theUser);
                 // fetchUserProfile(userId);
                 // fetchGameHistory(userId);
                 fetchUserData(theUser);

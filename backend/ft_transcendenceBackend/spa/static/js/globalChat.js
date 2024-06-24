@@ -149,8 +149,6 @@ function displayChatMessage(message) {
     const messageElement = document.createElement('div');
     messageElement.className = 'chat-message';
 
-    console.log("messages senders id: ", message.senderId)
-
     const iconsHTML = message.senderId != userId ? `
         <i class="bi bi-caret-right-fill toggle-icons"></i>
         <div class="messageIcons" style="display: none;">

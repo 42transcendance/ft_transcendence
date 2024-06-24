@@ -33,7 +33,6 @@ def get_game_history(request):
             
             game_history_json = []
             for game in game_history:
-                print(game)
                 player1_username = game.player1.username
                 player2_username = game.player2.username
                 if (game.player1.username == user.username):

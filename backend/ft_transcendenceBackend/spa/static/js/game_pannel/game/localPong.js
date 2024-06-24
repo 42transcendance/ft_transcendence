@@ -217,7 +217,6 @@ class LocalGame {
 
 		// Creating events for movements on keydown
 		document.addEventListener('keydown', (key) => {
-			//console.log(key.key);	
 			// Handle w key events
 			if (key.key === 'w') {
 				this.player.move = LOCAL_DIRECTION.UP;
@@ -299,31 +298,4 @@ class LocalGame {
 	}
 };
 
-// var sendMessageButton = document.querySelector('.test-send-button');
-// var messageInput = document.querySelector('.test-message-input');
 
-// var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/pong/');
-
-// sendMessageButton.addEventListener('click', function() {
-// 	var messageText = messageInput.value.trim();
-
-// 	if (messageText) {
-// 		chatSocket.send(JSON.stringify({ 
-// 			'type':'notification',
-// 			'message':messageText,
-// 		}));
-// 		messageInput.value = '';
-// 	}
-// });
-
-// messageInput.addEventListener('keypress', function(event) {
-// 	if (event.key === 'Enter') {
-// 		event.preventDefault();
-// 		sendMessageButton.click();
-// 	}
-// });
-
-// chatSocket.onmessage = function(e) {
-// 	var data = e.data;
-// 	console.log(data);
-// };
