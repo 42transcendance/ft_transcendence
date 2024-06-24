@@ -48,25 +48,26 @@ function connectWebSocket() {
     }       
 
     async  function handleWebSocketMessage(data) {
+        console.log("websocket: message");
+        console.log(data);
         switch(data.type) {
             case 'private.message':
                 console.log("websocket: private message");
                 console.log(data)
-                await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
-                // displayPrivateMessage(data);
+                await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id, data.timestamp);
                 break;
-                case 'global.message':
-                    try {
-                        // const isBlocked = await msgFromBlocked(data.source_user_id);
-                        // if (isBlocked) {
-                        //     console.log("Message blocked.");
-                        //     return;
-                        // }
-                        await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
-                    } catch (error) {
-                        console.error("Error checking block list:", error);
-                    }
-                    break;
+            case 'global.message':
+                try {
+                    const isBlocked = await msgFromBlocked(data.source_user_id);
+                    // if (isBlocked) {
+                    //     console.log("Message blocked.");
+                    //     return;
+                    // }
+                    await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id, data.timestamp);
+                } catch (error) {
+                    console.error("Error checking block list:", error);
+                }
+                break;
             case 'notification':
                 displayNotification(data.message);
                 break;
@@ -306,15 +307,3 @@ function displayNotification(message) {
 function handleFriendRequest(data) {
     console.log(`Friend request from ${data.sender}: ${data.message}`);
 }
-
-
-// function sendMessage(type, message, id=null) {
-//     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-//         const messageData = { type, message };
-//         if (id) messageData.id = id;
-
-//         window.chatSocket.send(JSON.stringify(messageData));
-//     } else {
-//         console.error("WebSocket is not connected.");
-//     }
-// }

@@ -81,12 +81,17 @@
                         <!-- Content for Friends -->
                         <div id="friendsContainer" class="content-container"  style="display: none;">
                             <button class="add-friend-button">{{ translations.add_friend }}</button>
-                            <button class="friend-tab-button" id="friendsTab">
+                            <div class="friends-list" id="friendsList">
+                                <i class="bi bi-people bi-peopleMain"></i> {{ translations.frds }} <i class="bi bi-arrow-clockwise refresh-icon "></i>
+                            </div>
+                            <div id="friends-list-content" class="friends-list-content">
+                            
+                            </div>
+                            <!-- <button class="friend-tab-button" id="friendsTab">
                                 <i class="bi bi-people"></i> {{ translations.frds }} <i class="bi bi-chevron-down arrow-icon"></i>
                             </button>
-                            <!-- Content container for Friends -->
                             <div id="friendsTabContent" class="friends-tab-content">
-                            </div>
+                            </div> -->
                         
                             <button class="friend-tab-button" id="outgoingRequestsTab">
                                 <i class="bi bi-arrow-bar-right"></i> {{ translations.out_req }} <i class="bi bi-chevron-down arrow-icon"></i>

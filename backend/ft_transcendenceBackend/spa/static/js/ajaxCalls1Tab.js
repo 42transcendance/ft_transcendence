@@ -51,12 +51,13 @@ function showNotification(message, color) {
     });  
 }
 
-function sendGameInvite(friendId, friendUsername) {
+function sendGameInvite(friendId, friendUsername, roomId) {
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
         const inviteMessage = {
             type: 'game.invite.send',
             target_user_id: friendId,
             target_user_name: friendUsername,
+            room_id: roomId, 
         };
         window.chatSocket.send(JSON.stringify(inviteMessage));
         console.log("Game invite sent successfully");
@@ -108,9 +109,9 @@ function fetchFriends() {
         dataType: 'json',
         success: function(friends) {
             if (friends.length > 0) {
-                displayFriends('friendsTabContent', friends);
+                displayFriends('friends-list-content', friends);
             } else {
-                displayEmpty('friendsTabContent');
+                displayEmpty('friends-list-content');
             }
         },
         error: function(xhr, status, error) {
@@ -144,9 +145,9 @@ function fetchFriends() {
         dataType: 'json',
         success: function(friends) {
             if (friends.length > 0) {
-                displayFriends('friendsTabContent', friends);
+                displayFriends('friends-list-content', friends);
             } else {
-                displayEmpty('friendsTabContent');
+                displayEmpty('friends-list-content');
             }
         },
         error: function(xhr, status, error) {
@@ -263,7 +264,7 @@ function displayEmpty(containerId) {
 }
 
 
-document.addEventListener('authenticated', function() {
+document.addEventListener('DOMContentLoaded', function() {
     fetchAllData();
 
     function fetchAllData() {
@@ -325,6 +326,7 @@ document.addEventListener('authenticated', function() {
 			if (requestId) {
 				acceptFriendRequest(requestId, username);
 			}
+            fetchFriends();
 		}
 		else if (event.target.classList.contains('decline-request')) {
 			const friendItem = event.target.closest('.friend-item');
@@ -347,7 +349,12 @@ document.addEventListener('authenticated', function() {
             const friendItem = event.target.closest('.friend-item');
             const friendId = friendItem.getAttribute('data-id');
             const friendUsername = friendItem.getAttribute('data-username');
-            sendGameInvite(friendId, friendUsername);
+    
+            document.querySelector('.nav-button.play').click();
+    
+            createPrivateGame(true, function(roomId) {
+                sendGameInvite(friendId, friendUsername, roomId);
+            });
         }
 		else if (event.target.classList.contains('icon-block')) {
             const friendItem = event.target.closest('.friend-item');
@@ -774,5 +781,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.refresh-icon').addEventListener('click', function() {
+        fetchFriends();
     });
 });

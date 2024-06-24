@@ -132,6 +132,25 @@
 
 /* friends  requests etc*/
 
+.friends-list {
+    width: 95%;
+    border: 2px solid rgba(146, 128, 224, 0.7);
+    background-color: transparent;
+    padding: 10px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 5px;
+    margin: 10px auto;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    margin-bottom: 0;
+    background-color: rgba(146, 128, 224, 0.7);
+    font-size: 1.15rem;
+}
+
 .friend-tab-button {
     width: 95%;
     border: 2px solid rgba(146, 128, 224, 0.7);
@@ -159,8 +178,12 @@
 }
 
 /* Style for the arrow icon */
-.arrow-icon {
+.arrow-icon, .refresh-icon {
     margin-left: auto;
+}
+
+.bi-peopleMain {
+    margin-right: 10px;
 }
 
 .arrow-up {
@@ -178,6 +201,21 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     display: none;
+    margin: auto;
+    background-color: #ddd;
+}
+
+.friends-list-content {
+    width: 95%;
+    padding: 10px;
+    border: 2px solid rgba(173, 102, 255, 0.7) !important;
+    text-align: left;
+    justify-content: flex-start;
+    border-top: none;
+    margin-bottom: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: block;
     margin: auto;
     background-color: #ddd;
 }

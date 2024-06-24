@@ -28,21 +28,16 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 
-
-
-
-
 function scrollToBottom(element) {
     element.scrollTop = element.scrollHeight;
 }
 
-
 function sendMessage(type, message, id=null) {
+    let timestamp = new Date().toISOString();
+    console.log(`sending time: ${timestamp}`);
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-        const messageData = { type, message };
-        console.log("type: ", type);
+        const messageData = { type, message, timestamp };
         if (id) {
-            console.log("id present: ", id);
             messageData.target_user_id = id;
         }
         window.chatSocket.send(JSON.stringify(messageData));

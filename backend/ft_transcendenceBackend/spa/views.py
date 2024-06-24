@@ -12,6 +12,7 @@ from django.db import models
 
 from django.db.models import Q
 
+
 from django.utils.translation import gettext_lazy as _
 
 from django.views.decorators.http import require_GET
@@ -140,19 +141,18 @@ def get_chat_history(request):
     for message in messages:
         chat_history.append({
             'sender': message.sender.username,
-            'sender_id': message.sender.userid,  # Add sender_id here
+            'sender_id': message.sender.userid,
             'recipient': message.recipient.username if message.recipient else 'global',
-            'recipient_id': message.recipient.userid if message.recipient else None,  # Add recipient_id here
+            'recipient_id': message.recipient.userid if message.recipient else None,
             'message': message.message,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'timestamp': message.timestamp.isoformat(),
         })
 
     print(f"Chat history response: {chat_history}")
     return JsonResponse({'chat_history': chat_history})
 
-
 @database_sync_to_async
-def save_chat_message(sender_id, recipient_id, message, is_global):
+def save_chat_message(sender_id, recipient_id, message, is_global, timestamp=None):
     try:
         print(f"Saving message from sender_id: {sender_id} (type: {type(sender_id)}) to recipient_id: {recipient_id} (type: {type(recipient_id)})")
         sender = CustomUser.objects.get(userid=sender_id)
@@ -168,13 +168,14 @@ def save_chat_message(sender_id, recipient_id, message, is_global):
             print(f"Message not saved: {sender.username} and {recipient.username} have blocked each other.")
             return False
 
-        ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)
+        timestamp = timestamp
+        print(f"Using timestamp: {timestamp}")  # For debugging
+        ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timestamp, is_global=is_global)
         print("Message saved successfully.")
         return True
     except CustomUser.DoesNotExist as e:
         print(f"Error: {e}")
         return False
-
 
 def get_chat_users(request):
     user_id, _ = extract_user_info_from_token(request.session.get('token'))
