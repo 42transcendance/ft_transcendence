@@ -23,8 +23,6 @@ COPY ./conf/.pgpass /.pgpass
 
 WORKDIR /djangoSource/ft_transcendenceBackend
 
-ENTRYPOINT [ "tail", "-f", "/dev/null"]
-
-# ENTRYPOINT [ "bash", "start_django.sh" ]
+ENTRYPOINT [ "bash", "start_django.sh" ]
 
 EXPOSE 8000
