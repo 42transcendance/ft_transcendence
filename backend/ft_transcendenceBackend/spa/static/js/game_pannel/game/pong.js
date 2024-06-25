@@ -247,6 +247,9 @@ class Game {
 		this.animationId = requestAnimationFrame((currentTime) => this.animate(currentTime));
 	
 		let deltaTime = currentTime - this.lastFrameTime;
+
+		this.canvas.style.width = this.principalContainer.clientWidth + 'px';
+		this.canvas.style.height = this.principalContainer.clientHeight + 'px';
 		
 		if (deltaTime >= this.frameInterval) {
 			this.lastFrameTime = currentTime - (deltaTime % this.frameInterval);
