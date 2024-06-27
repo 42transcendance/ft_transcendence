@@ -179,10 +179,12 @@ function displayEmptyT(translations) {
 
 //Settings tab pfp load
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchUserSettings();
+});
 
-    function fetchUserSettings() {
+function fetchUserSettings() {
+    return new Promise((resolve, reject) => {
         $.ajax({
             url: '/get_user_details/',
             method: 'GET',
@@ -195,25 +197,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     userId = data.user_details.userid;
                     userUsername = data.user_details.username;
                 }
+                resolve();
             },
             error: function(xhr, status, error) {
                 console.error(error);
+                reject(error);
             }
         });
-    }
+    });
+}
 
-    function updateProfilePicture(data) {
-        document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
-        document.querySelector('.profile-pic').src = data.user_details.userPfp;
-    }
-    function updateSettingsUsername(data){
-        document.querySelector('.current-username').textContent = data.user_details.username;
-    }
-});
+function updateProfilePicture(data) {
+    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
+    document.querySelector('.profile-pic').src = data.user_details.userPfp;
+}
+function updateSettingsUsername(data){
+    document.querySelector('.current-username').textContent = data.user_details.username;
+}
 
 // Chats History Load
 
-document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('authenticated', async function() {
     await initializeChatDivs();
 });
 

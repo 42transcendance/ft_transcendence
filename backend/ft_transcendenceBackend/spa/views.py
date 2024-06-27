@@ -9,6 +9,7 @@ from .translate.static_translate import *
 from channels.db import database_sync_to_async
 from django.utils import timezone
 from django.db import models
+from django.views.decorators.http import require_GET
 
 from django.db.models import Q
 
@@ -34,6 +35,10 @@ def custom_logout(request):
         del request.session['token']
     return redirect ('home')
 
+def check_authentication(request):
+    if 'token' in request.session:
+        return JsonResponse({'authenticated': True})
+    return JsonResponse({'authenticated': False})
 
 def extract_user_info_from_token(token):
     try:
@@ -125,18 +130,18 @@ def get_chat_history(request):
     for message in messages:
         chat_history.append({
             'sender': message.sender.username,
-            'sender_id': message.sender.userid,  # Add sender_id here
+            'sender_id': message.sender.userid,
             'recipient': message.recipient.username if message.recipient else 'global',
-            'recipient_id': message.recipient.userid if message.recipient else None,  # Add recipient_id here
+            'recipient_id': message.recipient.userid if message.recipient else None,
             'message': message.message,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'timestamp': message.timestamp.isoformat(),
         })
 
     return JsonResponse({'chat_history': chat_history})
 
 
 @database_sync_to_async
-def save_chat_message(sender_id, recipient_id, message, is_global):
+def save_chat_message(sender_id, recipient_id, message, is_global, timestamp=None):
     try:
         sender = CustomUser.objects.get(userid=sender_id)
         recipient = CustomUser.objects.get(userid=recipient_id) if recipient_id else None
@@ -149,7 +154,8 @@ def save_chat_message(sender_id, recipient_id, message, is_global):
         if recipient and (sender.blocklist.filter(userid=recipient.userid).exists() or recipient.blocklist.filter(userid=sender.userid).exists()):
             return False
 
-        ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timezone.now(), is_global=is_global)
+        timestamp = timestamp
+        ChatMessage.objects.create(sender=sender, recipient=recipient, message=message, timestamp=timestamp, is_global=is_global)
         return True
     except CustomUser.DoesNotExist as e:
         print(f"Error: {e}")

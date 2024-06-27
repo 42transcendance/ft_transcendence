@@ -27,19 +27,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
-
-
-
-
-
 function scrollToBottom(element) {
     element.scrollTop = element.scrollHeight;
 }
 
 
 function sendMessage(type, message, id=null) {
+    let timestamp = new Date().toISOString();
     if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-        const messageData = { type, message };
+        const messageData = { type, message, timestamp };
         if (id) {
             messageData.target_user_id = id;
         }

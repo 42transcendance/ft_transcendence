@@ -6,9 +6,9 @@ function fetchFriendsList() {
         dataType: 'json',
         success: function(data) {
             if (data.friends.length > 0) {
-                addFriendsListItems3('friendsListContent', data);
+                addFriendsListItems3('friends-list-content3', data);
             } else {
-                displayEmpty('friendsTabContent'); 
+                displayEmpty('friends-list-content3'); 
             }
         },
         error: function(xhr, status, error) {
@@ -51,12 +51,12 @@ function addFriendsListItems3(containerId, data) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchFriendsList();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const friendsListContainer = document.querySelector('.friends-list-content');
+    const friendsListContainer = document.querySelector('.friends-list-content3');
 
     friendsListContainer.addEventListener('click', function(event) {
         const friendItem = event.target.closest('.friend-item3');

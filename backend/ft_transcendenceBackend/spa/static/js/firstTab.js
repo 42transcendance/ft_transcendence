@@ -1,6 +1,6 @@
 // FRIENDS AND CHATS :: CHATS
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     const friendsBtn = document.getElementById('button1');
     const chatsBtn = document.getElementById('button2');
     const friendsContainer = document.getElementById('friendsContainer');

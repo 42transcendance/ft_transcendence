@@ -14,10 +14,32 @@ function redirectToLogin() {
 }
 
 window.onload = function() {
-        removeBlurAndText();
+    checkAuthentication(function(isAuthenticated) {
+        if (isAuthenticated) {
+            removeBlurAndText();
+        }
+    });
 };
 
 window.addEventListener("load", function() {
     const loader = document.getElementById("loading-container");
     loader.style.display = "none";
   });
+
+  function checkAuthentication(callback) {
+    fetch('/check_authentication/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.authenticated) {
+                document.dispatchEvent(new CustomEvent('authenticated'));
+                if (callback) callback(true);
+            } else {
+                console.log('User is not authenticated');
+                // redirectToLogin();
+            }
+        })
+        .catch(error => {
+            console.error('Error checking authentication:', error);
+            // redirectToLogin();
+        });
+}

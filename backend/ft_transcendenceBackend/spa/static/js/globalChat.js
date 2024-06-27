@@ -11,6 +11,14 @@ function openGlobalChat() {
     messageWith('general');
 }
 
+function convertUTCToLocalTime(utcTimestamp) {
+    const date = new Date(utcTimestamp);
+    return date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    });
+}
 
 async function updateChatInterface(chatMessagesDiv, chatHistory) {
     chatMessagesDiv.innerHTML = '';
@@ -18,17 +26,17 @@ async function updateChatInterface(chatMessagesDiv, chatHistory) {
     chatHistory.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
     for (const chat of chatHistory) {
-        if (chat.recipient === 'global') {
-            await addMessageToGlobalChatUI(chat.message, chat.sender, chat.sender_id, chatMessagesDiv);
+        if (chat.recipient == 'global') {
+            await addMessageToGlobalChatUI(chat.message, chat.sender, chat.sender_id, chat.timestamp, chatMessagesDiv);
         } else {
-            await addMessageToChatUI(chat.message, chat.sender, chat.sender_id, chat.recipient_id, chatMessagesDiv);
+            await addMessageToChatUI(chat.message, chat.sender, chat.sender_id, chat.recipient_id, chat.timestamp, chatMessagesDiv);
         }
     }
 
     scrollToBottom(chatMessagesDiv);
 }
 
-function addMessageToGlobalChatUI(message, sender, sender_id) {
+function addMessageToGlobalChatUI(message, sender, sender_id, timestamp) {
     return new Promise((resolve, reject) => {
         const messageElement = document.createElement('div');
         messageElement.className = 'chat-message';
@@ -44,6 +52,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
                 userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
 
                 let messageDetailsHTML1;
+                const localTime = convertUTCToLocalTime(timestamp);
                 if (sender_id == userId) {
                     messageDetailsHTML1 = `
                     <div class="message-details">
@@ -52,7 +61,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
                         </div>
                         <div class="text-and-time">
                             <div class="message-text">${message}</div>
-                            <span class="message-time">${getCurrentTime()}</span>
+                            <span class="message-time">${localTime}</span>
                         </div>
                     </div>
                     `;
@@ -71,7 +80,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
                         </div>
                         <div class="text-and-time">
                             <div class="message-text">${message}</div>
-                            <span class="message-time">${getCurrentTime()}</span>
+                             <span class="message-time">${localTime}</span>
                         </div>
                     </div>
                     `;
@@ -107,7 +116,7 @@ function addMessageToGlobalChatUI(message, sender, sender_id) {
 
 
 
-function addMessageToChatUI(message, sender, senderid, recipientid) {
+function addMessageToChatUI(message, sender, senderid, recipientid, timestamp) {
     return new Promise((resolve, reject) => {
         const messageElement = document.createElement('div');
         messageElement.className = 'chat-message';
@@ -118,20 +127,23 @@ function addMessageToChatUI(message, sender, senderid, recipientid) {
             data: { 'profile_id': senderid },
             dataType: 'json',
             success: function(data) {
-                let pfp = data.user_details.userPfp || 'static/static/assets/pfp.png';
+                let pfp = data.user_details.userPfp ||'static/assets/pfp.png';
                 const userIconHTML = `<div class="user-icon-container"><img src="${pfp}" alt="${sender}" class="user-icon"></div>`;
+                const localTime = convertUTCToLocalTime(timestamp);
                 const messageDetailsHTML = `
                     <div class="message-details">
                         <span class="nickname">${sender}</span>
                         <div class="text-and-time">
                             <div class="message-text">${message}</div>
-                            <span class="message-time">${getCurrentTime()}</span>
+                            <span class="message-time">${localTime}</span>
                         </div>
                     </div>
                 `;
                 messageElement.innerHTML = userIconHTML + messageDetailsHTML;
-                const chatDivId = senderid === userId ? recipientid : senderid;
+                const chatDivId = senderid == userId ? recipientid : senderid;
                 const chatDiv = document.querySelector(`.chat-messages[data-id='${chatDivId}']`);
+                console.log("chatDivId:", chatDivId);
+                console.log("chatDivId:", chatDiv);
                 chatDiv.appendChild(messageElement);
                 scrollToBottom(chatDiv);
                 resolve();
