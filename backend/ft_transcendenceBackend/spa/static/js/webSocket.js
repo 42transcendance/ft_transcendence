@@ -45,16 +45,22 @@ function connectWebSocket() {
     async  function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
-                await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id);
+                console.log("message recieved");
+                createChatDivIfNotExists(data.id, data.name);
+                await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id, data.timestamp);
                 break;
-                case 'global.message':
-                    try {
-
-                        await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id);
-                    } catch (error) {
-                        console.error("Error checking block list:", error);
-                    }
-                    break;
+            case 'global.message':
+                try {
+                    const isBlocked = await msgFromBlocked(data.source_user_id);
+                    // if (isBlocked) {
+                    //     console.log("Message blocked.");
+                    //     return;
+                    // }
+                    await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id, data.timestamp);
+                } catch (error) {
+                    console.error("Error checking block list:", error);
+                }
+                break;
             case 'notification':
                 break;
             case 'friendRequest':
@@ -186,5 +192,5 @@ function getCurrentTime() {
     return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
 }
 
-document.addEventListener('DOMContentLoaded', connectWebSocket);
-
+document.addEventListener('authenticated', connectWebSocket);
+// document.addEventListener('DOMContentLoaded', connectWebSocket);

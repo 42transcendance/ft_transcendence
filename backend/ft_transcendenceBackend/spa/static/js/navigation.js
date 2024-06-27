@@ -92,6 +92,12 @@ function showTab(route) {
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
             fetchUserData(userId);
             fetchFriendsList();
+            fetchUserSettings().then(() => {
+                fetchUserData(userId);
+                fetchFriendsList();
+            }).catch(error => {
+                console.error('Error fetching user settings:', error);
+            });
             break;
     }
 }

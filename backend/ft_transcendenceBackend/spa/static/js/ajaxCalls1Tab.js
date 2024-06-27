@@ -81,9 +81,9 @@ function fetchFriends() {
         dataType: 'json',
         success: function(data) {
             if (data.friends.length > 0) {
-                displayFriends('friendsTabContent', data);
+                displayFriends('friends-list-content', data);
             } else {
-                displayEmpty('friendsTabContent');
+                displayEmpty('friends-list-content');
             }
         },
         error: function(xhr, status, error) {
@@ -91,6 +91,7 @@ function fetchFriends() {
         }
     });
 }
+
 function displayFriends(containerId, data) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -235,7 +236,7 @@ function displayEmpty(containerId) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('authenticated', function() {
     fetchAllData();
 
     function fetchAllData() {
@@ -253,10 +254,12 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             data: { 'friend_username': username },
             success: function(data) {
+                console.log(data);
                 fetchIncomingRequests();
                 fetchFriends();
                 fetchFriendsList();
                 showNotification("Friend request accepted", "rgb(81, 171, 81)");
+                createChatDivIfNotExists(requestId, username);
             }
         });
     }
@@ -296,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (requestId) {
 				acceptFriendRequest(requestId, username);
 			}
+            fetchFriends();
 		}
 		else if (event.target.classList.contains('decline-request')) {
 			const friendItem = event.target.closest('.friend-item');
@@ -369,31 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
 
-        function switchOrCreateChatDiv(chatId, chatName) {
-            document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-                chatDiv.style.display = 'none';
-            });
         
-            let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
-            if (!chatDiv) {
-                chatDiv = document.createElement('div');
-                chatDiv.className = 'chat-messages';
-                chatDiv.dataset.id = chatId;
-                chatDiv.dataset.username = chatName;
-                chatDiv.style.display = 'none';
-        
-                document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
-            }
-            chatDiv.style.display = 'block';
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-        
-            const chatHeader = document.getElementById('social-text');
-            if (chatId === 'global') {
-                chatHeader.textContent = 'General Chat';
-            } else {
-                chatHeader.textContent = `Chat with ${chatName}`;
-            }
-        }
         /////////////////////////////////////////////////////////////////
         // var friendTabs = document.querySelectorAll('.friend-tab-button');
 
@@ -697,6 +677,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+function switchOrCreateChatDiv(chatId, chatName) {
+    document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+        chatDiv.style.display = 'none';
+    });
+
+    let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
+    if (!chatDiv) {
+        chatDiv = document.createElement('div');
+        chatDiv.className = 'chat-messages';
+        chatDiv.dataset.id = chatId;
+        chatDiv.dataset.username = chatName;
+        chatDiv.style.display = 'none';
+
+        document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
+    }
+    chatDiv.style.display = 'block';
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+
+    const chatHeader = document.getElementById('social-text');
+    if (chatId === 'global') {
+        chatHeader.textContent = 'General Chat';
+    } else {
+        chatHeader.textContent = `Chat with ${chatName}`;
+    }
+}
+
+function switchOrCreateChatDiv(chatId, chatName) {
+            document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+                chatDiv.style.display = 'none';
+            });
+        
+            let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
+            if (!chatDiv) {
+                chatDiv = document.createElement('div');
+                chatDiv.className = 'chat-messages';
+                chatDiv.dataset.id = chatId;
+                chatDiv.dataset.username = chatName;
+                chatDiv.style.display = 'none';
+        
+                document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
+            }
+            chatDiv.style.display = 'block';
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        
+            const chatHeader = document.getElementById('social-text');
+            if (chatId === 'global') {
+                chatHeader.textContent = 'General Chat';
+            } else {
+                chatHeader.textContent = `Chat with ${chatName}`;
+            }
+        }
+
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -747,5 +779,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelector('.refresh-icon').addEventListener('click', function() {
+        fetchFriends();
     });
 });
