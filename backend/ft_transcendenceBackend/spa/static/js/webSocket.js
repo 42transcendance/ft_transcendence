@@ -60,6 +60,7 @@ function connectWebSocket() {
             case 'friendRequest':
                 break;
             case 'game.invite.receive':
+                gameNotification(data);
                 break;
             case 'game.invite.send':
                 showNotification(data.message, "rgb(81, 171, 81)");
@@ -186,3 +187,4 @@ function getCurrentTime() {
 }
 
 document.addEventListener('DOMContentLoaded', connectWebSocket);
+
