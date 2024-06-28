@@ -80,42 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// general chat nickname icons
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const toggleButton = document.querySelector('.toggle-icons'); // Get the arrow icon
-//     const iconsContainer = document.querySelector('.messageIcons'); // Get the icons container
-
-//     toggleButton.addEventListener('click', () => {
-//         iconsContainer.classList.toggle('active');
-
-//         if (toggleButton.classList.contains('bi-caret-right-fill')) {
-//             toggleButton.classList.remove('bi-caret-right-fill');
-//             toggleButton.classList.add('bi-caret-left-fill');
-//         } else {
-//             toggleButton.classList.remove('bi-caret-left-fill');
-//             toggleButton.classList.add('bi-caret-right-fill');
-//         }
-//     });
-// });
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const nicknameElement = document.querySelector('.nicknameAndIcon');
-//     const iconsContainer = nicknameElement.querySelector('.messageIcons');
-
-//     nicknameElement.addEventListener('mouseenter', () => {
-//         iconsContainer.style.display = 'flex';  // Show the icons
-//     });
-
-//     nicknameElement.addEventListener('mouseleave', () => {
-//         iconsContainer.style.display = 'none';  // Hide the icons
-//     });
-// });
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const chatMessagesContainer = document.querySelector('.chat-messages');
 
@@ -160,7 +124,7 @@ function addFriend(senderNickname) {
     $.ajax({
         url: '/send_friend_request/',
         method: 'GET',
-        data: { 'search_term': senderNickname }, // This should be the username if the API expects it
+        data: { 'search_term': senderNickname },
         success: function() {
             showNotification("Friend request sent to user: " + senderNickname, "rgb(81, 171, 81)");
         },
@@ -177,7 +141,7 @@ function blockUser(username) {
         success: function(data) {
             fetchFriends();
             fetchBlockedContacts();
-            showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+            showNotification("User Blocked", "rgb(168, 64, 64");
         }
     });
 }

@@ -38,7 +38,7 @@ def translate_static(language):
         'it' :_("Italian"),
         'crt_priv' : _("Create Private Game"),
         'join_priv' : _("Join Private Game"),
-        'wfo' : _("Waiting for opponent.."),
+        'wfo' : _("Waiting for opponent..."),
         'join' : _("Join"),
         'privid' : _("Enter private game id."),
         'genchat' : _("General Chat"),

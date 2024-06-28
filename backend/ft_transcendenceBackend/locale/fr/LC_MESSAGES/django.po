@@ -312,8 +312,8 @@ msgstr "Invitation à une partie envoyée !"
 msgid "Failed to send game request."
 msgstr "Échec de l'envoi de l'invitation à une partie."
 
-msgid "Waiting for opponent.."
-msgstr "En attente de l'adversaire.."
+msgid "Waiting for opponent..."
+msgstr "En attente de l'adversaire..."
 
 msgid "Join"
 msgstr "Rejoindre"

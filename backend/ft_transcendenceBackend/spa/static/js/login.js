@@ -35,11 +35,9 @@ window.addEventListener("load", function() {
                 if (callback) callback(true);
             } else {
                 console.log('User is not authenticated');
-                // redirectToLogin();
             }
         })
         .catch(error => {
             console.error('Error checking authentication:', error);
-            // redirectToLogin();
         });
 }

@@ -33,6 +33,7 @@ function showTournamentForm() {
             console.error("Failed to fetch user details:", error);
         }
     });
+    document.addEventListener('click', hideTournamentFormOnClickOutside);
 }
 
 function hideTournamentFormOnClickOutside(event) {

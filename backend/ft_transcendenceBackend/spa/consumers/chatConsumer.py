@@ -40,8 +40,6 @@ class chatConsumer(AsyncWebsocketConsumer):
         message = text_data_json.get("message")
         timestamp = text_data_json.get("timestamp", datetime.now(timezone.utc).isoformat())
 
-        print(f"Received message: {message} from user: {self.user_id}")
-
         if text_data_json.get("type") == 'global.message':
             message_saved = await save_chat_message(self.user_id, None, message, True, timestamp)
             if message_saved:
@@ -59,7 +57,6 @@ class chatConsumer(AsyncWebsocketConsumer):
         elif text_data_json.get("type") == 'private.message':
             target_user_id = text_data_json.get("target_user_id")
             message_saved = await save_chat_message(self.user_id, target_user_id, message, False, timestamp)
-            print(f"Private message to {target_user_id} from {self.user_id}")
             if message_saved:
                 await self.channel_layer.group_send(
                     self.room_group_name,

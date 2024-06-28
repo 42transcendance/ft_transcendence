@@ -92,16 +92,15 @@ function addMessageToGlobalChatUI(message, sender, sender_id, timestamp) {
                 globalChatDiv.appendChild(messageElement);
                 scrollToBottom(globalChatDiv);
 
-                // Add event listeners for mouseenter and mouseleave
                 const nicknameElement = messageElement.querySelector('.nicknameAndIcon');
                 const iconsContainer = nicknameElement.querySelector('.messageIcons');
 
                 nicknameElement.addEventListener('mouseenter', () => {
-                    iconsContainer.style.display = 'flex';  // Show the icons
+                    iconsContainer.style.display = 'flex';
                 });
 
                 nicknameElement.addEventListener('mouseleave', () => {
-                    iconsContainer.style.display = 'none';  // Hide the icons
+                    iconsContainer.style.display = 'none';
                 });
 
                 resolve();

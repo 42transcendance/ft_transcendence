@@ -4,3 +4,4 @@
 **/__pycache__/
 *.pyc
 /backend/ft_transcendenceBackend/staticfiles
+backend/ft_transcendenceBackend/media/profile_pictures/*profile_picture*

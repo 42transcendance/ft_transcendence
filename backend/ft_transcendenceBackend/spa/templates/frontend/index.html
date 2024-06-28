@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong Game</title>
+    <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
@@ -15,15 +16,11 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/video-background.css' %}">
     <link rel="stylesheet" href="{% static 'css/small-windows.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pong-container.css' %}">
     <link rel="stylesheet" href="{% static 'css/private-game-buttons/private-game-buttons.css' %}">
 </head>
 <body>
 
-    <!-- Video Background -->
-    <!-- <video autoplay muted loop id="myVideo">
-        <source src="assets/bg.mp4" type="video/mp4">
-    </video> -->
-    
     {% if not token %}
     <div class="blur-background"></div>
     <div class="centered-text">
@@ -242,10 +239,11 @@
                             <div id="join-private-game-div" class="form-container">
                                 <form id="join-private-game-form">
                                     <input type="text" class="input-private-game-id" required="" placeholder="{{ translations.privid}}">
-                                    <button type="button" class="send-button join">{{ translations.join}}</button>
+                                    <button type="button" class="send-button join">{{ translations.join }}</button>
                                 </form>
                             </div>
                             <div id="pong-container">
+                                <button type="button" class="send-button cancel" id="cancel-game-button">Cancel Game</button>
                                 <div class="waiting-overlay" id="waitingOverlay">
                                     <div class="waiting-text">{{ translations.wfo}}</div>
                                 </div>

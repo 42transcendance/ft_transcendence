@@ -111,7 +111,6 @@ class pongConsumer(AsyncWebsocketConsumer):
                 })
 
             tasks = asyncio.all_tasks()
-            DuelsManager.debug()
 
         elif message_type == 'create.private.game':
             # Create a private game
@@ -148,7 +147,6 @@ class pongConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'matchmaking',
             })
-            DuelsManager.debug()
 
         elif message_type == 'join.private.game':
             # Joins private game using game-id
@@ -192,8 +190,6 @@ class pongConsumer(AsyncWebsocketConsumer):
                     'type': 'game.starting',
                 })
                 self.room_object.startGameTask()
-            DuelsManager.debug()
-
 
 
     async def send_notification(self, type, message):

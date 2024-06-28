@@ -7,7 +7,6 @@ function adjustGameContainerSize() {
     }
 }
 
-// containers visibility management
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
     if (isVisible) {
         if (container.classList.contains(slideOutClass)) {
@@ -16,7 +15,7 @@ function setContainerVisibility(container, isVisible, slideOutClass, slideInClas
             container.style.visibility = 'visible';
             container.style.pointerEvents = 'auto';
             container.addEventListener('transitionend', () => {
-                container.classList.remove(slideInClass); // Remove the slide-in class after animation
+                container.classList.remove(slideInClass);
             }, { once: true });
         }
     } else {

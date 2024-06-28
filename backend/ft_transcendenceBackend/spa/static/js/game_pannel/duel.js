@@ -3,7 +3,7 @@ let Pong = null;
 function startDuelGame() {
 
     if (Pong) {
-        Pong = null; // Remove the reference to the old game
+        Pong = null;
     }
 
     removeTournamentForm();
@@ -14,6 +14,13 @@ function startDuelGame() {
 
     Pong.joinMatchmaking();
 
+    var cancelButton = document.getElementById('cancel-game-button');
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            Pong.endGame();
+        });
+    }
+    
     checkGameState(Pong);
 }
 
@@ -23,11 +30,10 @@ function checkGameState(Pong) {
             endGameDuel(Pong);
             clearInterval(intervalId);
         }
-    }, 1000);
+    }, 200);
 }
 
 function endGameDuel(Pong){
     showButtons();
     hideCanvas();
-    // winningMsg(Pong);
 }

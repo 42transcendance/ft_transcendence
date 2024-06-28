@@ -1,16 +1,17 @@
 function createPrivateGame(isInvite = false, callback = null) {
+
     if (Pong) {
-        Pong = null; // Remove the reference to the old game
+        Pong = null;
     }
+
     removeTournamentForm();
     removeWinTournament();
     showCanvas();
     Pong = new Game();
     hideButtons();
 
-    Pong.createPrivateGame(false);
+    Pong.createPrivateGame(isInvite);
 
-    // If it's an invite scenario, wait for the room_id
     if (isInvite) {
         let waitTime = 0;
         const interval = setInterval(() => {
@@ -21,7 +22,7 @@ function createPrivateGame(isInvite = false, callback = null) {
                 }
             } else {
                 waitTime += 100;
-                if (waitTime >= 5000) { // Wait for max 5 seconds
+                if (waitTime >= 5000) {
                     clearInterval(interval);
                     console.error("Failed to get room_id within 5 seconds.");
                 }
@@ -29,6 +30,12 @@ function createPrivateGame(isInvite = false, callback = null) {
         }, 100);
     }
 
+    var cancelButton = document.getElementById('cancel-game-button');
+    if (cancelButton) {
+        cancelButton.addEventListener('click', function() {
+            Pong.endGame();
+        });
+    }
     checkGameState(Pong);
 }
 
@@ -36,7 +43,7 @@ function createPrivateGame(isInvite = false, callback = null) {
 function joinPrivateGame(room_id) {
 
     if (Pong) {
-        Pong = null; // Remove the reference to the old game
+        Pong = null;
     }
 
     removeTournamentForm();
@@ -51,14 +58,14 @@ function joinPrivateGame(room_id) {
     checkGameState(Pong);
 }
 
-// Event to create a private game
 document.addEventListener('DOMContentLoaded', function () {
     
     var createPrivateGameButton = document.querySelector('.create-private-game-button');
-    createPrivateGameButton.addEventListener('click', createPrivateGame);
+    createPrivateGameButton.addEventListener('click', function() {
+        createPrivateGame(false);
+    });
 });
 
-// Function to show and hide the joing private game form
 document.addEventListener('DOMContentLoaded', () => {
     const formContainer = document.getElementById('join-private-game-div');
     const joinButton = document.querySelector('.join-private-game-form-button');
