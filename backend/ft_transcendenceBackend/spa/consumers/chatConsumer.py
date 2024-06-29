@@ -22,6 +22,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'global'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+        print(f"User connected: {self.username} (ID: {self.user_id})")
+
 
         await self.send(text_data=json.dumps({
             'type': 'notification',
@@ -35,12 +37,20 @@ class chatConsumer(AsyncWebsocketConsumer):
         await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
+        print(f"User disconnected: {self.username} (ID: {self.user_id})")
+
+
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         timestamp = text_data_json.get("timestamp", datetime.now(timezone.utc).isoformat())
 
-        print(f"Received message: {message} from user: {self.user_id}")
+        try:
+            user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+            self.username = user.username
+        except CustomUser.DoesNotExist:
+            await self.close()
+            return
 
         if text_data_json.get("type") == 'global.message':
             message_saved = await save_chat_message(self.user_id, None, message, True, timestamp)
@@ -59,7 +69,6 @@ class chatConsumer(AsyncWebsocketConsumer):
         elif text_data_json.get("type") == 'private.message':
             target_user_id = text_data_json.get("target_user_id")
             message_saved = await save_chat_message(self.user_id, target_user_id, message, False, timestamp)
-            print(f"Private message to {target_user_id} from {self.user_id}")
             if message_saved:
                 await self.channel_layer.group_send(
                     self.room_group_name,

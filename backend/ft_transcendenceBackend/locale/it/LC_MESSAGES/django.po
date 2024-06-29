@@ -296,8 +296,8 @@ msgstr "Invito a una partita inviato!"
 msgid "Failed to send game request."
 msgstr "Invio dell'invito a una partita fallito."
 
-msgid "Waiting for opponent.."
-msgstr "In attesa dell'avversario.."
+msgid "Waiting for opponent..."
+msgstr "In attesa dell'avversario..."
 
 msgid "Join"
 msgstr "Unisciti"

@@ -4,7 +4,6 @@ function isModalPresent(modalId) {
     return document.getElementById(modalId) !== null;
 }
 
-// ADD FRIEND
 function showAddFriendModal() {
     if (isModalPresent('modalAddFriend')) return;
 
@@ -52,65 +51,6 @@ function showAddFriendModal() {
     });
 }
 
-// // CREATE CHANNEL
-// function showCreateChannelModal() {
-//     if (isModalPresent('modalCreateChannel')) return;
-
-//     const modalHtml = `
-//         <div id="modalCreateChannel" class="modal-overlay">
-//             <div class="modal-content">
-//                 <h2>Create Channel</h2>
-//                 <p>Set up your new channel</p>
-//                 <input type="text" placeholder="Channel Name" id="inputChannelName" class="modal-input">
-//                 <div class="threeChanOptions">
-//                     <div class="radio-option">
-//                         <input type="radio" id="private" name="channelType" value="private">
-//                         <label for="private">Private</label>
-//                     </div>
-//                     <div class="radio-option">
-//                         <input type="radio" id="public" name="channelType" value="public" checked>
-//                         <label for="public">Public</label>
-//                     </div>
-//                     <div class="radio-option">
-//                         <input type="radio" id="protected" name="channelType" value="protected">
-//                         <label for="protected">Protected</label>
-//                     </div>
-//                 </div>
-//                 <div class="modal-buttons">
-//                     <button id="btnCreateChannel" class="modal-button modal-button-add">Create</button>
-//                     <button id="btnCancelCreateChannel" class="modal-button modal-button-cancel">Cancel</button>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-
-//     document.body.insertAdjacentHTML('beforeend', modalHtml);
-//     document.getElementById('btnCancelCreateChannel').addEventListener('click', () => closeModal('modalCreateChannel'));
-// }
-
-// // JOIN CHANNEL
-// function showJoinChannelModal() {
-//     if (isModalPresent('modalJoinChannel')) return;
-
-//     const modalHtml = `
-//         <div id="modalJoinChannel" class="modal-overlay">
-//             <div class="modal-content">
-//                 <h2>Join Channel</h2>
-//                 <p>Enter the channel name or ID to join</p>
-//                 <input type="text" placeholder="Channel Name or ID" id="inputChannelId" class="modal-input">
-//                 <div class="modal-buttons">
-//                     <button id="btnJoinChannel" class="modal-button modal-button-add">Join</button>
-//                     <button id="btnCancelJoinChannel" class="modal-button modal-button-cancel">Cancel</button>
-//                 </div>
-//             </div>
-//         </div>
-//     `;
-
-//     document.body.insertAdjacentHTML('beforeend', modalHtml);
-//     document.getElementById('btnCancelJoinChannel').addEventListener('click', () => closeModal('modalJoinChannel'));
-// }
-
-// CHANGE NICKNAME
 function showChangeUsernameModal() {
     if (isModalPresent('modalChangeUsername')) return;
 
@@ -146,8 +86,13 @@ function showChangeUsernameModal() {
                     document.getElementById('inputNewUsername').value = '';
                     closeModal('modalChangeUsername');
                     showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                    window.location.reload();
-                    
+                    // window.location.reload();
+                    fetchUserSettings().then(() => {
+                        fetchUserData(userId);
+                        fetchFriendsList();
+                    }).catch(error => {
+                        console.error('Error fetching user settings:', error);
+                    });
                 },
                 error: function(xhr, status, error) {
                     document.getElementById('inputNewUsername').value = '';
@@ -198,7 +143,6 @@ function showLogoutModal() {
 }
 
 
-//CHANGE THE PROFILE PICTURE
 function showUploadProfilePictureModal() {
 
     $.ajax({
@@ -254,16 +198,16 @@ function showUploadProfilePictureModal() {
     });
    
 }
-// CHANGE LANGUAGE
+
 function changeLanguageModal(){
     let selectedLanguage = document.getElementById('selectLanguage').value;
     $.ajax({
         url: '/change_language/',
         method: 'GET',
         data: { 'language': selectedLanguage },
-        success: function() {
+        success: function(response) {
             showNotification("Language has been changed !", "rgb(81, 171, 81)");
-            window.location.reload();
+            updateTranslationsInDOM(response.translations, "settings");
         },
         error: function(xhr, status, error) {
             console.error(error);
@@ -272,7 +216,93 @@ function changeLanguageModal(){
     });
 }
 
-// Function to close the modal
+function updateLanguageModal(tab){
+    let selectedLanguage = document.getElementById('selectLanguage').value;
+    $.ajax({
+        url: '/change_language/',
+        method: 'GET',
+        data: { 'language': selectedLanguage },
+        success: function(response) {
+            updateTranslationsInDOM(response.translations, tab);
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+function updateTranslationsInDOM(translations, arg=null) {
+    // switch(arg) {
+    //     case 'chat':
+    //         document.getElementById('socialText').textContent = translations.social;
+    //         document.getElementById('button1').textContent = translations.friends;
+    //         document.getElementById('button2').textContent = translations.chats;
+    //         document.getElementById('friendsList').textContent = translations.frds;
+    //         document.getElementById('outgoingRequestsTab').textContent = translations.out_req;
+    //         document.getElementById('incomingRequestsTab').textContent = translations.inc_req;
+    //         document.getElementById('blockedTab').textContent = translations.blocked;
+    //         document.getElementById('glo_cha').textContent = translations.glo_cha;
+    //         document.getElementById('social-text').textContent = `${translations.messages}: ${translations.genchat}`;
+    //         document.getElementById('send-button').textContent = translations.send;
+    //         break;
+    //     case 'settings':
+    //         document.getElementById('settingsText').textContent = translations.settings;
+    //         document.getElementById('username-labelId').textContent = translations.user_name;
+    //         document.getElementById('change-username-button').textContent = translations.change;
+    //         document.getElementById('language-label').textContent = translations.language;
+    //         document.getElementById('enVal').textContent = translations.en;
+    //         document.getElementById('frVal').textContent = translations.fr;
+    //         document.getElementById('itVal').textContent = translations.it;
+    //         // document.getElementById('changeLanguageButton').textContent = translations.change;
+    //         document.getElementById('logout-button').textContent = translations.logout;
+    //         break;
+    //     case 'profile':
+    //         document.getElementById('joinedDate').textContent = translations.joined;
+    //         document.getElementById('matchesPlayed').textContent = translations.mtch_plyd;
+    //         document.getElementById('career-text').textContent = translations.carrer;
+    //         break;
+    //     case 'game':
+    //         document.getElementById('duelId').textContent = translations.duel;
+    //         document.getElementById('tournId').textContent = translations.tourn;
+    //         document.getElementById('crt_priv').textContent = translations.crt_priv;
+    //         document.getElementById('join_priv').textContent = translations.join_priv;
+    //         document.getElementById('joinPrivGame').textContent = translations.join;
+    //         document.getElementById('waiting-text').textContent = translations.wfo;
+    //         break;
+    //     default:
+    //         break;
+    // }
+    document.getElementById('socialText').textContent = translations.social;
+            document.getElementById('button1').textContent = translations.friends;
+            document.getElementById('button2').textContent = translations.chats;
+            document.getElementById('friendsList').textContent = translations.frds;
+            document.getElementById('outgoingRequestsTab').textContent = translations.out_req;
+            document.getElementById('incomingRequestsTab').textContent = translations.inc_req;
+            document.getElementById('blockedTab').textContent = translations.blocked;
+            document.getElementById('glo_cha').textContent = translations.glo_cha;
+            document.getElementById('social-text').textContent = `${translations.messages}: ${translations.genchat}`;
+            document.getElementById('send-button').textContent = translations.send;
+            document.getElementById('settingsText').textContent = translations.settings;
+            document.getElementById('username-labelId').textContent = translations.user_name;
+            document.getElementById('change-username-button').textContent = translations.change;
+            document.getElementById('language-label').textContent = translations.language;
+            document.getElementById('enVal').textContent = translations.en;
+            document.getElementById('frVal').textContent = translations.fr;
+            document.getElementById('itVal').textContent = translations.it;
+            // document.getElementById('changeLanguageButton').textContent = translations.change;
+            document.getElementById('logout-button').textContent = translations.logout;
+            document.getElementById('joinedDate').textContent = translations.joined;
+            document.getElementById('matchesPlayed').textContent = translations.mtch_plyd;
+            document.getElementById('career-text').textContent = translations.carrer;
+            document.getElementById('duelId').textContent = translations.duel;
+            document.getElementById('tournId').textContent = translations.tourn;
+            document.getElementById('crt_priv').textContent = translations.crt_priv;
+            document.getElementById('join_priv').textContent = translations.join_priv;
+            document.getElementById('joinPrivGame').textContent = translations.join;
+            document.getElementById('waiting-text').textContent = translations.wfo;
+}
+
+
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -280,11 +310,9 @@ function closeModal(modalId) {
     }
 }
 
-// Event Listeners
 document.querySelector('.user-pfp').addEventListener('click', showUploadProfilePictureModal);
 document.querySelector('.add-friend-button').addEventListener('click', showAddFriendModal);
-// document.querySelector('.create-channel-button').addEventListener('click', showCreateChannelModal);
-// document.querySelector('.join-channel-button').addEventListener('click', showJoinChannelModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
-document.querySelector('.change-language-button').addEventListener('click', changeLanguageModal);
+// document.querySelector('.change-language-button').addEventListener('click', changeLanguageModal);
+document.getElementById('selectLanguage').addEventListener('change', changeLanguageModal);

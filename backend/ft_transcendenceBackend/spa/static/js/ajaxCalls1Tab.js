@@ -1,4 +1,4 @@
-function updateUI(action, containerId, contentOrId, isId = false) { //used to remove and add profiles in friends/requests/blocked
+function updateUI(action, containerId, contentOrId, isId = false) {
     const container = isId ? document : document.getElementById(containerId);
     
     if (!container) {
@@ -126,7 +126,6 @@ function displayFriends(containerId, data) {
         `;  
         });
 }  
-//////////////////////////////////////////////////////////
 
 function fetchOutgoingRequests() {
     $.ajax({
@@ -253,13 +252,26 @@ document.addEventListener('authenticated', function() {
             url: '/accept_friend_request/',
             method: 'GET',
             data: { 'friend_username': username },
-            success: function(data) {
-                console.log(data);
-                fetchIncomingRequests();
-                fetchFriends();
-                fetchFriendsList();
-                showNotification("Friend request accepted", "rgb(81, 171, 81)");
-                createChatDivIfNotExists(requestId, username);
+            success: function(response) {
+                if (response.status == 'success') {
+                    fetchIncomingRequests();
+                    fetchFriends();
+                    fetchFriendsList();
+                    showNotification(response.message, "rgb(81, 171, 81)");
+                    // createChatDivIfNotExists(requestId, username);
+                    switchOrCreateChatDiv(requestId, username)
+                }
+                else {
+                    showNotification(response.message, "rgb(168, 64, 64)");
+                }
+            },
+            error: function(xhr, status, error) {
+                let response = xhr.responseJSON;
+                if (response && response.message) {
+                    showNotification(response.message, "rgb(168, 64, 64)");
+                } else {
+                    showNotification("An unexpected error occurred.", "rgb(168, 64, 64)");
+                }
             }
         });
     }
@@ -361,7 +373,7 @@ document.addEventListener('authenticated', function() {
                 if (friendId && !(currentChatContext === 'private' && currentRecipientId === friendId)) {
                     currentChatContext = 'private';
                     currentRecipientId = friendId;
-                    switchOrCreateChatDiv(friendId, friendName);
+                    switchOrCreateChatDiv(friendId, friendName, 1);
                     messageWith("set", friendName);
                 }
             }
@@ -371,14 +383,6 @@ document.addEventListener('authenticated', function() {
             currentRecipientId = null;
             openGlobalChat();
         }
-        
-
-        
-        /////////////////////////////////////////////////////////////////
-        // var friendTabs = document.querySelectorAll('.friend-tab-button');
-
-        
-
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -517,47 +521,26 @@ document.addEventListener('authenticated', function() {
                     }
                 }
     
-                // Close all tabs and contents
                 friendTabs.forEach(function(t) {
                     t.classList.remove('active-tab');
                     var content = document.getElementById(t.id + 'Content');
                     if (content) {
-                        content.style.display = 'none'; // Ensure all contents are hidden
+                        content.style.display = 'none';
                     }
                     t.querySelector('.arrow-icon').classList.toggle('arrow-up', false);
                 });
     
-                // Toggle the clicked tab and its content
                 if (!isCurrentlyOpen) {
                     this.classList.add('active-tab');
                     this.querySelector('.arrow-icon').classList.add('arrow-up');
                     if (contentDiv) {
-                        contentDiv.style.display = 'block'; // Show content
+                        contentDiv.style.display = 'block';
                         fetchTabData(this.id);
                     }
                 }
             });
         });
     });
-
-    // function unblockModal(blockIcon) {
-    //     const modalHtml = `
-    //         <div id="confirmBlockModal" class="modal-overlay">
-    //             <div class="modal-content">
-    //                 <h3>Block User</h3>
-    //                 <p>Are you sure you want to block this user?</p>
-    //                 <div class="modal-buttons">
-    //                     <button id="btnConfirmBlock" class="modal-button modal-button-add">Yes</button>
-    //                     <button id="btnCancelBlock" class="modal-button modal-button-cancel">No</button>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     `;
-        
-    //     document.body.insertAdjacentHTML('beforeend', modalHtml);
-    //     addModalEventListeners(blockIcon);
-    // }
-
     function showConfirmBlockModal(userId,username) {
         $.ajax({
             url: '/get_block_translate/',
@@ -595,7 +578,7 @@ document.addEventListener('authenticated', function() {
                 success: function(data) {
                     fetchFriends();
                     fetchBlockedContacts();
-                    showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+                    showNotification("User Blocked", "rgb(168, 64, 64");
                     removeModal('confirmBlockModal');
                 }
             });
@@ -607,7 +590,6 @@ document.addEventListener('authenticated', function() {
     
 
     function blockUser(userId) {
-        //placeholder
         let userImage = 'static/assets/pfp.png';
         let userName = 'Blocked User';
         updateUI('delete', 'friendsContainer', userId);
@@ -620,53 +602,9 @@ document.addEventListener('authenticated', function() {
                 <i class="bi bi-x-circle icon-unblock small-icons" data-id="${userId}"></i>
             </div>
         `;
-        //  DATA. IMPLEMENTED
-
-        // const blockedUserHTML = `
-        //     <div class="friend-item" data-id="${userId}">
-        //         <img src="${data.userImage}" alt="${data.userName}" class="friend-image">
-        //         <div class="friend-info">
-        //             <div>${data.userName}</div>
-        //         </div>
-        //         <i class="bi bi-x-circle icon-unblock" data-id="${userId}"></i>
-        //     </div>
-        // `;
-
         updateUI('add', 'blockedTabContent', blockedUserHTML);
         updateUI('delete', null, 'confirmBlockModal', true);
         showNotification("User blocked", "rgb(168, 64, 64)");
-        //after connectiong to backend
-        // fetch('/api/block-user', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({ userId: userId })
-        // })
-        // .then(response => {
-        //     if (!response.ok) {
-        //         throw new Error('Network response was not ok');
-        //     }
-        //     return response.json();
-        // })
-        // .then(data => {
-        //     updateUI('delete', 'friendsContainer', userId);
-        //     const blockedUserHTML = `
-        //         <div class="friend-item" data-id="${userId}">
-        //             <img src="${data.userImage}" alt="${data.userName}" class="friend-image">
-        //             <div class="friend-info">
-        //                 <div>${data.userName}</div>
-        //             </div>
-        //             <i class="bi bi-x-circle icon-unblock" data-id="${userId}"></i>
-        //         </div>
-        //     `;
-        //     updateUI('add', 'blockedContainer', blockedUserHTML);
-        //     updateUI('delete', null, 'confirmBlockModal', true);
-        //     showNotification("User blocked", "rgb(168, 64, 64)");
-        // })
-        // .catch(error => {
-        //     console.error('Error blocking user:', error);
-        // });
     }
     
 
@@ -677,11 +615,7 @@ document.addEventListener('authenticated', function() {
 
 });
 
-function switchOrCreateChatDiv(chatId, chatName) {
-    document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-        chatDiv.style.display = 'none';
-    });
-
+function switchOrCreateChatDiv(chatId, chatName, switchTab = null) {
     let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
     if (!chatDiv) {
         chatDiv = document.createElement('div');
@@ -692,42 +626,47 @@ function switchOrCreateChatDiv(chatId, chatName) {
 
         document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
     }
-    chatDiv.style.display = 'block';
-    chatDiv.scrollTop = chatDiv.scrollHeight;
 
-    const chatHeader = document.getElementById('social-text');
-    if (chatId === 'global') {
-        chatHeader.textContent = 'General Chat';
-    } else {
-        chatHeader.textContent = `Chat with ${chatName}`;
+    if (switchTab) {
+        document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+            chatDiv.style.display = 'none';
+        });
+        chatDiv.style.display = 'block';
+        chatDiv.scrollTop = chatDiv.scrollHeight;
     }
+    // const chatHeader = document.getElementById('social-text');
+    // if (chatId === 'global') {
+    //     chatHeader.textContent = 'General Chat';
+    // } else {
+    //     chatHeader.textContent = `Chat with ${chatName}`;
+    // }
 }
 
-function switchOrCreateChatDiv(chatId, chatName) {
-            document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-                chatDiv.style.display = 'none';
-            });
+// function switchOrCreateChatDiv(chatId, chatName) {
+//             document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+//                 chatDiv.style.display = 'none';
+//             });
         
-            let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
-            if (!chatDiv) {
-                chatDiv = document.createElement('div');
-                chatDiv.className = 'chat-messages';
-                chatDiv.dataset.id = chatId;
-                chatDiv.dataset.username = chatName;
-                chatDiv.style.display = 'none';
+//             let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
+//             if (!chatDiv) {
+//                 chatDiv = document.createElement('div');
+//                 chatDiv.className = 'chat-messages';
+//                 chatDiv.dataset.id = chatId;
+//                 chatDiv.dataset.username = chatName;
+//                 chatDiv.style.display = 'none';
         
-                document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
-            }
-            chatDiv.style.display = 'block';
-            chatDiv.scrollTop = chatDiv.scrollHeight;
+//                 document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
+//             }
+//             chatDiv.style.display = 'block';
+//             chatDiv.scrollTop = chatDiv.scrollHeight;
         
-            const chatHeader = document.getElementById('social-text');
-            if (chatId === 'global') {
-                chatHeader.textContent = 'General Chat';
-            } else {
-                chatHeader.textContent = `Chat with ${chatName}`;
-            }
-        }
+//             const chatHeader = document.getElementById('social-text');
+//             if (chatId === 'global') {
+//                 chatHeader.textContent = 'General Chat';
+//             } else {
+//                 chatHeader.textContent = `Chat with ${chatName}`;
+//             }
+//         }
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -759,22 +698,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // Close all tabs and contents
             friendTabs.forEach(function(t) {
                 t.classList.remove('active-tab');
                 var content = document.getElementById(t.id + 'Content');
                 if (content) {
-                    content.style.display = 'none'; // Ensure all contents are hidden
+                    content.style.display = 'none';
                 }
                 t.querySelector('.arrow-icon').classList.toggle('arrow-up', false);
             });
 
-            // Toggle the clicked tab and its content
             if (!isCurrentlyOpen) {
                 this.classList.add('active-tab');
                 this.querySelector('.arrow-icon').classList.add('arrow-up');
                 if (contentDiv) {
-                    contentDiv.style.display = 'block'; // Show content
+                    contentDiv.style.display = 'block';
                     fetchTabData(this.id);
                 }
             }

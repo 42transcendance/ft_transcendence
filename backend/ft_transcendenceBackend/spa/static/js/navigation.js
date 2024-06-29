@@ -1,3 +1,8 @@
+let chatLan;
+let settingsLan;
+let profileLan;
+let playLan;
+
 function adjustGameContainerSize() {
     const gameContainer = document.getElementById('inner-container2');
     if (gameContainer) {
@@ -7,7 +12,6 @@ function adjustGameContainerSize() {
     }
 }
 
-// containers visibility management
 function setContainerVisibility(container, isVisible, slideOutClass, slideInClass) {
     if (isVisible) {
         if (container.classList.contains(slideOutClass)) {
@@ -16,7 +20,7 @@ function setContainerVisibility(container, isVisible, slideOutClass, slideInClas
             container.style.visibility = 'visible';
             container.style.pointerEvents = 'auto';
             container.addEventListener('transitionend', () => {
-                container.classList.remove(slideInClass); // Remove the slide-in class after animation
+                container.classList.remove(slideInClass);
             }, { once: true });
         }
     } else {
@@ -56,6 +60,10 @@ function showTab(route) {
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
+            // if (playLan != document.getElementById('selectLanguage').value) {
+            //     updateLanguageModal("play");
+            //     playLan = document.getElementById('selectLanguage').value
+            // }
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'none';
@@ -66,6 +74,10 @@ function showTab(route) {
             setContainerVisibility(firstTab, true, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
+            // if (chatLan != document.getElementById('selectLanguage').value) {
+            //     updateLanguageModal("chat");
+            //     chatLan = document.getElementById('selectLanguage').value
+            // }
             chatTab.style.display = 'flex';
             settingsTab.style.display = 'none';
             profileTab.style.display = 'none';
@@ -76,6 +88,10 @@ function showTab(route) {
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, false, 'right-slide-out', 'right-slide-in');
+            // if (settingsLan != document.getElementById('selectLanguage').value) {
+            //     updateLanguageModal("settings");
+            //     settingsLan = document.getElementById('selectLanguage').value
+            // }
             chatTab.style.display = 'none';
             settingsTab.style.display = 'block';
             profileTab.style.display = 'none';
@@ -87,14 +103,19 @@ function showTab(route) {
             settingsTab.style.display = 'none';
             profileTab.style.display = 'block';
             gameTab.style.display = 'none';
+            // if (profileLan != document.getElementById('selectLanguage').value) {
+            //     updateLanguageModal("profile");
+            //     profileLan = document.getElementById('selectLanguage').value
+            // }
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
             setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
-            fetchUserData(userId);
-            fetchFriendsList();
+            // fetchUserData(userId);
+            // fetchFriendsList();
             fetchUserSettings().then(() => {
-                fetchUserData(userId);
                 fetchFriendsList();
+                fetchUserData(userId);
+                console.log(userId, "hahaha");
             }).catch(error => {
                 console.error('Error fetching user settings:', error);
             });
@@ -132,6 +153,12 @@ navButtons.forEach(function(button) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
+    chatLan = document.getElementById('selectLanguage').value;
+    settingsLan = document.getElementById('selectLanguage').value;
+    profileLan = document.getElementById('selectLanguage').value;
+    playLan = document.getElementById('selectLanguage').value;
+    console.log(chatLan, settingsLan, profileLan);
+
     var thirdTab = document.querySelector('.third-tab');
 
     thirdTab.classList.add('right-slide-out');

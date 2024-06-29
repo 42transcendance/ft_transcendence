@@ -23,7 +23,7 @@ function connectWebSocket() {
     function msgFromBlocked(source_user_id) {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/get_block_list/', 
+                url: '/message_from_blocked/', 
                 method: 'GET',
                 dataType: 'json',
                 success: function(block_list) {
@@ -46,16 +46,17 @@ function connectWebSocket() {
         switch(data.type) {
             case 'private.message':
                 console.log("message recieved");
-                createChatDivIfNotExists(data.id, data.name);
+                // createChatDivIfNotExists(data.id, data.name);
+                switchOrCreateChatDiv(data.source_user_id, data.source_user);
                 await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id, data.timestamp);
                 break;
             case 'global.message':
                 try {
                     const isBlocked = await msgFromBlocked(data.source_user_id);
-                    // if (isBlocked) {
-                    //     console.log("Message blocked.");
-                    //     return;
-                    // }
+                    if (isBlocked) {
+                        console.log("Message blocked.");
+                        return;
+                    }
                     await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id, data.timestamp);
                 } catch (error) {
                     console.error("Error checking block list:", error);
@@ -66,6 +67,7 @@ function connectWebSocket() {
             case 'friendRequest':
                 break;
             case 'game.invite.receive':
+                gameNotification(data);
                 break;
             case 'game.invite.send':
                 showNotification(data.message, "rgb(81, 171, 81)");
@@ -75,6 +77,23 @@ function connectWebSocket() {
     }
     window.chatSocket = chatSocket;
 }
+
+// function createChatDivIfNotExists(requestId, username) {
+//     let chatDiv = document.querySelector(`.chat-messages[data-id='${requestId}']`);
+    
+//     if (!chatDiv) {
+//         chatDiv = document.createElement('div');
+//         chatDiv.classList.add('chat-messages');
+//         chatDiv.setAttribute('data-id', requestId);
+
+//         const chatHeader = document.querySelector('chat-tab');
+//         // chatHeader.classList.add('chat-header');
+//         // chatHeader.innerText = `Chat with ${username}`;
+//         chatDiv.appendChild(chatHeader);
+
+//     }
+// }
+
 
 function gameNotification(data) {
     const username = data.source_user;
@@ -97,7 +116,6 @@ function gameNotification(data) {
                 notification.style.alignItems = "center";
                 notification.style.justifyContent = "space-between";
                 notification.style.marginRight = "20px";
-                // notification.style.position = "relative";
 
                 const notificationMessage = document.createElement('span');
                 notificationMessage.textContent = username + " " + response.translations.message;
@@ -114,7 +132,7 @@ function gameNotification(data) {
                 acceptButton.innerHTML = '<i class="bi bi-check-circle" style="color: white; font-size: 1.15rem;"></i>';
                 acceptButton.onclick = () => {
                     document.querySelector('.nav-button.play').click();
-                    acceptGameInvite(data.source_user_id, data.room_id); // Pass the room_id
+                    acceptGameInvite(data.source_user_id, data.room_id);
                     notification.remove();
                     updateNotificationStyles();
                 };
@@ -157,18 +175,7 @@ function gameNotification(data) {
 }
 
 function acceptGameInvite(friendId, roomId) {
-    // if (window.chatSocket && window.chatSocket.readyState === WebSocket.OPEN) {
-    //     const inviteMessage = {
-    //         type: 'game.invite.accept',
-    //         inviter: friendId,
-    //         invited: userId,
-    //         room_id: roomId // Include room_id
-    //     };
-    //     window.chatSocket.send(JSON.stringify(inviteMessage));
-
-    //     // Join the game immediately
-        joinPrivateGame(roomId);
-    // }
+    joinPrivateGame(roomId);
 }
 
 

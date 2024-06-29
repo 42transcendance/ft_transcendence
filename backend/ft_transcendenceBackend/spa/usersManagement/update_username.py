@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import jwt
 from spa.views import extract_user_info_from_token
+from django.conf import settings
 
 def update_username(request):
     new_username = request.GET.get('search_term', '')
@@ -17,11 +18,14 @@ def update_username(request):
                 existing_user = CustomUser.objects.get(username=new_username)
                 return JsonResponse({'error': 'Username already taken'}, status=400)
             except ObjectDoesNotExist:
+                old_username = user.username
                 user.username = new_username
                 user.save()
+                # Update JWT token in the session
+                jwt_token = jwt.encode({'user_id': user.userid, 'username': user.username}, settings.JWT_SECRET_PHRASE, algorithm='HS256')
+                request.session['token'] = jwt_token
+                print(f"Username changed from {old_username} to {new_username}")
                 return JsonResponse({}, status=200)
-
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
-
     return JsonResponse({'error': 'Invalid token'}, status=401)

@@ -1,4 +1,3 @@
-// SECOND TAB :: PROFILES
 
 function  fetchUserData(theUsersId) {
     $.ajax({
@@ -7,6 +6,7 @@ function  fetchUserData(theUsersId) {
         data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
+            console.log(theUsersId)
             updateProfilePage(data);
         },
         error: function(xhr, status, error) {
@@ -177,8 +177,6 @@ function displayEmptyT(translations) {
     stat.classList.add('centered');
 }
 
-//Settings tab pfp load
-
 document.addEventListener('authenticated', function() {
     fetchUserSettings();
 });
@@ -214,8 +212,6 @@ function updateProfilePicture(data) {
 function updateSettingsUsername(data){
     document.querySelector('.current-username').textContent = data.user_details.username;
 }
-
-// Chats History Load
 
 document.addEventListener('authenticated', async function() {
     await initializeChatDivs();
@@ -273,8 +269,6 @@ function createChatDiv(userId, userName) {
         document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
     }
 }
-
-// chat items
 
 async function loadChatItems() {
     try {

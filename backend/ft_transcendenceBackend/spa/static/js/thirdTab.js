@@ -1,4 +1,3 @@
-// friends list 3rd container, profile page
 function fetchFriendsList() {
     $.ajax({
         url: '/get_friends/', 
@@ -64,16 +63,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (friendItem) {
             const theUser = friendItem.querySelector('.friend-nickname').getAttribute('data-user-id');
             if (theUser) {
-                // fetchUserProfile(userId);
-                // fetchGameHistory(userId);
                 fetchUserData(theUser);
             }
         }
     });
 });
-
-
-///
 
 
 

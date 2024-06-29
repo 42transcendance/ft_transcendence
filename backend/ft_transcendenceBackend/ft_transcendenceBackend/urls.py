@@ -40,6 +40,7 @@ urlpatterns = [
     path('get_outgoing_requests/', friend_requests.get_outgoing_requests, name='get_outgoing_requests'),
     path('get_friends/', friend_requests.get_friends, name='get_friends'),
     path('get_block_list/', friend_requests.get_block_list, name='get_block_list'),
+	path('message_from_blocked/', friend_requests.message_from_blocked, name='message_from_blocked'),
     path('block_friend/', friend_requests.block_friend, name='block_friend'),
     path('unblock_friend/', friend_requests.unblock_friend, name='unblock_friend'),
     path('update_username/', update_username.update_username, name='update_username'),
@@ -62,6 +63,8 @@ urlpatterns = [
 	  path('get_chat_users/', views.get_chat_users, name='get_chat_users'),
     path('invite_code_translate/', tournament_translate.invite_code_translate, name='invite_code_translate'),
 	path('check_authentication/', views.check_authentication, name='check_authentication'),
+	path('get_translations/', views.get_translations, name='get_translations'),
+
 
 ]
 

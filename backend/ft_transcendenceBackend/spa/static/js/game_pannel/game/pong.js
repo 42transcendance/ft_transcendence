@@ -7,7 +7,6 @@ const DIRECTION = {
 	RIGHT: 4,
 };
 
-// The paddle object (The two lines that move up and down)
 let Paddle = {
 
 	new: function (side, username) {
@@ -29,6 +28,9 @@ class Game {
 		this.principalContainer = document.getElementById('principal-container');
 		this.buttonContainer = document.getElementById('button-container');
 		this.waitingOverlay = document.getElementById('waitingOverlay');
+		this.cancelGameButton = document.getElementById('cancel-game-button');
+		this.waitingText = document.querySelector('.waiting-text');
+
 		this.buttonContainer.style.display = 'none';
 
 		this.over = false;
@@ -81,13 +83,13 @@ class Game {
 				'type':'join.matchmaking',
 			}));
 		};
-		this.wsListen();
+		this.wsListen(false);
 		this.animate();
 	}
 
-	createPrivateGame() {
+	createPrivateGame(isInvite) {
 		this.pongSocket = new WebSocket('wss://' + window.location.host + '/ws/pong/');
-	
+		
 		this.pongSocket.onopen = () => {
 			this.connected = true;
 
@@ -95,7 +97,7 @@ class Game {
 				'type':'create.private.game',
 			}));
 		};
-		this.wsListen();
+		this.wsListen(isInvite);
 		this.animate();
 	}
 
@@ -110,11 +112,11 @@ class Game {
 				'room_id': room_id,
 			}));
 		};
-		this.wsListen();
+		this.wsListen(false);
 		this.startAnimation();
 	}
 
-	wsListen() {
+	wsListen(isInvite) {
         this.pongSocket.onmessage = (event) => {
             const wsData = JSON.parse(event.data);
 			switch (wsData.type) {
@@ -127,17 +129,23 @@ class Game {
 					this.room_id = wsData.room_id;
 					if (this.room_id != null) {
 						if (this.room_id.includes("private") == true) {
-							this.displayGameId(this.room_id);
+							if (isInvite === false) {
+								this.displayGameId(this.room_id);
+							}
 						}
 					}
+					else {	this.waitingText.textContent = "Waiting for opponent...";	}
+					
 					break ;
 
 				case ('matchmaking'):
 					this.waitingOverlay.style.visibility = 'visible';
+					this.cancelGameButton.style.display = 'flex';
 					break ;
 
 				case ('game.starting'):
 					this.waitingOverlay.style.visibility = 'hidden';
+					this.cancelGameButton.style.display = 'none';
 					this.game_running = true;
 					this.inputsListen();
 					break ;
@@ -279,8 +287,10 @@ class Game {
 	endGame() {
 		cancelAnimationFrame(this.animationId);
 		this.over = true;
+		this.cancelGameButton.style.display = 'none'
 		this.buttonContainer.style.display = 'flex';
 		this.waitingOverlay.style.visibility = 'hidden';
+		this.pongSocket.close();
 	}
 
 	drawCountdown(wsData, count) {
@@ -297,7 +307,6 @@ class Game {
 		this.context.fillStyle = this.color;
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-		//Draw the dotted line in the middle of the board
 		this.context.beginPath();
 		this.context.setLineDash([7, 17]);
 		this.context.moveTo((this.canvas.width / 2), 0);
@@ -306,20 +315,16 @@ class Game {
 		this.context.strokeStyle = 'grey';
 		this.context.stroke();
 		
-		//Draw The paddle
 		this.context.fillStyle = '#ffffff';
 		this.context.fillRect( this.playerPaddle.x, this.playerPaddle.y, this.playerPaddle.width, this.playerPaddle.height );
 		if (this.side == 'left') this.context.fillRect( (wsData.rightPlayerPaddle.x * diff), (wsData.rightPlayerPaddle.y * diff), (wsData.rightPlayerPaddle.width * diff), (wsData.rightPlayerPaddle.height * diff));
 		else if (this.side == 'right') this.context.fillRect( (wsData.leftPlayerPaddle.x * diff), (wsData.leftPlayerPaddle.y * diff), (wsData.leftPlayerPaddle.width * diff), (wsData.leftPlayerPaddle.height * diff));
 
-
-		//Draw The Score
 		this.context.setLineDash([]);
 		this.context.font = (wsData.defaultFontSize * diff) + "px " + wsData.defaultFont;
 		this.context.strokeText(wsData.leftPlayerScore, this.canvas.width / 8, ((wsData.defaultFontSize) * diff));
 		this.context.strokeText(wsData.rightPlayerScore, this.canvas.width * 0.6, ((wsData.defaultFontSize) * diff));
 
-		// Draw the ball
 		this.context.fillStyle = 'white';
 		this.context.setLineDash([]);
 		this.context.beginPath();

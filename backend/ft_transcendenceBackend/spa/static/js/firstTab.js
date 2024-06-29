@@ -1,4 +1,3 @@
-// FRIENDS AND CHATS :: CHATS
 
 document.addEventListener('authenticated', function() {
     const friendsBtn = document.getElementById('button1');
@@ -17,7 +16,6 @@ document.addEventListener('authenticated', function() {
     function showTab(activeContainer, inactiveContainer) {
         activeContainer.style.display = 'block';
         inactiveContainer.style.display = 'none';
-        // activeContainer === chatsContainer ? fetchChats() : null;
         updateTabButtonStyles(activeContainer);
     }
 
@@ -49,7 +47,6 @@ document.addEventListener('authenticated', function() {
                 const existingChatItems = Array.from(chatsTabContent2.querySelectorAll('.chats-item'));
                 const existingChatIds = existingChatItems.map(item => item.getAttribute('data-id'));
 
-                // Remove chat items for users who are no longer friends or are blocked
                 existingChatItems.forEach(item => {
                     const userId = item.getAttribute('data-id');
                     if (!friendsIds.includes(userId) || blockedIds.includes(userId)) {
@@ -57,7 +54,6 @@ document.addEventListener('authenticated', function() {
                     }
                 });
 
-                // Add new chat items
                 chatUsersData.chat_users.forEach(user => {
                     const userId = user[0];
                     const userName = user[1];
@@ -75,8 +71,6 @@ document.addEventListener('authenticated', function() {
     }
 });
 
-
-// FRIENDS AND CHATS :: EFFECT
 
 const socialButtons = document.querySelectorAll('.social-button');
 

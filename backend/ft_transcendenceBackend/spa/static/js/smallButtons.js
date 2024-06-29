@@ -80,42 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// general chat nickname icons
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const toggleButton = document.querySelector('.toggle-icons'); // Get the arrow icon
-//     const iconsContainer = document.querySelector('.messageIcons'); // Get the icons container
-
-//     toggleButton.addEventListener('click', () => {
-//         iconsContainer.classList.toggle('active');
-
-//         if (toggleButton.classList.contains('bi-caret-right-fill')) {
-//             toggleButton.classList.remove('bi-caret-right-fill');
-//             toggleButton.classList.add('bi-caret-left-fill');
-//         } else {
-//             toggleButton.classList.remove('bi-caret-left-fill');
-//             toggleButton.classList.add('bi-caret-right-fill');
-//         }
-//     });
-// });
-
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     const nicknameElement = document.querySelector('.nicknameAndIcon');
-//     const iconsContainer = nicknameElement.querySelector('.messageIcons');
-
-//     nicknameElement.addEventListener('mouseenter', () => {
-//         iconsContainer.style.display = 'flex';  // Show the icons
-//     });
-
-//     nicknameElement.addEventListener('mouseleave', () => {
-//         iconsContainer.style.display = 'none';  // Hide the icons
-//     });
-// });
-
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
     const chatMessagesContainer = document.querySelector('.chat-messages');
 
@@ -146,7 +110,35 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             addFriend(senderNickname);
             break;
         case 'bi-person':
-            simulateProfileTabClick(senderId);
+            // simulateProfileTabClick(senderId);
+            history.pushState(null, null, `#${"profile"}`);
+            var chatTab = document.querySelector('.chat-tab');
+            var settingsTab = document.querySelector('.settings-tab');
+            var profileTab = document.querySelector('.profile-tab');
+            var gameTab = document.querySelector('.game-container');
+
+            var firstTab = document.querySelector('.first-tab');
+            var secondTab = document.querySelector('.second-tab');
+            var thirdTab = document.querySelector('.third-tab');
+
+            const gameContainer = document.getElementById('inner-container2');
+
+            var navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(function(button) {
+                button.classList.remove('active');
+                if (button.getAttribute('data-button') === "profile") {
+                    button.classList.add('active');
+                }
+            });
+            gameContainer.style.height = "75vh";
+            chatTab.style.display = 'none';
+            settingsTab.style.display = 'none';
+            profileTab.style.display = 'block';
+            gameTab.style.display = 'none';
+            setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
+            setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
+            setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
+            fetchUserData(senderId);
             break;
         case 'bi-slash-circle':
             blockUser(senderNickname)
@@ -160,7 +152,7 @@ function addFriend(senderNickname) {
     $.ajax({
         url: '/send_friend_request/',
         method: 'GET',
-        data: { 'search_term': senderNickname }, // This should be the username if the API expects it
+        data: { 'search_term': senderNickname },
         success: function() {
             showNotification("Friend request sent to user: " + senderNickname, "rgb(81, 171, 81)");
         },
@@ -177,21 +169,21 @@ function blockUser(username) {
         success: function(data) {
             fetchFriends();
             fetchBlockedContacts();
-            showNotification("User Blocked", "rgb(168, 64, 64"); // Red color
+            showNotification("User Blocked", "rgb(168, 64, 64");
         }
     });
 }
 
 function simulateProfileTabClick(senderId) {
 
-    var navButtons = document.querySelectorAll('.nav-button');
-    const profileButton = document.querySelector('button[data-button="profile"]');
+    // var navButtons = document.querySelectorAll('.nav-button');
+    // const profileButton = document.querySelector('button[data-button="profile"]');
 
 
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    profileButton.classList.add('active');
+    // navButtons.forEach(btn => btn.classList.remove('active'));
+    // profileButton.classList.add('active');
 
     navbarPressed('profile');
-
     fetchUserData(senderId);
+
 }

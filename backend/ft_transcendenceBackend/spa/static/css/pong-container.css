@@ -1,0 +1,13 @@
+
+#pong-container {
+    position: relative;
+}
+
+#cancel-game-button {
+    position: absolute;
+    display: none;
+    z-index: 1;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
