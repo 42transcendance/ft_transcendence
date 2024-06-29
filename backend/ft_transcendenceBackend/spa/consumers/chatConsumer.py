@@ -26,7 +26,7 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'notification',
             'message': 'Connection established.',
-            'source_user': self.username,
+            'source_user': self.userObject.username,
             'source_user_id': self.user_id,
         }))
     
@@ -39,6 +39,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         timestamp = text_data_json.get("timestamp", datetime.now(timezone.utc).isoformat())
+        self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
+
 
         if text_data_json.get("type") == 'global.message':
             message_saved = await save_chat_message(self.user_id, None, message, True, timestamp)
@@ -49,7 +51,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                         'type': 'global.message',
                         'message': message,
                         'timestamp': timestamp,
-                        'source_user': self.username,
+                        'source_user': self.userObject.username,
                         'source_user_id': self.user_id,
                     }
                 )
@@ -64,7 +66,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                         'type': 'private.message',
                         'message': message,
                         'timestamp': timestamp,
-                        'source_user': self.username,
+                        'source_user': self.userObject.username,
                         'source_user_id': self.user_id,
                         'target_user_id': target_user_id,
                     }
@@ -79,7 +81,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     {
                         'type': 'invitation',
-                        'source_user': self.username,
+                        'source_user':  self.userObject.username,
                         'source_user_id': self.user_id,
                         'target_user_id': target_user_id,
                         'target_user_name': target_user_name,

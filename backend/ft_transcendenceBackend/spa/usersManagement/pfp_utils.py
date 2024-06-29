@@ -70,6 +70,6 @@ def upload_profile_picture(request):
         current_user.profile_picture = f"profile_pictures/{filename}"
         current_user.save()
         
-        return JsonResponse({'success': 'Profile picture updated successfully'})
+        return JsonResponse({'success': 'Profile picture updated successfully', 'userPfp' : get_base64_image(current_user.profile_picture) if current_user.profile_picture else None})
     else:
         return JsonResponse({'error': 'No file uploaded'}, status=400)

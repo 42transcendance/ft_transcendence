@@ -82,11 +82,11 @@ function showChangeUsernameModal() {
                 url: '/update_username/',
                 method: 'GET',
                 data: { 'search_term': inputText },
-                success: function() {
+                success: function(data) {
                     document.getElementById('inputNewUsername').value = '';
                     closeModal('modalChangeUsername');
                     showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                    window.location.reload();
+                    document.querySelector('.current-username').textContent = data.username;
                     
                 },
                 error: function(xhr, status, error) {
@@ -149,7 +149,7 @@ function showUploadProfilePictureModal() {
             <div id="modalUploadProfilePicture" class="modal-overlay">
                 <div class="modal-content">
                     <h3>${data.translations.upload}</h3>
-                    <input type="file" id="inputProfilePicture" accept="image/*" class="modal-input">
+                    <input type="file" id="inputProfilePicture" accept="image/jpeg" class="modal-input">
                     <div class="modal-buttons">
                         <button id="btnUploadPicture" class="modal-button modal-button-add">${data.translations.upload_btn}</button>
                         <button id="btnCancelUpload" class="modal-button modal-button-cancel">${data.translations.cnl_btn}</button>
@@ -157,41 +157,45 @@ function showUploadProfilePictureModal() {
                 </div>
             </div>
             `;
-    
-        document.body.insertAdjacentHTML('beforeend', modalHtml);
-        document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
-    
-        document.getElementById('btnUploadPicture').addEventListener('click', function() {
-            const fileInput = document.getElementById('inputProfilePicture');
-            const file = fileInput.files[0];
-            if (file) {
-                const formData = new FormData();
-                formData.append('profile_picture', file);
-                
-                $.ajax({
-                    url: '/upload_profile_picture/',
-                    method: 'POST',
-                    processData: false,
-                    contentType: false,
-                    data: formData,
-                    success: function(response) {
-                        closeModal('modalUploadProfilePicture');
-                        showNotification("Profile picture has been changed !", "rgb(81, 171, 81)");
-                        window.location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                        showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)"); 
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('btnCancelUpload').addEventListener('click', () => closeModal('modalUploadProfilePicture'));
+
+            document.getElementById('btnUploadPicture').addEventListener('click', function() {
+                const fileInput = document.getElementById('inputProfilePicture');
+                const file = fileInput.files[0];
+                if (file) {
+                    if (file.type !== 'image/jpeg') {
+                        showNotification("Please upload a JPG file.", "rgb(168, 64, 64)");
+                        return;
                     }
-                });
-            }
-        });
+                    const formData = new FormData();
+                    formData.append('profile_picture', file);
+
+                    $.ajax({
+                        url: '/upload_profile_picture/',
+                        method: 'POST',
+                        processData: false,
+                        contentType: false,
+                        data: formData,
+                        success: function(response) {
+                            closeModal('modalUploadProfilePicture');
+                            document.querySelector('.pfp-container .user-pfp').src = response.userPfp ;
+                            document.querySelector('.profile-pic').src = response.userPfp || '/static/assets/pfp.png';
+                            showNotification("Profile picture has been changed!", "rgb(81, 171, 81)");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(error);
+                            showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)");
+                        }
+                    });
+                }
+            });
         },
         error: function(xhr, status, error) {
             console.error(error);
         }
     });
-   
 }
 
 function changeLanguageModal(){
@@ -200,9 +204,16 @@ function changeLanguageModal(){
         url: '/change_language/',
         method: 'GET',
         data: { 'language': selectedLanguage },
-        success: function() {
+        success: function() {   
+            $.ajax({
+                url: 'get_translations',
+                method: 'GET',
+                success: function(data) {
+                    updateText(data.translations);
+                }
+            });
             showNotification("Language has been changed !", "rgb(81, 171, 81)");
-            window.location.reload();
+            
         },
         error: function(xhr, status, error) {
             console.error(error);
@@ -210,6 +221,42 @@ function changeLanguageModal(){
         }
     });
 }
+
+function updateText(translations) {
+    document.querySelector('.social-text').textContent = translations.social;
+    document.getElementById('button1').textContent = translations.friends;
+    document.getElementById('button2').textContent = translations.chats;
+    document.querySelector('.add-friend-button').textContent = translations.add_friend;
+    document.querySelector('.bi-peopleMain').textContent = translations.frds;
+    document.getElementById('outgoingRequestsTab').textContent = translations.out_req;
+    document.getElementById('incomingRequestsTab').textContent = translations.inc_req;
+    document.getElementById('blockedTab').textContent = translations.blocked;
+    document.querySelector('.global-chat-item .friend-info div').textContent = translations.glo_cha;
+    document.querySelector('#social-text').textContent = translations.messages + ': ' + translations.genchat;
+    document.querySelector('.message-input').setAttribute('placeholder', translations.message_ph);
+    document.querySelector('.send-button').textContent = translations.send;
+    document.querySelector('.settings-heading .social-text').textContent = translations.settings;
+    document.querySelector('.username-label').textContent = translations.user_name;
+    document.querySelector('.change-username-button').textContent = translations.change;
+    document.querySelector('.language-label').textContent = translations.language;
+    document.getElementById('selectLanguage').querySelector('option[value="en"]').textContent = translations.en;
+    document.getElementById('selectLanguage').querySelector('option[value="fr"]').textContent = translations.fr;
+    document.getElementById('selectLanguage').querySelector('option[value="it"]').textContent = translations.it;
+    document.querySelector('.change-language-button').textContent = translations.change;
+    document.querySelector('.logout-button').textContent = translations.logout;
+    document.getElementById('profile-pfp').querySelector('img').setAttribute('alt', translations.user_name);
+    document.getElementById('joinedDate').textContent = translations.joined;
+    document.getElementById('matchesPlayed').textContent = translations.mtch_plyd;
+    document.querySelector('.career-text').textContent = translations.carrer;
+    document.querySelectorAll('.game-container .send-button')[0].textContent = translations.duel;
+    document.querySelectorAll('.game-container .send-button')[1].textContent = translations.tourn;
+    document.querySelectorAll('.game-container .send-button')[2].textContent = translations.crt_priv;
+    document.querySelectorAll('.game-container .send-button')[3].textContent = translations.join_priv;
+    document.querySelector('.waiting-overlay .waiting-text').textContent = translations.wfo;
+    document.querySelector('.input-private-game-id').setAttribute('placeholder', translations.privid);
+    // document.querySelector('.join-private-game-form-button .send-button').textContent = translations.join;
+}
+
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);

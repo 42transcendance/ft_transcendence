@@ -19,6 +19,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
 class Game(models.Model):
     player1 = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='player1_games')
     player2 = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='player2_games')

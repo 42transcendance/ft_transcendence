@@ -26,6 +26,7 @@ from spa.usersManagement import game_history
 from spa.translate import modal_translate
 from spa.translate import profile_friends_translate
 from spa.translate import tournament_translate
+from spa.translate import static_translate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -57,11 +58,13 @@ urlpatterns = [
     path('tournament_win_translate/', tournament_translate.tournament_win_translate, name='tournament_win_translate'),
     path('tournament_winmsg_translate/', tournament_translate.tournament_winmsg_translate, name='tournament_winmsg_translate'),
     path('change_language/', views.change_language, name='change_language'),
-	  path('get_chat_history/', views.get_chat_history, name='get_chat_history'),
-	  path('save_chat_message/', views.save_chat_message, name='save_chat_message'),
-	  path('get_chat_users/', views.get_chat_users, name='get_chat_users'),
+	path('get_chat_history/', views.get_chat_history, name='get_chat_history'),
+	path('save_chat_message/', views.save_chat_message, name='save_chat_message'),
+	path('get_chat_users/', views.get_chat_users, name='get_chat_users'),
     path('invite_code_translate/', tournament_translate.invite_code_translate, name='invite_code_translate'),
 	path('check_authentication/', views.check_authentication, name='check_authentication'),
+    path('get_translations/', static_translate.get_translations, name='get_translations'),
+    
 
 ]
 

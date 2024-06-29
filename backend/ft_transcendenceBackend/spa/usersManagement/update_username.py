@@ -19,7 +19,7 @@ def update_username(request):
             except ObjectDoesNotExist:
                 user.username = new_username
                 user.save()
-                return JsonResponse({}, status=200)
+                return JsonResponse({'username': user.username}, status=200)
 
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
