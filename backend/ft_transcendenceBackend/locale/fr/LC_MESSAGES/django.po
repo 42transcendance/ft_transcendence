@@ -127,9 +127,8 @@ msgstr "Lancer le Duel"
 msgid "Start Tournament"
 msgstr "Lancer le Tournois"
 
-msgid "Career"
-msgstr "Carrière"
-
+msgid "Friends Profile"
+msgstr "Profil d'amis"
 
 msgid "Logout"
 msgstr "Se Déconnecter"

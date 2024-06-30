@@ -251,14 +251,15 @@ function updateText(translations) {
     document.getElementById('profile-pfp').querySelector('img').setAttribute('alt', translations.user_name);
     document.getElementById('joinedDate').textContent = translations.joined;
     document.getElementById('matchesPlayed').textContent = translations.mtch_plyd;
-    document.querySelector('.career-text').textContent = translations.carrer;
+    document.querySelector('.career-text').textContent = translations.fp;
     document.querySelectorAll('.game-container .send-button')[0].textContent = translations.duel;
     document.querySelectorAll('.game-container .send-button')[1].textContent = translations.tourn;
     document.querySelectorAll('.game-container .send-button')[2].textContent = translations.crt_priv;
     document.querySelectorAll('.game-container .send-button')[3].textContent = translations.join_priv;
-    document.querySelector('.waiting-overlay .waiting-text').textContent = translations.wfo;
+    document.getElementById('waiting-text').textContent  = translations.wfo;
     document.querySelector('.input-private-game-id').setAttribute('placeholder', translations.privid);
-    // document.querySelector('.join-private-game-form-button .send-button').textContent = translations.join;
+    document.getElementById('joinPrivGame').textContent = translations.join;
+    document.getElementById('cancel-game-button').textContent = translations.cancel_game_text;
 }
 
 

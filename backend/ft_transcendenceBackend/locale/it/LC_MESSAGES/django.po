@@ -113,8 +113,8 @@ msgstr "Inizia Partita"
 msgid "Start Tournament"
 msgstr "Inizia Torneo"
 
-msgid "Career's"
-msgstr "Carriera"
+msgid "Friends Profile"
+msgstr "Profilo degli amici"
 
 msgid "Logout"
 msgstr "Esci"

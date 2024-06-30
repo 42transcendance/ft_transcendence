@@ -239,7 +239,7 @@ def get_translations(request):
         'logout': _("Logout"),
         'joined': _("Joined"),
         'mtch_plyd': _("Matches Played"),
-        'carrer': _("Career"),
+        'fp': _("Friends Profile"),
         'duel': _("Duel"),
         'tourn': _("Tournament"),
         'crt_priv': _("Create Private Game"),
