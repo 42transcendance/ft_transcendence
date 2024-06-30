@@ -167,3 +167,19 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Use database for session storage
+SESSION_COOKIE_NAME = 'myapp_sessionid'  # Name of the session cookie
+SESSION_COOKIE_SECURE = not DEBUG  # Use HTTPS for cookie when not in debug mode
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even after browser is closed
+SESSION_COOKIE_AGE = 1209600  # 2 weeks

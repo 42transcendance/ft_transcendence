@@ -298,7 +298,7 @@ function createChatItem(userId, userName, userPfp) {
     chatItem.setAttribute('data-username', userName);
 
     const img = document.createElement('img');
-    img.src = userPfp || '/static/assets/default-pfp.png';
+    img.src = userPfp;
     img.alt = userName;
     img.className = 'friend-image';
 

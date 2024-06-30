@@ -5,7 +5,6 @@ from spa.models import CustomUser
 from asgiref.sync import sync_to_async
 from datetime import datetime, timezone
 
-
 class chatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
@@ -22,6 +21,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = 'global'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
+        print(f"User connected: {self.username} (ID: {self.user_id})")
+
 
         await self.send(text_data=json.dumps({
             'type': 'notification',
@@ -35,12 +36,22 @@ class chatConsumer(AsyncWebsocketConsumer):
         await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
+        print(f"User disconnected: {self.username} (ID: {self.user_id})")
+
+
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         timestamp = text_data_json.get("timestamp", datetime.now(timezone.utc).isoformat())
         self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
 
+
+        try:
+            user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+            self.username = user.username
+        except CustomUser.DoesNotExist:
+            await self.close()
+            return
 
         if text_data_json.get("type") == 'global.message':
             message_saved = await save_chat_message(self.user_id, None, message, True, timestamp)

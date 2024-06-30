@@ -34,7 +34,6 @@ window.addEventListener("load", function() {
                 document.dispatchEvent(new CustomEvent('authenticated'));
                 if (callback) callback(true);
             } else {
-                console.log('User is not authenticated');
             }
         })
         .catch(error => {

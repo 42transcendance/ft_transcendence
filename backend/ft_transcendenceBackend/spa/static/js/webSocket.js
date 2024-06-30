@@ -11,7 +11,6 @@ function connectWebSocket() {
         const data = JSON.parse(e.data);
         await handleWebSocketMessage(data);
     };
-
     chatSocket.onerror = function(error) {
         console.error("WebSocket error: ", error);
     };
@@ -23,7 +22,7 @@ function connectWebSocket() {
     function msgFromBlocked(source_user_id) {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/get_block_list/', 
+                url: '/message_from_blocked/', 
                 method: 'GET',
                 dataType: 'json',
                 success: function(block_list) {
@@ -45,13 +44,15 @@ function connectWebSocket() {
     async  function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
-                console.log("message recieved");
-                createChatDivIfNotExists(data.id, data.name);
+                switchOrCreateChatDiv(data.source_user_id, data.source_user);
                 await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id, data.timestamp);
                 break;
             case 'global.message':
                 try {
                     const isBlocked = await msgFromBlocked(data.source_user_id);
+                    if (isBlocked) {
+                        return;
+                    }
                     await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id, data.timestamp);
                 } catch (error) {
                     console.error("Error checking block list:", error);

@@ -252,13 +252,25 @@ document.addEventListener('authenticated', function() {
             url: '/accept_friend_request/',
             method: 'GET',
             data: { 'friend_username': username },
-            success: function(data) {
-                console.log(data);
-                fetchIncomingRequests();
-                fetchFriends();
-                fetchFriendsList();
-                showNotification("Friend request accepted", "rgb(81, 171, 81)");
-                createChatDivIfNotExists(requestId, username);
+            success: function(response) {
+                if (response.status == 'success') {
+                    fetchIncomingRequests();
+                    fetchFriends();
+                    fetchFriendsList();
+                    showNotification(response.message, "rgb(81, 171, 81)");
+                    switchOrCreateChatDiv(requestId, username)
+                }
+                else {
+                    showNotification(response.message, "rgb(168, 64, 64)");
+                }
+            },
+            error: function(xhr, status, error) {
+                let response = xhr.responseJSON;
+                if (response && response.message) {
+                    showNotification(response.message, "rgb(168, 64, 64)");
+                } else {
+                    showNotification("An unexpected error occurred.", "rgb(168, 64, 64)");
+                }
             }
         });
     }
@@ -360,7 +372,7 @@ document.addEventListener('authenticated', function() {
                 if (friendId && !(currentChatContext === 'private' && currentRecipientId === friendId)) {
                     currentChatContext = 'private';
                     currentRecipientId = friendId;
-                    switchOrCreateChatDiv(friendId, friendName);
+                    switchOrCreateChatDiv(friendId, friendName, 1);
                     messageWith("set", friendName);
                 }
             }
@@ -602,11 +614,7 @@ document.addEventListener('authenticated', function() {
 
 });
 
-function switchOrCreateChatDiv(chatId, chatName) {
-    document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-        chatDiv.style.display = 'none';
-    });
-
+function switchOrCreateChatDiv(chatId, chatName, switchTab = null) {
     let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
     if (!chatDiv) {
         chatDiv = document.createElement('div');
@@ -617,42 +625,16 @@ function switchOrCreateChatDiv(chatId, chatName) {
 
         document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
     }
-    chatDiv.style.display = 'block';
-    chatDiv.scrollTop = chatDiv.scrollHeight;
 
-    const chatHeader = document.getElementById('social-text');
-    if (chatId === 'global') {
-        chatHeader.textContent = 'General Chat';
-    } else {
-        chatHeader.textContent = `Chat with ${chatName}`;
+    if (switchTab) {
+        document.querySelectorAll('.chat-messages').forEach(chatDiv => {
+            chatDiv.style.display = 'none';
+        });
+        chatDiv.style.display = 'block';
+        chatDiv.scrollTop = chatDiv.scrollHeight;
     }
 }
 
-function switchOrCreateChatDiv(chatId, chatName) {
-            document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-                chatDiv.style.display = 'none';
-            });
-        
-            let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
-            if (!chatDiv) {
-                chatDiv = document.createElement('div');
-                chatDiv.className = 'chat-messages';
-                chatDiv.dataset.id = chatId;
-                chatDiv.dataset.username = chatName;
-                chatDiv.style.display = 'none';
-        
-                document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
-            }
-            chatDiv.style.display = 'block';
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-        
-            const chatHeader = document.getElementById('social-text');
-            if (chatId === 'global') {
-                chatHeader.textContent = 'General Chat';
-            } else {
-                chatHeader.textContent = `Chat with ${chatName}`;
-            }
-        }
 
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -15,6 +15,7 @@ from django.db.models import Q
 
 from django.utils.translation import gettext_lazy as _
 
+
 import requests
 import jwt
 import os   
@@ -51,13 +52,22 @@ def extract_user_info_from_token(token):
     except jwt.InvalidTokenError:
         return None, None
 
+# def change_language(request):
+#     if request.method == 'GET':
+#         language = request.GET.get('language', None)
+#         if language in ['en', 'fr', 'it']:
+#             request.session['language'] = language
+#             return JsonResponse({'success': True})
+#     return JsonResponse({'success': False})
+
 def change_language(request):
-    if request.method == 'GET':
-        language = request.GET.get('language', None)
-        if language in ['en', 'fr', 'it']:
-            request.session['language'] = language
-            return JsonResponse({'success': True})
+    language = request.GET.get('language', None)
+    if language in ['en', 'fr', 'it']:
+        request.session['language'] = language
+        translations = translate_static(language)
+        return JsonResponse({'success': True, 'translations': translations})
     return JsonResponse({'success': False})
+
 
 def callback(request):
     code = request.GET.get('code')
@@ -80,8 +90,10 @@ def callback(request):
             id_user = api_response.json().get('id')
             
             if CustomUser.objects.filter(userid=id_user).exists():
-                 current_user = CustomUser.objects.get(userid=id_user)
-            else :
+                current_user = CustomUser.objects.get(userid=id_user)
+                current_user_username = current_user.username
+                print(f"Existing user login. Username: {current_user_username}")
+            else:
                 login_user = api_response.json().get('login')
                 base_username = login_user
                 username_suffix = 1
@@ -95,8 +107,10 @@ def callback(request):
                 download_successful = download_image(pfp_link, pfp_destination)
                 current_user = CustomUser(userid=id_user, username=login_user, profile_picture=f"profile_pictures/{pfp_filename}" if download_successful else None)
                 current_user.save()
+                current_user_username = current_user.username
+                print(f"New user created. Username: {current_user_username}")
             if api_response.status_code == 200:
-                jwt_token = jwt.encode({'user_id': current_user.userid, 'username': current_user.username}, settings.JWT_SECRET_PHRASE, algorithm='HS256')
+                jwt_token = jwt.encode({'user_id': current_user.userid, 'username': current_user_username}, settings.JWT_SECRET_PHRASE, algorithm='HS256')
                 request.session['token'] = jwt_token
                 return redirect ('home')
     return HttpResponseServerError('ERROR')
@@ -179,7 +193,7 @@ def get_chat_users(request):
         if msg['recipient__userid']:
             profile_picture = get_base64_image(CustomUser.objects.get(userid=msg['recipient__userid']).profile_picture)
             users.add((msg['recipient__userid'], msg['recipient__username'], profile_picture))
-
+            
     for msg in received_messages:
         if msg['sender__userid']:
             profile_picture = get_base64_image(CustomUser.objects.get(userid=msg['sender__userid']).profile_picture)
@@ -199,3 +213,38 @@ def get_base64_image(image_field):
         return f"data:image/png;base64,{encoded_string}"
     except FileNotFoundError:
         return None
+
+def get_translations(request):
+    language = request.GET.get('language')
+    if language:
+        activate(language)
+    translations = {
+        'social': _("Social"),
+        'friends': _("Friends"),
+        'chats': _("Chats"),
+        'add_friend': _("Add Friend"),
+        'frds': _("Friends"),
+        'out_req': _("Outgoing Requests"),
+        'inc_req': _("Incoming Requests"),
+        'blocked': _("Blocked"),
+        'glo_cha': _("Global Chat"),
+        'messages': _("Messages"),
+        'genchat': _("General Chat"),
+        'message_ph': _("Type a message..."),
+        'send': _("Send"),
+        'settings': _("Settings"),
+        'user_name': _("Username"),
+        'change': _("Change"),
+        'language': _("Language"),
+        'logout': _("Logout"),
+        'joined': _("Joined"),
+        'mtch_plyd': _("Matches Played"),
+        'carrer': _("Career"),
+        'duel': _("Duel"),
+        'tourn': _("Tournament"),
+        'crt_priv': _("Create Private Game"),
+        'join_priv': _("Join Private Game"),
+        'privid': _("Private Game ID"),
+        'wfo': _("Waiting for opponent"),
+    }
+    return JsonResponse({'translations': translations})

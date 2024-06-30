@@ -76,7 +76,7 @@ function showChangeUsernameModal() {
         document.body.insertAdjacentHTML('beforeend', modalHtml);
         document.getElementById('btnCancelChangeUsername').addEventListener('click', () => closeModal('modalChangeUsername'));
         document.getElementById('btnChangeUsername').addEventListener('click', function() {
-            let inputText = document.getElementById('inputNewUsername').value;;
+            let inputText = document.getElementById('inputNewUsername').value;
             userUsername = document.getElementById('inputNewUsername').value;
             $.ajax({
                 url: '/update_username/',
@@ -86,8 +86,14 @@ function showChangeUsernameModal() {
                     document.getElementById('inputNewUsername').value = '';
                     closeModal('modalChangeUsername');
                     showNotification("Username has been changed !", "rgb(81, 171, 81)"); 
-                    document.querySelector('.current-username').textContent = data.username;
-                    
+                    // document.querySelector('.current-username').textContent = data.username;
+                    fetchUserSettings().then(() => {
+                        fetchUserData(userId);
+                        fetchFriendsList();
+                        sendMessage('global.message', `I just changed my username to <b>${userUsername}</b>`);
+                    }).catch(error => {
+                        console.error('Error fetching user settings:', error);
+                    });
                 },
                 error: function(xhr, status, error) {
                     document.getElementById('inputNewUsername').value = '';
@@ -227,10 +233,10 @@ function updateText(translations) {
     document.getElementById('button1').textContent = translations.friends;
     document.getElementById('button2').textContent = translations.chats;
     document.querySelector('.add-friend-button').textContent = translations.add_friend;
-    document.querySelector('.bi-peopleMain').textContent = translations.frds;
-    document.getElementById('outgoingRequestsTab').textContent = translations.out_req;
-    document.getElementById('incomingRequestsTab').textContent = translations.inc_req;
-    document.getElementById('blockedTab').textContent = translations.blocked;
+    document.getElementById('friendsList').textContent = translations.frds;
+    document.getElementById('outgoingRequestsTab').innerHTML = `<i class="bi bi-arrow-bar-right"></i> ${translations.out_req} <i class="bi bi-chevron-down arrow-icon"></i>`;
+    document.getElementById('incomingRequestsTab').innerHTML = `<i class="bi bi-arrow-bar-left"></i> ${translations.inc_req} <i class="bi bi-chevron-down arrow-icon"></i>`;
+    document.getElementById('blockedTab').innerHTML = `<i class="bi bi-slash-circle"></i> ${translations.blocked} <i class="bi bi-chevron-down arrow-icon"></i>`;
     document.querySelector('.global-chat-item .friend-info div').textContent = translations.glo_cha;
     document.querySelector('#social-text').textContent = translations.messages + ': ' + translations.genchat;
     document.querySelector('.message-input').setAttribute('placeholder', translations.message_ph);
@@ -242,7 +248,6 @@ function updateText(translations) {
     document.getElementById('selectLanguage').querySelector('option[value="en"]').textContent = translations.en;
     document.getElementById('selectLanguage').querySelector('option[value="fr"]').textContent = translations.fr;
     document.getElementById('selectLanguage').querySelector('option[value="it"]').textContent = translations.it;
-    document.querySelector('.change-language-button').textContent = translations.change;
     document.querySelector('.logout-button').textContent = translations.logout;
     document.getElementById('profile-pfp').querySelector('img').setAttribute('alt', translations.user_name);
     document.getElementById('joinedDate').textContent = translations.joined;
@@ -269,4 +274,4 @@ document.querySelector('.user-pfp').addEventListener('click', showUploadProfileP
 document.querySelector('.add-friend-button').addEventListener('click', showAddFriendModal);
 document.querySelector('.change-username-button').addEventListener('click', showChangeUsernameModal);
 document.querySelector('.logout-button').addEventListener('click', showLogoutModal);
-document.querySelector('.change-language-button').addEventListener('click', changeLanguageModal);
+document.getElementById('selectLanguage').addEventListener('change', changeLanguageModal);

@@ -92,16 +92,18 @@ function addMessageToGlobalChatUI(message, sender, sender_id, timestamp) {
                 globalChatDiv.appendChild(messageElement);
                 scrollToBottom(globalChatDiv);
 
-                const nicknameElement = messageElement.querySelector('.nicknameAndIcon');
-                const iconsContainer = nicknameElement.querySelector('.messageIcons');
+                if (sender_id != userId) {
+                    const nicknameElement = messageElement.querySelector('.nicknameAndIcon');
+                    const iconsContainer = nicknameElement.querySelector('.messageIcons');
 
-                nicknameElement.addEventListener('mouseenter', () => {
-                    iconsContainer.style.display = 'flex';
-                });
+                    nicknameElement.addEventListener('mouseenter', () => {
+                        iconsContainer.style.display = 'flex';
+                    });
 
-                nicknameElement.addEventListener('mouseleave', () => {
-                    iconsContainer.style.display = 'none';
-                });
+                    nicknameElement.addEventListener('mouseleave', () => {
+                        iconsContainer.style.display = 'none';
+                    });
+                }
 
                 resolve();
             },
@@ -141,8 +143,6 @@ function addMessageToChatUI(message, sender, senderid, recipientid, timestamp) {
                 messageElement.innerHTML = userIconHTML + messageDetailsHTML;
                 const chatDivId = senderid == userId ? recipientid : senderid;
                 const chatDiv = document.querySelector(`.chat-messages[data-id='${chatDivId}']`);
-                console.log("chatDivId:", chatDivId);
-                console.log("chatDivId:", chatDiv);
                 chatDiv.appendChild(messageElement);
                 scrollToBottom(chatDiv);
                 resolve();

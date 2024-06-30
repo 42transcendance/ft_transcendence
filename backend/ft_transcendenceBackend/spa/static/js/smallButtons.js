@@ -110,7 +110,34 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             addFriend(senderNickname);
             break;
         case 'bi-person':
-            simulateProfileTabClick(senderId);
+            history.pushState(null, null, `#${"profile"}`);
+            var chatTab = document.querySelector('.chat-tab');
+            var settingsTab = document.querySelector('.settings-tab');
+            var profileTab = document.querySelector('.profile-tab');
+            var gameTab = document.querySelector('.game-container');
+
+            var firstTab = document.querySelector('.first-tab');
+            var secondTab = document.querySelector('.second-tab');
+            var thirdTab = document.querySelector('.third-tab');
+
+            const gameContainer = document.getElementById('inner-container2');
+
+            var navButtons = document.querySelectorAll('.nav-button');
+            navButtons.forEach(function(button) {
+                button.classList.remove('active');
+                if (button.getAttribute('data-button') === "profile") {
+                    button.classList.add('active');
+                }
+            });
+            gameContainer.style.height = "75vh";
+            chatTab.style.display = 'none';
+            settingsTab.style.display = 'none';
+            profileTab.style.display = 'block';
+            gameTab.style.display = 'none';
+            setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
+            setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
+            setContainerVisibility(thirdTab, true, 'right-slide-out', 'right-slide-in');
+            fetchUserData(senderId);
             break;
         case 'bi-slash-circle':
             blockUser(senderNickname)
@@ -147,15 +174,7 @@ function blockUser(username) {
 }
 
 function simulateProfileTabClick(senderId) {
-
-    var navButtons = document.querySelectorAll('.nav-button');
-    const profileButton = document.querySelector('button[data-button="profile"]');
-
-
-    navButtons.forEach(btn => btn.classList.remove('active'));
-    profileButton.classList.add('active');
-
     navbarPressed('profile');
-
     fetchUserData(senderId);
+
 }
