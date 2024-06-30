@@ -6,7 +6,6 @@ function  fetchUserData(theUsersId) {
         data: { 'profile_id': theUsersId },
         dataType: 'json',
         success: function(data) {
-            console.log(theUsersId)
             updateProfilePage(data);
         },
         error: function(xhr, status, error) {
@@ -206,7 +205,7 @@ function fetchUserSettings() {
 }
 
 function updateProfilePicture(data) {
-    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp;
+    document.querySelector('.pfp-container .user-pfp').src = data.user_details.userPfp || '/static/assets/default-pfp.png';
     document.querySelector('.profile-pic').src = data.user_details.userPfp;
 }
 function updateSettingsUsername(data){
@@ -281,7 +280,7 @@ async function loadChatItems() {
             for (const user of data.chat_users) {
                 const userId = user[0];
                 const userName = user[1];
-                const userPfp = user[2];
+                const userPfp = user[2] ? `data:image/png;base64,${user[2]}` : '/static/assets/default-pfp.png';
 
                 const chatItem = createChatItem(userId, userName, userPfp);
                 chatsTabContent.appendChild(chatItem);
@@ -299,7 +298,7 @@ function createChatItem(userId, userName, userPfp) {
     chatItem.setAttribute('data-username', userName);
 
     const img = document.createElement('img');
-    img.src = userPfp || '/static/assets/default-pfp.png';
+    img.src = userPfp;
     img.alt = userName;
     img.className = 'friend-image';
 

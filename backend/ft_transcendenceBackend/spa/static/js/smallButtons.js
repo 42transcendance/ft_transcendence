@@ -110,7 +110,6 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             addFriend(senderNickname);
             break;
         case 'bi-person':
-            // simulateProfileTabClick(senderId);
             history.pushState(null, null, `#${"profile"}`);
             var chatTab = document.querySelector('.chat-tab');
             var settingsTab = document.querySelector('.settings-tab');
@@ -175,14 +174,6 @@ function blockUser(username) {
 }
 
 function simulateProfileTabClick(senderId) {
-
-    // var navButtons = document.querySelectorAll('.nav-button');
-    // const profileButton = document.querySelector('button[data-button="profile"]');
-
-
-    // navButtons.forEach(btn => btn.classList.remove('active'));
-    // profileButton.classList.add('active');
-
     navbarPressed('profile');
     fetchUserData(senderId);
 

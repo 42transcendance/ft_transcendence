@@ -258,7 +258,6 @@ document.addEventListener('authenticated', function() {
                     fetchFriends();
                     fetchFriendsList();
                     showNotification(response.message, "rgb(81, 171, 81)");
-                    // createChatDivIfNotExists(requestId, username);
                     switchOrCreateChatDiv(requestId, username)
                 }
                 else {
@@ -634,39 +633,8 @@ function switchOrCreateChatDiv(chatId, chatName, switchTab = null) {
         chatDiv.style.display = 'block';
         chatDiv.scrollTop = chatDiv.scrollHeight;
     }
-    // const chatHeader = document.getElementById('social-text');
-    // if (chatId === 'global') {
-    //     chatHeader.textContent = 'General Chat';
-    // } else {
-    //     chatHeader.textContent = `Chat with ${chatName}`;
-    // }
 }
 
-// function switchOrCreateChatDiv(chatId, chatName) {
-//             document.querySelectorAll('.chat-messages').forEach(chatDiv => {
-//                 chatDiv.style.display = 'none';
-//             });
-        
-//             let chatDiv = document.querySelector(`.chat-messages[data-id='${chatId}']`);
-//             if (!chatDiv) {
-//                 chatDiv = document.createElement('div');
-//                 chatDiv.className = 'chat-messages';
-//                 chatDiv.dataset.id = chatId;
-//                 chatDiv.dataset.username = chatName;
-//                 chatDiv.style.display = 'none';
-        
-//                 document.querySelector('.chat-tab').insertBefore(chatDiv, document.querySelector('.message-input-area'));
-//             }
-//             chatDiv.style.display = 'block';
-//             chatDiv.scrollTop = chatDiv.scrollHeight;
-        
-//             const chatHeader = document.getElementById('social-text');
-//             if (chatId === 'global') {
-//                 chatHeader.textContent = 'General Chat';
-//             } else {
-//                 chatHeader.textContent = `Chat with ${chatName}`;
-//             }
-//         }
 
 
 document.addEventListener('DOMContentLoaded', function() {

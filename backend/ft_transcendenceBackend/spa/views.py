@@ -191,12 +191,28 @@ def get_chat_users(request):
     users = set()
     for msg in sent_messages:
         if msg['recipient__userid']:
-            users.add((msg['recipient__userid'], msg['recipient__username'], msg['recipient__profile_picture']))
+            profile_picture = get_base64_image(CustomUser.objects.get(userid=msg['recipient__userid']).profile_picture)
+            users.add((msg['recipient__userid'], msg['recipient__username'], profile_picture))
+            
     for msg in received_messages:
         if msg['sender__userid']:
-            users.add((msg['sender__userid'], msg['sender__username'], msg['sender__profile_picture']))
+            profile_picture = get_base64_image(CustomUser.objects.get(userid=msg['sender__userid']).profile_picture)
+            users.add((msg['sender__userid'], msg['sender__username'], profile_picture))
 
     return JsonResponse({'chat_users': list(users)})
+
+import base64
+from django.core.files.base import ContentFile
+
+def get_base64_image(image_field):
+    if not image_field:
+        return None
+    try:
+        with open(image_field.path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+        return f"data:image/png;base64,{encoded_string}"
+    except FileNotFoundError:
+        return None
 
 def get_translations(request):
     language = request.GET.get('language')

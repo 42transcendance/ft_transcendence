@@ -344,3 +344,6 @@ msgstr "Hors ligne"
 
 msgid "In-game"
 msgstr "En jeu"
+
+msgid "Cancel Game"
+msgstr "Annuler le jeu"

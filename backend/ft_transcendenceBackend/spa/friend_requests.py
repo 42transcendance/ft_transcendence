@@ -8,6 +8,8 @@ from django.utils.translation import gettext_lazy as _
 import requests
 import jwt
 from django.conf import settings
+
+
 def extract_user_info_from_token(token):
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_PHRASE, algorithms=['HS256'])
@@ -24,6 +26,7 @@ def get_user_details(request):
     token = request.session.get('token')
     profile_id = request.GET.get('profile_id', None)
 
+
     if token:
         user_id, username = extract_user_info_from_token(token)
         target_user_id = profile_id if profile_id and profile_id != user_id else user_id
@@ -33,60 +36,32 @@ def get_user_details(request):
             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
             activate(request.session.get('language'))
             user_details = {
-                'myid' : user_id,
+                'myid': user_id,
                 'username': user.username,
-                'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
-                'joinedDate' : formatted_joined_date,
-                'userid'    : user.userid,
-                'gamesPlayed' : user.game_history.count(),
-                'language' : request.session.get('language'),
+                'userPfp': get_base64_image(user.profile_picture) if user.profile_picture else None,
+                'joinedDate': formatted_joined_date,
+                'userid': user.userid,
+                'gamesPlayed': user.game_history.count(),
+                'language': request.session.get('language'),
                 'is_online': user.is_online,
                 'is_ingame': user.is_ingame
             }
             translations = {
                 'join': _("Joined:"),
-                'nb_match' : _("Matches Played:"),
-                'player' : _("Player "),
-                'start_tournament' : _("Start Tournament"),
+                'nb_match': _("Matches Played:"),
+                'player': _("Player "),
+                'start_tournament': _("Start Tournament"),
                 'note': _("Note: Tournament mode does not impact player statistics in their profile."),
                 'online': _("Online"),
-                'offline' : _("Offline"),
-                'ingame' : _("In-game"),
+                'offline': _("Offline"),
+                'ingame': _("In-game"),
             }
             return JsonResponse({'user_details': user_details, 'translations': translations})
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
     else:
         return JsonResponse({'error': 'Token not found in session'}, status=400)
-
-
-
-# @csrf_exempt
-# def get_user_details(request):
-#     token = request.session.get('token')
-#     if token:
-#         user_id, username = extract_user_info_from_token(token)
-#         try:
-#             user = CustomUser.objects.get(userid=user_id)
-#             formatted_joined_date = user.join_date.strftime('%Y-%m-%d')
-#             activate(request.session.get('language'))
-#             user_details = {
-#                 'username': user.username,
-#                 'userPfp' :  get_base64_image(user.profile_picture) if user.profile_picture else None,
-#                 'joinedDate' : formatted_joined_date,
-#                 'userid'    : user.userid,
-#                 'gamesPlayed' : user.game_history.count(),
-#             }
-#             translatations  = {
-#                 'join': _("Joined:"),
-#                 'nb_match' : _("Matches Played:"),
-#             }
-#             return JsonResponse({'user_details': user_details, 'translations' : translatations})
-#         except CustomUser.DoesNotExist:
-#             return JsonResponse({'error': 'User not found'}, status=404)
-#     else:
-#         return JsonResponse({'error': 'Token not found in session'}, status=400)
-
+    
 @csrf_exempt
 def send_friend_request(request):
     search_term = request.GET.get('search_term', '')

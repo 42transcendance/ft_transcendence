@@ -11,7 +11,6 @@ function connectWebSocket() {
         const data = JSON.parse(e.data);
         await handleWebSocketMessage(data);
     };
-
     chatSocket.onerror = function(error) {
         console.error("WebSocket error: ", error);
     };
@@ -45,8 +44,6 @@ function connectWebSocket() {
     async  function handleWebSocketMessage(data) {
         switch(data.type) {
             case 'private.message':
-                console.log("message recieved");
-                // createChatDivIfNotExists(data.id, data.name);
                 switchOrCreateChatDiv(data.source_user_id, data.source_user);
                 await addMessageToChatUI(data.message, data.source_user, data.source_user_id, data.target_user_id, data.timestamp);
                 break;
@@ -54,7 +51,6 @@ function connectWebSocket() {
                 try {
                     const isBlocked = await msgFromBlocked(data.source_user_id);
                     if (isBlocked) {
-                        console.log("Message blocked.");
                         return;
                     }
                     await addMessageToGlobalChatUI(data.message, data.source_user, data.source_user_id, data.timestamp);
@@ -77,23 +73,6 @@ function connectWebSocket() {
     }
     window.chatSocket = chatSocket;
 }
-
-// function createChatDivIfNotExists(requestId, username) {
-//     let chatDiv = document.querySelector(`.chat-messages[data-id='${requestId}']`);
-    
-//     if (!chatDiv) {
-//         chatDiv = document.createElement('div');
-//         chatDiv.classList.add('chat-messages');
-//         chatDiv.setAttribute('data-id', requestId);
-
-//         const chatHeader = document.querySelector('chat-tab');
-//         // chatHeader.classList.add('chat-header');
-//         // chatHeader.innerText = `Chat with ${username}`;
-//         chatDiv.appendChild(chatHeader);
-
-//     }
-// }
-
 
 function gameNotification(data) {
     const username = data.source_user;

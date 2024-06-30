@@ -5,7 +5,6 @@ from spa.models import CustomUser
 from asgiref.sync import sync_to_async
 from datetime import datetime, timezone
 
-
 class chatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
@@ -28,7 +27,7 @@ class chatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'notification',
             'message': 'Connection established.',
-            'source_user': self.username,
+            'source_user': self.userObject.username,
             'source_user_id': self.user_id,
         }))
     
@@ -44,6 +43,8 @@ class chatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         timestamp = text_data_json.get("timestamp", datetime.now(timezone.utc).isoformat())
+        self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
+
 
         try:
             user = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
@@ -61,7 +62,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                         'type': 'global.message',
                         'message': message,
                         'timestamp': timestamp,
-                        'source_user': self.username,
+                        'source_user': self.userObject.username,
                         'source_user_id': self.user_id,
                     }
                 )
@@ -76,7 +77,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                         'type': 'private.message',
                         'message': message,
                         'timestamp': timestamp,
-                        'source_user': self.username,
+                        'source_user': self.userObject.username,
                         'source_user_id': self.user_id,
                         'target_user_id': target_user_id,
                     }
@@ -91,7 +92,7 @@ class chatConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     {
                         'type': 'invitation',
-                        'source_user': self.username,
+                        'source_user':  self.userObject.username,
                         'source_user_id': self.user_id,
                         'target_user_id': target_user_id,
                         'target_user_name': target_user_name,
