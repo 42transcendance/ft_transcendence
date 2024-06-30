@@ -13,6 +13,9 @@ from channels.db import database_sync_to_async
 
 def update_username(request):
     new_username = request.GET.get('search_term', '')
+    if not new_username.strip():
+        return JsonResponse({'error': 'Username cannot be blank'}, status=400)
+    
     token = request.session.get('token')
     if token:
         user_id, username = extract_user_info_from_token(token)
