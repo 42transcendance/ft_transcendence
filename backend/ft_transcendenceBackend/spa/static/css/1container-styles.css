@@ -61,6 +61,8 @@
 
 .social-button {
     background-color: transparent;
+    font-family: 'Jost', sans-serif;
+    font-weight: bold;
     border: none;
     cursor: pointer;
     display: inline-block;
@@ -81,6 +83,8 @@
 
 .social-text {
     font-size: 20px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: -0.03em;
 }
 
 /* add friend button */
@@ -135,6 +139,7 @@
 .friends-list {
     width: 95%;
     border: 2px solid rgba(146, 128, 224, 0.7);
+    font-family: 'Jost', sans-serif;
     background-color: transparent;
     padding: 10px;
     cursor: pointer;
@@ -194,6 +199,7 @@
 .friends-list-content {
     width: 95%;
     padding: 10px;
+    font-family: 'Poppins', italic;
     border: 2px solid rgba(173, 102, 255, 0.7) !important;
     text-align: left;
     justify-content: flex-start;
@@ -378,6 +384,7 @@
 .chats-item {   
     width: 100%;
     background-color: transparent;
+    font-family: 'Jost', sans-serif;
     display: flex;
     justify-content: flex-start; 
     margin: 1px auto;
