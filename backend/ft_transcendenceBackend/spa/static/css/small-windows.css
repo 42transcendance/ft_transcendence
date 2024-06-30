@@ -70,21 +70,111 @@
 }
 
 .modal-button-add {
-    background-color: rgba(164, 94, 202); /* Blue background for Add */
-    color: white;
+    position: relative;
+    padding: 6px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #d338fa;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
 }
 
-.modal-button-add:hover {
-    background-color: #0056b3;
+.modal-button-add::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #cc00ff;
+    transition: width 0.5s ease;
+    z-index: -1;
 }
+
+.modal-button-add:hover::before {
+    width: 100%;
+}
+
+.modal-button-add span {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* .modal-button-default {
+    position: relative;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.modal-button-default::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #2980b9;
+    transition: width 0.5s ease;
+    z-index: -1;
+}
+
+.modal-button-default:hover::before {
+    width: 100%;
+}
+
+.modal-button-default span {
+    position: relative;
+    z-index: 1;
+} */
+
+/* ///////////////////////////////////////////////////////////////////////////// */
 
 .modal-button-cancel {
-    background-color: #6c757d; /* Grey background for Cancel */
-    color: white;
+    position: relative;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 0;
 }
 
-.modal-button-cancel:hover {
-    background-color: #545b62;
+.modal-button-cancel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: #2980b9;
+    transition: width 0.5s ease;
+    z-index: -1;
+}
+
+.modal-button-cancel:hover::before {
+    width: 100%;
+}
+
+.modal-button-cancel span {
+    position: relative;
+    z-index: 1;
 }
 
 /* Create Chann */
