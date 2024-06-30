@@ -191,7 +191,6 @@ function showUploadProfilePictureModal() {
                             showNotification("Profile picture has been changed!", "rgb(81, 171, 81)");
                         },
                         error: function(xhr, status, error) {
-                            console.error(error);
                             showNotification("Error encountered while uploading a user profile picture.", "rgb(168, 64, 64)");
                         }
                     });

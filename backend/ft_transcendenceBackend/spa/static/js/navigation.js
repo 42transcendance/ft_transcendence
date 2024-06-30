@@ -115,7 +115,6 @@ function showTab(route) {
             fetchUserSettings().then(() => {
                 fetchFriendsList();
                 fetchUserData(userId);
-                console.log(userId, "hahaha");
             }).catch(error => {
                 console.error('Error fetching user settings:', error);
             });
@@ -157,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
     settingsLan = document.getElementById('selectLanguage').value;
     profileLan = document.getElementById('selectLanguage').value;
     playLan = document.getElementById('selectLanguage').value;
-    console.log(chatLan, settingsLan, profileLan);
 
     var thirdTab = document.querySelector('.third-tab');
 

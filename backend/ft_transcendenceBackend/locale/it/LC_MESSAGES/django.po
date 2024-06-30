@@ -331,3 +331,9 @@ msgstr "In gioco"
 
 msgid "Cancel Game"
 msgstr "Annulla partita"
+
+msgid "Username cannot be blank"
+msgstr "Il nome utente non può essere vuoto"
+
+msgid "Profile picture set to default"
+msgstr "Immagine del profilo impostata su quella predefinita"
