@@ -16,8 +16,9 @@ class chatConsumer(AsyncWebsocketConsumer):
         self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
 
         self.userObject.is_online = True
+        self.userObject.online_counter += 1
         await sync_to_async(self.userObject.save)()
-                                                 
+        print(self.userObject.online_counter)
         self.room_group_name = 'global'
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
@@ -32,7 +33,12 @@ class chatConsumer(AsyncWebsocketConsumer):
         }))
     
     async def disconnect(self, close_code):
-        self.userObject.is_online = False
+        self.userObject.online_counter -= 1
+        if self.userObject.online_counter <= 0:
+            self.userObject.is_online = False
+        elif self.userObject.online_counter > 0:
+            self.userObject.is_online = True
+        print(self.userObject.online_counter)
         await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
