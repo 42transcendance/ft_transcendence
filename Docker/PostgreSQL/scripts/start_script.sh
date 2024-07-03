@@ -17,5 +17,3 @@ mv /postgresql.conf /usr/local/pgsql/data/.
 mv /pg_hba.conf /usr/local/pgsql/data/.
 
 chown djangodb /var/run/postgresql
-
-# chmod 770 /usr/local/pgsql/ /usr/local/pgsql/data/
