@@ -56,6 +56,7 @@ function showTab(route) {
 
     switch (route) {
         case 'play':
+            injectBlock();
             adjustGameContainerSize();
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
@@ -70,6 +71,7 @@ function showTab(route) {
             gameTab.style.display = 'block';
             break;
         case 'chat':
+            removeBlock();
             gameContainer.style.height = "75vh";
             setContainerVisibility(firstTab, true, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
@@ -84,6 +86,7 @@ function showTab(route) {
             gameTab.style.display = 'none';
             break;
         case 'settings':
+            removeBlock();
             gameContainer.style.height = "75vh";
             setContainerVisibility(firstTab, false, 'left-slide-out', 'left-slide-in');
             setContainerVisibility(secondTab, true, 'middle-slide-out', 'middle-slide-in');
@@ -98,6 +101,7 @@ function showTab(route) {
             gameTab.style.display = 'none';
             break;
         case 'profile':
+            removeBlock();
             gameContainer.style.height = "75vh";
             chatTab.style.display = 'none';
             settingsTab.style.display = 'none';

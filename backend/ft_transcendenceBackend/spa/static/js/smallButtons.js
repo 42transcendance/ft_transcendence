@@ -179,3 +179,43 @@ function simulateProfileTabClick(senderId) {
     fetchUserData(senderId);
 
 }
+
+
+// game instructions
+function injectBlock() {
+    if (!document.getElementById('mon-bloc')) {
+        var block = document.createElement('div');
+        block.id = 'mon-bloc';
+        block.className = 'mon-bloc';
+        block.textContent = 'W and S to play. Good Luck !';
+
+        document.body.insertBefore(block, document.body.firstChild);
+
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = `
+            .mon-bloc {
+                position: absolute;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 300px;
+                padding: 16px;
+                background-color: rgba(255, 255, 255, 0.5);
+                border: 1px solid #ff18c5;
+                border-radius: 15px;
+                text-align: center;
+                font-size: 16px;
+            }
+        `;
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
+}
+
+// Function to remove the block
+function removeBlock() {
+    var block = document.getElementById('mon-bloc');
+    if (block) {
+        block.parentNode.removeChild(block);
+    }
+}
