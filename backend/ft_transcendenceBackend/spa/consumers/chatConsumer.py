@@ -42,9 +42,6 @@ class chatConsumer(AsyncWebsocketConsumer):
         await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
-        print(f"User disconnected: {self.username} (ID: {self.user_id})")
-
-
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")

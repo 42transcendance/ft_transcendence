@@ -26,10 +26,19 @@ def home(request):
 
     if not language:
         request.session['language'] = 'en'
-        
-    translations = translate_static(request.session.get('language'))
+    
+    # Environment variables
+    db_host = os.getenv('DB_HOST', 'default_host')
+    db_port = os.getenv('DB_PORT', 'default_port')
+    
+    # Pass environment variables to the template context
+    context = {
+        'token': token,
+        'translations': translate_static(language),  # Assuming translate_static takes 'language' as an argument
+        'CALLBACK_LINK': os.getenv('CALLBACK_LINK'),
+    }
 
-    return render(request, 'frontend/index.html', {'token': token, 'translations': translations})
+    return render(request, 'frontend/index.html', context)
     
 def custom_logout(request):
     if 'token' in request.session:
