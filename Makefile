@@ -1,10 +1,13 @@
 PATH_YML = ./docker-compose.yml
 
+HOSTNAME= $(shell hostname | cut -d '.' -f 1)
+
 all: build start
 
 build:
 	@utils/djangoEnvSetup.sh
 	@utils/postgresEnvSetup.sh
+	@utils/setApi.sh
 	docker-compose -f $(PATH_YML) build
 
 start:
@@ -25,6 +28,10 @@ prune: stop
 	@docker-compose -f $(PATH_YML) down -v
 	@docker system prune -af
 	@find ./backend/ft_transcendenceBackend/media/profile_pictures/ -type f ! -name 'nerdface.png' -exec rm {} +
+
+	@sed -i "s|'redirect_uri': 'https://[^']*',|'redirect_uri': 'https://localhost:8000/callback',|" ./backend/ft_transcendenceBackend/spa/views.py
+
+	@sed -i "s/$(HOSTNAME)/localhost/g" ./backend/ft_transcendenceBackend/spa/static/js/login.js
 
 	@rm -rf *.env
 
