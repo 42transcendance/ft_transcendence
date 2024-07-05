@@ -90,13 +90,25 @@ def send_friend_request(request):
         if current_user.outgoing_friends_requests.filter(userid=friend.userid).exists():
             return JsonResponse({'error': 'OutgoingRequestExists', 'message': 'You have already sent a friend request to this user.'}, status=400)
         
-        if current_user.incoming_friends_requests.filter(userid=friend.userid).exists():
-            return JsonResponse({'error': 'IncomingRequestExists', 'message': 'You have already received a friend request from this user.'}, status=400)
-
         if current_user.blocklist.filter(userid=friend.userid).exists() or friend.blocklist.filter(userid=current_user.userid).exists():
             return JsonResponse({'error': 'UserBlocked', 'message': 'You or the user is blocked, unable to send friend request.'}, status=400)
 
-        current_user.outgoing_friends_requests.add(friend) 
+        # Check if there is an incoming friend request from the user
+        if current_user.incoming_friends_requests.filter(userid=friend.userid).exists():
+            current_user.friends.add(friend)
+            friend.friends.add(current_user)
+
+            current_user.incoming_friends_requests.remove(friend)
+            friend.outgoing_friends_requests.remove(current_user)
+
+            friend_details = {
+                'name': friend.username,
+                'image': get_base64_image(friend.profile_picture) if friend.profile_picture else None,
+                'id': friend.userid,
+            }
+            return JsonResponse({'status': 'success', 'message': _('Friend request accepted successfully!'), 'data': friend_details}, status=200)
+
+        current_user.outgoing_friends_requests.add(friend)
         friend.incoming_friends_requests.add(current_user)
         
         return JsonResponse({'status': 'success', 'message': 'Friend request sent successfully.'}, status=200)
