@@ -31,8 +31,6 @@ prune: stop
 
 	@sed -i "s|'redirect_uri': 'https://[^']*',|'redirect_uri': 'https://localhost:8000/callback',|" ./backend/ft_transcendenceBackend/spa/views.py
 
-	@sed -i "s/$(HOSTNAME)/localhost/g" ./backend/ft_transcendenceBackend/spa/static/js/login.js
-
 	@rm -rf *.env
 
 	@rm -rf ./Docker/Backend/conf/.pgpass

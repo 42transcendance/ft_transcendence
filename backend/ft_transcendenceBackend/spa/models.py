@@ -17,6 +17,7 @@ class CustomUser(AbstractUser):
     is_online = models.BooleanField(default=False)
     is_ingame = models.BooleanField(default=False)
     online_counter = models.IntegerField(default=0)
+    ingame_counter = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username

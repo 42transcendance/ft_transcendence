@@ -28,13 +28,17 @@ class pongConsumer(AsyncWebsocketConsumer):
             self.username = self.userObject.username
             self.room_id = None
             self.userObject.is_ingame = True
+            self.userObject.ingame_counter += 1
             await sync_to_async(self.userObject.save)()
             await self.accept()
     
     async def disconnect(self, close_code):
         # Gotta check which type of game user is in and act accordingly
         await DuelsManager.delete_room(self.room_id)
-        self.userObject.is_ingame = False
+        self.userObject.ingame_counter -= 1
+        if self.userObject.ingame_counter == 0:
+            self.userObject.is_ingame = False
+        
         await sync_to_async(self.userObject.save)()
         await self.channel_layer.group_send(
         self.room_id,
