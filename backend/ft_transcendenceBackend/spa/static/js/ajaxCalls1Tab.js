@@ -251,7 +251,7 @@ document.addEventListener('authenticated', function() {
         $.ajax({
             url: '/accept_friend_request/',
             method: 'GET',
-            data: { 'friend_username': username },
+            data: { 'friend_userId': requestId },
             success: function(response) {
                 if (response.status == 'success') {
                     fetchIncomingRequests();
@@ -275,13 +275,13 @@ document.addEventListener('authenticated', function() {
         });
     }
     
-    function declineFriendRequest(requestId,username) {
+    function declineFriendRequest(requestId, username) {
         removeRequestFromUI(requestId);
     
         $.ajax({
             url: '/decline_friend_request/',
             method: 'GET',
-            data: { 'friend_username': username },
+            data: { 'friend_userId': requestId },
             success: function(data) {
                 fetchIncomingRequests();
                 showNotification("Friend request declined", "rgb(168, 64, 64)");
@@ -289,11 +289,11 @@ document.addEventListener('authenticated', function() {
         });
     }
     
-    function unblockBlockedUser(username){
+    function unblockBlockedUser(requestId){
         $.ajax({
             url: '/unblock_friend/',
             method : 'GET',
-            data : {'friend_username' : username},
+            data : {'friend_userId' : requestId},
             success: function(data){
                 showNotification("User unblocked", "rgb(81, 171, 81)");
                 fetchBlockedContacts();
@@ -326,7 +326,7 @@ document.addEventListener('authenticated', function() {
             const usernameElement = friendItem.querySelector('.friend-info > div');
             const username = usernameElement.textContent.trim();
 			const requestId = friendItem ? friendItem.getAttribute('data-id') : null;
-            unblockBlockedUser(username);
+            unblockBlockedUser(requestId);
         }
 		else if (event.target.classList.contains('icon-controller')) {
             const friendItem = event.target.closest('.friend-item');
@@ -573,7 +573,7 @@ document.addEventListener('authenticated', function() {
             $.ajax({
                 url: '/block_friend/',
                 method: 'GET',
-                data: { 'friend_username': username },
+                data: { 'friend_userId': userId },
                 success: function(data) {
                     fetchFriends();
                     fetchBlockedContacts();

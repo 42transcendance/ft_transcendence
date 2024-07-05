@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             $.ajax({
                 url: '/block_friend/',
                 method: 'GET',
-                data: { 'friend_username': username },
+                data: { 'friend_userId': userId },
                 success: function(data) {
                     showNotification("User Blocked", "rgb(168, 64, 64");
                     removeModal('confirmBlockModal');
@@ -107,7 +107,7 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             });
             break;
         case 'bi-plus-circle':
-            addFriend(senderNickname);
+            addFriend(senderId);
             break;
         case 'bi-person':
             history.pushState(null, null, `#${"profile"}`);
@@ -140,31 +140,32 @@ function handleIconClick(senderId, senderNickname, iconElement) {
             fetchUserData(senderId);
             break;
         case 'bi-slash-circle':
-            blockUser(senderNickname)
+            blockUser(senderId)
             break;
         default:
             console.error("Unknown icon clicked for user:", senderId);
     }
 }
 
-function addFriend(senderNickname) {
+function addFriend(user_id) {
     $.ajax({
         url: '/send_friend_request/',
         method: 'GET',
-        data: { 'search_term': senderNickname },
+        data: { 'user_id': user_id},
         success: function() {
-            showNotification("Friend request sent to user: " + senderNickname, "rgb(81, 171, 81)");
+            showNotification("Friend request sent to user", "rgb(81, 171, 81)");
         },
         error: function(xhr) {
             showNotification("Failed to send friend request: " + xhr.responseJSON.message, "rgb(168, 64, 64)");
         }
     });
 }
-function blockUser(username) {
+
+function blockUser(senderId) {
     $.ajax({
         url: '/block_friend/',
         method: 'GET',
-        data: { 'friend_username': username },
+        data: { 'friend_userId': senderId },
         success: function(data) {
             fetchFriends();
             fetchBlockedContacts();

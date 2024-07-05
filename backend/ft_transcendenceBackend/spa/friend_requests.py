@@ -64,50 +64,60 @@ def get_user_details(request):
     
 @csrf_exempt
 def send_friend_request(request):
+    user_id = request.GET.get('user_id', '')
     search_term = request.GET.get('search_term', '')
-    if search_term:
-        try:
+    try:
+        if user_id:
+            friend = CustomUser.objects.get(userid=user_id)
+        elif search_term:
             friend = CustomUser.objects.get(username=search_term)
-            token = request.session.get('token')
-            user_id, username = extract_user_info_from_token(token)
-            current_user = CustomUser.objects.get(userid=user_id)
+        else:
+            return JsonResponse({'error': 'InvalidRequest', 'message': 'Invalid request parameters.'}, status=400)
+        
+        token = request.session.get('token')
+        if not token:
+            return JsonResponse({'error': 'InvalidToken', 'message': 'Authentication token not found.'}, status=401)
+        
+        user_id, username = extract_user_info_from_token(token)
+        current_user = CustomUser.objects.get(userid=user_id)
 
-            if current_user.username == friend.username:
-                return JsonResponse({'error': 'SelfFriendRequest', 'message': 'You cannot send a friend request to yourself.'}, status=400)
+        if current_user.userid == friend.userid:
+            return JsonResponse({'error': 'SelfFriendRequest', 'message': 'You cannot send a friend request to yourself.'}, status=400)
 
-            if current_user.friends.filter(username=friend.username).exists():
-                return JsonResponse({'error': 'AlreadyFriends', 'message': 'You are already friends with this user.'}, status=400)
-            
-            if current_user.outgoing_friends_requests.filter(username=friend.username).exists():
-                return JsonResponse({'error': 'OutgoingRequestExists', 'message': 'You have already sent a friend request to this user.'}, status=400)
-            
-            if current_user.incoming_friends_requests.filter(username=friend.username).exists():
-                return JsonResponse({'error': 'IncomingRequestExists', 'message': 'You have already received a friend request from this user.'}, status=400)
+        if current_user.friends.filter(userid=friend.userid).exists():
+            return JsonResponse({'error': 'AlreadyFriends', 'message': 'You are already friends with this user.'}, status=400)
+        
+        if current_user.outgoing_friends_requests.filter(userid=friend.userid).exists():
+            return JsonResponse({'error': 'OutgoingRequestExists', 'message': 'You have already sent a friend request to this user.'}, status=400)
+        
+        if current_user.incoming_friends_requests.filter(userid=friend.userid).exists():
+            return JsonResponse({'error': 'IncomingRequestExists', 'message': 'You have already received a friend request from this user.'}, status=400)
 
-            if current_user.blocklist.filter(username=friend.username).exists() or friend.blocklist.filter(username=current_user.username).exists():
-                return JsonResponse({'error': 'UserBlocked', 'message': 'You or the user is blocked, unable to send friend request.'}, status=400)
+        if current_user.blocklist.filter(userid=friend.userid).exists() or friend.blocklist.filter(userid=current_user.userid).exists():
+            return JsonResponse({'error': 'UserBlocked', 'message': 'You or the user is blocked, unable to send friend request.'}, status=400)
 
-            current_user.outgoing_friends_requests.add(friend) 
-            friend.incoming_friends_requests.add(current_user)
-            
-            return JsonResponse({}, status=200)
-        except CustomUser.DoesNotExist:
-            return JsonResponse({'error': 'FriendNotfound', 'message': 'Friend not found.'}, status=404)
-    return JsonResponse({'error': 'InvalidRequest', 'message': 'Invalid request parameters.'}, status=400)
+        current_user.outgoing_friends_requests.add(friend) 
+        friend.incoming_friends_requests.add(current_user)
+        
+        return JsonResponse({'status': 'success', 'message': 'Friend request sent successfully.'}, status=200)
+    except CustomUser.DoesNotExist:
+        return JsonResponse({'error': 'FriendNotfound', 'message': 'Friend not found.'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': 'ServerError', 'message': str(e)}, status=400)
 
 @csrf_exempt
 def accept_friend_request(request):
-    friend_username = request.GET.get('friend_username')
-    if friend_username:
+    friend_userId = request.GET.get('friend_userId')
+    if friend_userId:
         try:
-            friend = CustomUser.objects.get(username=friend_username)
+            friend = CustomUser.objects.get(userid=friend_userId)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
             current_user = CustomUser.objects.get(userid=user_id)
             
             activate(request.session.get('language'))
             
-            if current_user.blocklist.filter(username=friend.username).exists() or friend.blocklist.filter(username=current_user.username).exists():
+            if current_user.blocklist.filter(userid=friend_userId).exists() or friend.blocklist.filter(userid=user_id).exists():
                 return JsonResponse({'status': 'blocked', 'message': _('Action Failed.')})
 
             current_user.friends.add(friend)
@@ -125,13 +135,13 @@ def accept_friend_request(request):
         except CustomUser.DoesNotExist:
             return JsonResponse({'status': 'not_found', 'message': _('User not found.')}, status=404)
     return JsonResponse({'status': 'invalid_request', 'message': _('Invalid request parameters.')}, status=400)
-
+    
 @csrf_exempt
 def decline_friend_request(request):
-    friend_username = request.GET.get('friend_username')
-    if friend_username:
+    friend_userId = request.GET.get('friend_userId')
+    if friend_userId:
         try:
-            friend = CustomUser.objects.get(username=friend_username)
+            friend = CustomUser.objects.get(userid=friend_userId)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
             current_user = CustomUser.objects.get(userid=user_id)
@@ -141,28 +151,27 @@ def decline_friend_request(request):
             return JsonResponse({}, status=200)
         except CustomUser.DoesNotExist:
             pass
-    return JsonResponse({'friend_details': 'No details found'}, status=400) 
-
+    return JsonResponse({'friend_details': 'No details found'}, status=400)
 
 @csrf_exempt
 def block_friend(request):
-    friend_username = request.GET.get('friend_username')
-    if friend_username:
+    friend_userId = request.GET.get('friend_userId')
+    if friend_userId:
         try:
-            friend = CustomUser.objects.get(username=friend_username)
+            friend = CustomUser.objects.get(userid=friend_userId)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
             current_user = CustomUser.objects.get(userid=user_id)
 
-            if current_user.outgoing_friends_requests.filter(username=friend.username).exists():
+            if current_user.outgoing_friends_requests.filter(userid=friend_userId).exists():
                 current_user.outgoing_friends_requests.remove(friend)
                 friend.incoming_friends_requests.remove(current_user)
 
-            if current_user.incoming_friends_requests.filter(username=friend.username).exists():
+            if current_user.incoming_friends_requests.filter(userid=friend_userId).exists():
                 current_user.incoming_friends_requests.remove(friend)
                 friend.outgoing_friends_requests.remove(current_user)
 
-            if current_user.friends.filter(username=friend.username).exists():
+            if current_user.friends.filter(userid=friend_userId).exists():
                 current_user.friends.remove(friend)
                 friend.friends.remove(current_user)
 
@@ -172,13 +181,12 @@ def block_friend(request):
             return JsonResponse({'status': 'not_found', 'message': 'User not found.'}, status=404)
     return JsonResponse({'status': 'invalid_request', 'message': 'Invalid request parameters.'}, status=400)
 
-
 @csrf_exempt
 def unblock_friend(request):
-    friend_username = request.GET.get('friend_username')
-    if friend_username:
+    friend_userId = request.GET.get('friend_userId')
+    if friend_userId:
         try:
-            friend = CustomUser.objects.get(username=friend_username)
+            friend = CustomUser.objects.get(userid=friend_userId)
             token = request.session.get('token')
             user_id, username = extract_user_info_from_token(token)
             current_user = CustomUser.objects.get(userid=user_id)
