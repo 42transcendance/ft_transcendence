@@ -337,3 +337,6 @@ msgstr "Il nome utente non può essere vuoto"
 
 msgid "Profile picture set to default"
 msgstr "Immagine del profilo impostata su quella predefinita"
+
+msgid "W and S to play. (+ arrows for tournament)."
+msgstr "W e S per giocare. (+ frecce per torneo)."

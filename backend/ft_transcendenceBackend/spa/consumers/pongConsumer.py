@@ -12,6 +12,7 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 from ..classes.DuelsManager import DuelsManager
+from channels.db import database_sync_to_async
 
 DuelsManager = DuelsManager()
 
@@ -19,27 +20,30 @@ class pongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.user_id, self.username = extract_user_info_from_token(self.scope['session'].get('token'))
 
-        self.userObject = await sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
+        self.userObject = await database_sync_to_async(CustomUser.objects.get)(userid=str(self.user_id))
 
         if self.user_id == None or self.username == None:
             await self.close(code=1000)
         else:
-            self.userObject = await sync_to_async(CustomUser.objects.get)(userid=self.user_id)
+            self.userObject = await database_sync_to_async(CustomUser.objects.get)(userid=self.user_id)
             self.username = self.userObject.username
             self.room_id = None
-            self.userObject.is_ingame = True
             self.userObject.ingame_counter += 1
-            await sync_to_async(self.userObject.save)()
+            if self.userObject.ingame_counter > 0:
+                self.userObject.is_ingame = True
+            await database_sync_to_async(self.userObject.save)()
+            print("Game connections : ", self.userObject.ingame_counter)
             await self.accept()
     
     async def disconnect(self, close_code):
         # Gotta check which type of game user is in and act accordingly
         await DuelsManager.delete_room(self.room_id)
+
         self.userObject.ingame_counter -= 1
-        if self.userObject.ingame_counter == 0:
+        if self.userObject.ingame_counter <= 0:
             self.userObject.is_ingame = False
-        
-        await sync_to_async(self.userObject.save)()
+        await database_sync_to_async(self.userObject.save)()
+        print("Game connections : ", self.userObject.ingame_counter)
         await self.channel_layer.group_send(
         self.room_id,
         {
