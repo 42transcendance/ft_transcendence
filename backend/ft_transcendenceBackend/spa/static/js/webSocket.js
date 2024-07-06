@@ -16,7 +16,7 @@ function connectWebSocket() {
     };
 
     chatSocket.onclose = function(e) {
-        setTimeout(connectWebSocket, 1000);
+        // setTimeout(connectWebSocket, 1000);
     };
 
     function msgFromBlocked(source_user_id) {
@@ -67,6 +67,9 @@ function connectWebSocket() {
                 break;
             case 'game.invite.send':
                 showNotification(data.message, "rgb(81, 171, 81)");
+                break;
+            case 'ping':
+                console.log("RECEIVED PING");
                 break;
             break;
         }

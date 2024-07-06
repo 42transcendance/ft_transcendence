@@ -183,11 +183,23 @@ function simulateProfileTabClick(senderId) {
 
 // game instructions
 function injectBlock() {
+    let message = "W and S to play. (+ arrows for tournament).";
+    $.ajax({
+        url: '/get_notif_translate/',
+        method: 'GET',
+        data: { 'message': message },
+        success: function(data) {
+            injectBlock1(data.translations.message);
+        }
+    });    
+}
+
+function injectBlock1(message) {
     if (!document.getElementById('mon-bloc')) {
         var block = document.createElement('div');
         block.id = 'mon-bloc';
         block.className = 'mon-bloc';
-        block.textContent = 'W and S to play. Good Luck !';
+        block.textContent = message;
 
         document.body.insertBefore(block, document.body.firstChild);
 
